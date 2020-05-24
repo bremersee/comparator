@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 public class SimpleIsObject {
 
-  private boolean value;
+  private final boolean value;
 
   /**
    * Instantiates a new simple test object of a boolean.

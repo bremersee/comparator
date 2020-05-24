@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("WeakerAccess")
 public class WellKnownTextConverter implements Converter<String, ComparatorFields> {
 
-  private WellKnownTextParser wellKnownTextParser;
+  private final WellKnownTextParser wellKnownTextParser;
 
   /**
    * Instantiates a new well known text converter.

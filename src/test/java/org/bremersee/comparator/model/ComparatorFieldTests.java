@@ -117,11 +117,12 @@ class ComparatorFieldTests {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
     ComparatorField field1 = field0;
     ComparatorField field2 = new ComparatorField("i0", true, false, true);
-    ComparatorField field3 = new ComparatorField("i1", true, false, true);
     assertEquals(field0.hashCode(), field2.hashCode());
     assertEquals(field0, field0);
     assertEquals(field0, field1);
     assertEquals(field0, field2);
+
+    ComparatorField field3 = new ComparatorField("i1", true, false, true);
     assertNotEquals(field0, field3);
 
     //noinspection EqualsBetweenInconvertibleTypes,SimplifiableJUnitAssertion

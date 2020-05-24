@@ -135,21 +135,22 @@
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>     ComparatorField field2 = <strong class="jxr_keyword">new</strong> ComparatorField(<span class="jxr_string">"i0"</span>, <strong class="jxr_keyword">true</strong>, false, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     ComparatorField field3 = <strong class="jxr_keyword">new</strong> ComparatorField(<span class="jxr_string">"i1"</span>, <strong class="jxr_keyword">true</strong>, false, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     ComparatorFields fields0 = <strong class="jxr_keyword">new</strong> ComparatorFields(Arrays.asList(field0, field1));
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>     ComparatorFields fields1 = fields0;
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>     ComparatorFields fields2 = <strong class="jxr_keyword">new</strong> ComparatorFields(Arrays.asList(field2, field3));
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>     ComparatorFields fields3 = <strong class="jxr_keyword">new</strong> ComparatorFields(Arrays.asList(field1, field3));
-<a class="jxr_linenumber" name="L133" href="#L133">133</a> 
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>     assertEquals(fields0.hashCode(), fields2.hashCode());
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>     assertEquals(fields0, fields1);
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>     assertEquals(fields0, fields2);
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     assertNotEquals(fields0, fields3);
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <em class="jxr_comment">//noinspection EqualsBetweenInconvertibleTypes,SimplifiableJUnitAssertion</em>
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>     assertFalse(fields0.equals(field0));
-<a class="jxr_linenumber" name="L140" href="#L140">140</a> 
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     assertEquals(<strong class="jxr_keyword">new</strong> ComparatorFields(<strong class="jxr_keyword">null</strong>), <strong class="jxr_keyword">new</strong> ComparatorFields());
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>   }
-<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
-<a class="jxr_linenumber" name="L144" href="#L144">144</a> }
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     ComparatorFields fields2 = <strong class="jxr_keyword">new</strong> ComparatorFields(Arrays.asList(field2, field3));
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>     assertEquals(fields0.hashCode(), fields2.hashCode());
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     ComparatorFields fields1 = fields0;
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     assertEquals(fields0, fields1);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     assertEquals(fields0, fields2);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     ComparatorFields fields3 = <strong class="jxr_keyword">new</strong> ComparatorFields(Arrays.asList(field1, field3));
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     assertNotEquals(fields0, fields3);
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>     <em class="jxr_comment">//noinspection EqualsBetweenInconvertibleTypes,SimplifiableJUnitAssertion</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>     assertFalse(fields0.equals(field0));
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     assertEquals(<strong class="jxr_keyword">new</strong> ComparatorFields(<strong class="jxr_keyword">null</strong>), <strong class="jxr_keyword">new</strong> ComparatorFields());
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2020 <a href="http://bremersee.org">bremersee.org</a>. All rights reserved.</div>

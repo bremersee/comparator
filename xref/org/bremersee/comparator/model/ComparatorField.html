@@ -77,8 +77,8 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment"> * @author Christian Bremer</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  @XmlAccessorType(XmlAccessType.FIELD)
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  @XmlRootElement(name = <span class="jxr_string">"comparatorField"</span>)
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  @XmlRootElement(name = <span class="jxr_string">"comparatorField"</span>)
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  @XmlAccessorType(XmlAccessType.FIELD)
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  @XmlType(name = <span class="jxr_string">"comparatorFieldType"</span>, propOrder = {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>      <span class="jxr_string">"field"</span>,
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      <span class="jxr_string">"asc"</span>,
@@ -93,7 +93,7 @@
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>      <span class="jxr_string">"nullIsFirst"</span>
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  })
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  @Schema(description = <span class="jxr_string">"A comparator field defines how a field of an object is sorted."</span>)
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>  @SuppressWarnings({<span class="jxr_string">"UnusedAssignment"</span>, <span class="jxr_string">"unused"</span>})
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  @SuppressWarnings({<span class="jxr_string">"UnusedAssignment"</span>, <span class="jxr_string">"unused"</span>, <span class="jxr_string">"FieldMayBeFinal"</span>})
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> ComparatorField {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>    @Schema(description = <span class="jxr_string">"The field name or path."</span>)

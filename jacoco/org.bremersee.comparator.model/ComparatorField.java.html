@@ -69,8 +69,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Christian Bremer
  */
-@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = &quot;comparatorField&quot;)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = &quot;comparatorFieldType&quot;, propOrder = {
     &quot;field&quot;,
     &quot;asc&quot;,
@@ -85,7 +85,7 @@ import javax.xml.bind.annotation.XmlType;
     &quot;nullIsFirst&quot;
 })
 @Schema(description = &quot;A comparator field defines how a field of an object is sorted.&quot;)
-@SuppressWarnings({&quot;UnusedAssignment&quot;, &quot;unused&quot;})
+@SuppressWarnings({&quot;UnusedAssignment&quot;, &quot;unused&quot;, &quot;FieldMayBeFinal&quot;})
 public class ComparatorField {
 
   @Schema(description = &quot;The field name or path.&quot;)

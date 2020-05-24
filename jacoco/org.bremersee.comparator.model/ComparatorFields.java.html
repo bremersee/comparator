@@ -43,14 +43,15 @@ import javax.xml.bind.annotation.XmlType;
 @SuppressWarnings(&quot;WeakerAccess&quot;)
 public class ComparatorFields {
 
-<span class="fc" id="L46">  @Schema(description = &quot;The list of comparator fields.&quot;)</span>
+<span class="fc" id="L46">  @SuppressWarnings(&quot;FieldMayBeFinal&quot;)</span>
+  @Schema(description = &quot;The list of comparator fields.&quot;)
   private List&lt;ComparatorField&gt; fields = new ArrayList&lt;&gt;();
 
   /**
    * Instantiates a new list of comparator fields.
    */
-<span class="fc" id="L52">  public ComparatorFields() {</span>
-<span class="fc" id="L53">  }</span>
+<span class="fc" id="L53">  public ComparatorFields() {</span>
+<span class="fc" id="L54">  }</span>
 
   /**
    * Instantiates a new list of comparator fields.
@@ -58,11 +59,11 @@ public class ComparatorFields {
    * @param fields the comparator fields
    */
   @JsonCreator
-<span class="fc" id="L61">  public ComparatorFields(@JsonProperty(&quot;fields&quot;) Collection&lt;? extends ComparatorField&gt; fields) {</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (fields != null) {</span>
-<span class="fc" id="L63">      this.fields.addAll(fields);</span>
+<span class="fc" id="L62">  public ComparatorFields(@JsonProperty(&quot;fields&quot;) Collection&lt;? extends ComparatorField&gt; fields) {</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">    if (fields != null) {</span>
+<span class="fc" id="L64">      this.fields.addAll(fields);</span>
     }
-<span class="fc" id="L65">  }</span>
+<span class="fc" id="L66">  }</span>
 
   /**
    * Gets the list of comparator fields.
@@ -70,7 +71,7 @@ public class ComparatorFields {
    * @return the list of comparator fields
    */
   public List&lt;ComparatorField&gt; getFields() {
-<span class="fc" id="L73">    return fields;</span>
+<span class="fc" id="L74">    return fields;</span>
   }
 
   /**
@@ -89,31 +90,31 @@ public class ComparatorFields {
    * @return the well known text
    */
   public String toWkt() {
-<span class="fc" id="L92">    return fields.stream()</span>
-<span class="fc" id="L93">        .map(ComparatorField::toWkt)</span>
-<span class="fc" id="L94">        .collect(Collectors.joining(&quot;|&quot;));</span>
+<span class="fc" id="L93">    return fields.stream()</span>
+<span class="fc" id="L94">        .map(ComparatorField::toWkt)</span>
+<span class="fc" id="L95">        .collect(Collectors.joining(&quot;|&quot;));</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L99">    return toWkt();</span>
+<span class="fc" id="L100">    return toWkt();</span>
   }
 
   @Override
   public boolean equals(Object o) {
-<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (this == o) {</span>
-<span class="fc" id="L105">      return true;</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    if (this == o) {</span>
+<span class="fc" id="L106">      return true;</span>
     }
-<span class="fc bfc" id="L107" title="All 2 branches covered.">    if (!(o instanceof ComparatorFields)) {</span>
-<span class="fc" id="L108">      return false;</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">    if (!(o instanceof ComparatorFields)) {</span>
+<span class="fc" id="L109">      return false;</span>
     }
-<span class="fc" id="L110">    ComparatorFields fields1 = (ComparatorFields) o;</span>
-<span class="fc" id="L111">    return Objects.equals(fields, fields1.fields);</span>
+<span class="fc" id="L111">    ComparatorFields fields1 = (ComparatorFields) o;</span>
+<span class="fc" id="L112">    return Objects.equals(fields, fields1.fields);</span>
   }
 
   @Override
   public int hashCode() {
-<span class="fc" id="L116">    return Objects.hash(fields);</span>
+<span class="fc" id="L117">    return Objects.hash(fields);</span>
   }
 
 }

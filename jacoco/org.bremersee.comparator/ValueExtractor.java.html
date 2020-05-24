@@ -20,8 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * The value extractor finds the value of a given field name or path by reflection.
@@ -33,7 +33,7 @@ public interface ValueExtractor {
   /**
    * Find the value of the given add name or path of the given object.
    *
-   * @param obj   the object
+   * @param obj the object
    * @param field the field name or path
    * @return the object
    * @throws ValueExtractorException if no add nor method is found
@@ -44,7 +44,7 @@ public interface ValueExtractor {
    * Find field with the given name of the specified class.
    *
    * @param clazz the class
-   * @param name  the field name
+   * @param name the field name
    * @return the field
    */
   default Optional&lt;Field&gt; findField(final Class&lt;?&gt; clazz, final String name) {
@@ -55,8 +55,8 @@ public interface ValueExtractor {
    * Find the field with the given name of the specified class.
    *
    * @param clazz the class
-   * @param name  the field name
-   * @param type  the type of the field
+   * @param name the field name
+   * @param type the type of the field
    * @return the field
    */
   default Optional&lt;Field&gt; findField(final Class&lt;?&gt; clazz, final String name,
@@ -106,39 +106,43 @@ public interface ValueExtractor {
    * Find the method with the given name and no parameters of the specified class.
    *
    * @param clazz the class
-   * @param name  the method name
+   * @param name the method name
    * @return the method
    */
   default Optional&lt;Method&gt; findMethod(final Class&lt;?&gt; clazz, final String name) {
-<span class="fc" id="L113">    return Arrays.stream(getPossibleMethodNames(name))</span>
-<span class="fc" id="L114">        .map(methodName -&gt; findMethod(clazz, methodName, new Class[0]))</span>
-<span class="fc" id="L115">        .flatMap(method -&gt; method.map(Stream::of).orElseGet(Stream::empty))</span>
-<span class="fc" id="L116">        .findFirst();</span>
+
+<span class="fc" id="L114">    return Arrays.stream(getPossibleMethodNames(name))</span>
+<span class="fc" id="L115">        .map(methodName -&gt; findMethod(clazz, methodName, new Class[0]).orElse(null))</span>
+<span class="fc" id="L116">        .filter(Objects::nonNull)</span>
+<span class="fc" id="L117">        .findFirst();</span>
   }
 
   /**
    * Find the method with the given name and parameters of the specified class.
    *
-   * @param clazz      the class
-   * @param name       the method name
+   * @param clazz the class
+   * @param name the method name
    * @param paramTypes the parameter types
    * @return the method
    */
-  default Optional&lt;Method&gt; findMethod(final Class&lt;?&gt; clazz, final String name,
+  default Optional&lt;Method&gt; findMethod(
+      final Class&lt;?&gt; clazz,
+      final String name,
       final Class&lt;?&gt;... paramTypes) {
-<span class="fc" id="L129">    Class&lt;?&gt; searchType = clazz;</span>
-<span class="fc bfc" id="L130" title="All 2 branches covered.">    while (searchType != null) {</span>
+
+<span class="fc" id="L133">    Class&lt;?&gt; searchType = clazz;</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">    while (searchType != null) {</span>
       Method[] methods =
-<span class="pc bpc" id="L132" title="1 of 2 branches missed.">          searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods();</span>
-<span class="fc bfc" id="L133" title="All 2 branches covered.">      for (Method method : methods) {</span>
-<span class="pc bpc" id="L134" title="1 of 4 branches missed.">        if (name.equals(method.getName())</span>
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">            &amp;&amp; (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {</span>
-<span class="fc" id="L136">          return Optional.of(method);</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">          searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods();</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">      for (Method method : methods) {</span>
+<span class="pc bpc" id="L138" title="1 of 4 branches missed.">        if (name.equals(method.getName())</span>
+<span class="pc bpc" id="L139" title="1 of 2 branches missed.">            &amp;&amp; (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {</span>
+<span class="fc" id="L140">          return Optional.of(method);</span>
         }
       }
-<span class="fc" id="L139">      searchType = searchType.getSuperclass();</span>
-<span class="fc" id="L140">    }</span>
-<span class="fc" id="L141">    return Optional.empty();</span>
+<span class="fc" id="L143">      searchType = searchType.getSuperclass();</span>
+<span class="fc" id="L144">    }</span>
+<span class="fc" id="L145">    return Optional.empty();</span>
   }
 
   /**
@@ -146,19 +150,19 @@ public interface ValueExtractor {
    * setAccessible(true)} will be called.
    *
    * @param method the method
-   * @param obj    the object
+   * @param obj the object
    * @return the return value of the method
    * @throws ValueExtractorException if a {@link IllegalAccessException} or a {@link
-   *                                 InvocationTargetException} occurs
+   *     InvocationTargetException} occurs
    */
   default Object invoke(final Method method, final Object obj) {
     try {
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">      if (!method.isAccessible()) {</span>
-<span class="fc" id="L157">        method.setAccessible(true);</span>
+<span class="pc bpc" id="L160" title="1 of 2 branches missed.">      if (!method.canAccess(obj)) {</span>
+<span class="fc" id="L161">        method.setAccessible(true);</span>
       }
-<span class="fc" id="L159">      return method.invoke(obj);</span>
-<span class="nc" id="L160">    } catch (IllegalAccessException | InvocationTargetException e) {</span>
-<span class="nc" id="L161">      throw new ValueExtractorException(&quot;Invoking method '&quot; + method.getName() + &quot;' failed.&quot;, e);</span>
+<span class="fc" id="L163">      return method.invoke(obj);</span>
+<span class="nc" id="L164">    } catch (IllegalAccessException | InvocationTargetException e) {</span>
+<span class="nc" id="L165">      throw new ValueExtractorException(&quot;Invoking method '&quot; + method.getName() + &quot;' failed.&quot;, e);</span>
     }
   }
 
@@ -167,18 +171,18 @@ public interface ValueExtractor {
    * setAccessible(true)} will be called.
    *
    * @param field the field
-   * @param obj   the object
+   * @param obj the object
    * @return the value of the field
    * @throws ValueExtractorException if a {@link IllegalAccessException} occurs
    */
   default Object invoke(final Field field, final Object obj) {
-<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    if (!field.isAccessible()) {</span>
-<span class="fc" id="L176">      field.setAccessible(true);</span>
+<span class="pc bpc" id="L179" title="1 of 2 branches missed.">    if (!field.canAccess(obj)) {</span>
+<span class="fc" id="L180">      field.setAccessible(true);</span>
     }
     try {
-<span class="fc" id="L179">      return field.get(obj);</span>
-<span class="nc" id="L180">    } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L181">      throw new ValueExtractorException(&quot;Getting value from add '&quot; + field.getName()</span>
+<span class="fc" id="L183">      return field.get(obj);</span>
+<span class="nc" id="L184">    } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L185">      throw new ValueExtractorException(&quot;Getting value from add '&quot; + field.getName()</span>
           + &quot;' failed&quot;, e);
     }
   }

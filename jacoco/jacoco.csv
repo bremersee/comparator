@@ -8,7 +8,7 @@ Comparator,org.bremersee.comparator,WellKnownTextParser,0,196,3,23,0,31,3,15,0,5
 Comparator,org.bremersee.comparator,ComparatorException,0,9,0,0,0,4,0,2,0,2
 Comparator,org.bremersee.comparator,WellKnownTextConverter,1,28,1,3,0,10,1,4,0,3
 Comparator,org.bremersee.comparator,ComparatorBuilder.DefaultComparatorBuilder,0,63,1,3,0,13,1,6,0,5
-Comparator,org.bremersee.comparator,ValueExtractor,26,192,10,26,5,40,9,18,0,9
+Comparator,org.bremersee.comparator,ValueExtractor,26,190,10,26,5,40,9,17,0,8
 Comparator,org.bremersee.comparator,DelegatingComparator,21,161,15,19,0,14,12,12,0,7
 Comparator,org.bremersee.comparator,DefaultValueExtractor,3,180,2,30,0,34,2,22,0,8
 Comparator,org.bremersee.comparator.model,ComparatorField,0,130,3,13,0,26,3,15,0,10

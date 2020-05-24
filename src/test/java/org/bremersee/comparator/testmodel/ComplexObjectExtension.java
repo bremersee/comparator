@@ -26,13 +26,13 @@ import java.util.Objects;
 public class ComplexObjectExtension extends ComplexObject
     implements Comparable<ComplexObjectExtension> {
 
-  private String value;
+  private final String value;
 
   /**
    * Instantiates a new complex test object extension.
    *
    * @param simple the simple
-   * @param value  the value
+   * @param value the value
    */
   public ComplexObjectExtension(SimpleObject simple, String value) {
     super(simple);

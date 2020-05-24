@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 public class ComplexObject {
 
-  private SimpleObject simple;
+  private final SimpleObject simple;
 
   /**
    * Instantiates a new complex test object.

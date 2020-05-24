@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 public class SimpleObject {
 
-  private int number;
+  private final int number;
 
   /**
    * Instantiates a new simple test object.

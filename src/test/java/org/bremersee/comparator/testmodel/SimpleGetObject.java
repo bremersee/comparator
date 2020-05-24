@@ -25,7 +25,7 @@ import java.util.Objects;
  */
 public class SimpleGetObject {
 
-  private int no;
+  private final int no;
 
   private int anotherNumber;
 

@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 @SuppressWarnings("WeakerAccess")
 public class ComparatorFields {
 
+  @SuppressWarnings("FieldMayBeFinal")
   @Schema(description = "The list of comparator fields.")
   private List<ComparatorField> fields = new ArrayList<>();
 

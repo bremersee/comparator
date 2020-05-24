@@ -31,7 +31,6 @@ import org.bremersee.comparator.testmodel.ComplexObjectExtensionComparator;
 import org.bremersee.comparator.testmodel.SimpleGetObject;
 import org.bremersee.comparator.testmodel.SimpleIsObject;
 import org.bremersee.comparator.testmodel.SimpleObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**

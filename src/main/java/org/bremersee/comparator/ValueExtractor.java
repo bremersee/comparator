@@ -20,8 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * The value extractor finds the value of a given field name or path by reflection.
@@ -33,7 +33,7 @@ public interface ValueExtractor {
   /**
    * Find the value of the given add name or path of the given object.
    *
-   * @param obj   the object
+   * @param obj the object
    * @param field the field name or path
    * @return the object
    * @throws ValueExtractorException if no add nor method is found
@@ -44,7 +44,7 @@ public interface ValueExtractor {
    * Find field with the given name of the specified class.
    *
    * @param clazz the class
-   * @param name  the field name
+   * @param name the field name
    * @return the field
    */
   default Optional<Field> findField(final Class<?> clazz, final String name) {
@@ -55,8 +55,8 @@ public interface ValueExtractor {
    * Find the field with the given name of the specified class.
    *
    * @param clazz the class
-   * @param name  the field name
-   * @param type  the type of the field
+   * @param name the field name
+   * @param type the type of the field
    * @return the field
    */
   default Optional<Field> findField(final Class<?> clazz, final String name,
@@ -106,26 +106,30 @@ public interface ValueExtractor {
    * Find the method with the given name and no parameters of the specified class.
    *
    * @param clazz the class
-   * @param name  the method name
+   * @param name the method name
    * @return the method
    */
   default Optional<Method> findMethod(final Class<?> clazz, final String name) {
+
     return Arrays.stream(getPossibleMethodNames(name))
-        .map(methodName -> findMethod(clazz, methodName, new Class[0]))
-        .flatMap(method -> method.map(Stream::of).orElseGet(Stream::empty))
+        .map(methodName -> findMethod(clazz, methodName, new Class[0]).orElse(null))
+        .filter(Objects::nonNull)
         .findFirst();
   }
 
   /**
    * Find the method with the given name and parameters of the specified class.
    *
-   * @param clazz      the class
-   * @param name       the method name
+   * @param clazz the class
+   * @param name the method name
    * @param paramTypes the parameter types
    * @return the method
    */
-  default Optional<Method> findMethod(final Class<?> clazz, final String name,
+  default Optional<Method> findMethod(
+      final Class<?> clazz,
+      final String name,
       final Class<?>... paramTypes) {
+
     Class<?> searchType = clazz;
     while (searchType != null) {
       Method[] methods =
@@ -146,14 +150,14 @@ public interface ValueExtractor {
    * setAccessible(true)} will be called.
    *
    * @param method the method
-   * @param obj    the object
+   * @param obj the object
    * @return the return value of the method
    * @throws ValueExtractorException if a {@link IllegalAccessException} or a {@link
-   *                                 InvocationTargetException} occurs
+   *     InvocationTargetException} occurs
    */
   default Object invoke(final Method method, final Object obj) {
     try {
-      if (!method.isAccessible()) {
+      if (!method.canAccess(obj)) {
         method.setAccessible(true);
       }
       return method.invoke(obj);
@@ -167,12 +171,12 @@ public interface ValueExtractor {
    * setAccessible(true)} will be called.
    *
    * @param field the field
-   * @param obj   the object
+   * @param obj the object
    * @return the value of the field
    * @throws ValueExtractorException if a {@link IllegalAccessException} occurs
    */
   default Object invoke(final Field field, final Object obj) {
-    if (!field.isAccessible()) {
+    if (!field.canAccess(obj)) {
       field.setAccessible(true);
     }
     try {

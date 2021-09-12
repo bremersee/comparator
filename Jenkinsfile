@@ -4,7 +4,7 @@ pipeline {
   }
   environment {
     CODECOV_TOKEN = credentials('comparator-codecov-token')
-    DEPLOY = false
+    DEPLOY = true
     SNAPSHOT_SITE = true
     RELEASE_SITE = true
     DEPLOY_FEATURE = true

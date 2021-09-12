@@ -13,7 +13,7 @@ java.lang.Comparable.
 
 - [Release](https://bremersee.github.io/comparator/index.html)
 
-- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/2.3.1-SNAPSHOT/index.html)
+- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/2.4.1-SNAPSHOT/index.html)
 
 ### Usage
 

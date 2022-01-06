@@ -37,13 +37,13 @@
 
   <organization>
     <name>bremersee.org</name>
-    <url>http://bremersee.org</url>
+    <url>https://bremersee.org</url>
   </organization>
 
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
     </license>
   </licenses>
 

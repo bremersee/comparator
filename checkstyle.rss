@@ -23,7 +23,7 @@ under the License.
     <link>https://github.com/bremersee/comparator</link>
     <description>Comparator - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2021 bremersee.org</copyright>
+    <copyright>&#169;2022 bremersee.org</copyright>
     <item>
       <title>File: 39,
              Errors: 0,
@@ -242,20 +242,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorFieldTests.java">org/bremersee/comparator/model/ComparatorFieldTests.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.DelegatingComparatorTests.java">org/bremersee/comparator/DelegatingComparatorTests.java</a>
                 </td>
                 <td>
@@ -271,6 +257,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.ComplexObject.java">org/bremersee/comparator/testmodel/ComplexObject.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorFieldTests.java">org/bremersee/comparator/model/ComparatorFieldTests.java</a>
                 </td>
                 <td>
                   0
@@ -354,7 +354,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.ComparatorSpringUtils.java">org/bremersee/comparator/spring/ComparatorSpringUtils.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.package-info.java">org/bremersee/comparator/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -368,7 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.package-info.java">org/bremersee/comparator/package-info.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.ComparatorSpringUtils.java">org/bremersee/comparator/spring/ComparatorSpringUtils.java</a>
                 </td>
                 <td>
                   0
@@ -438,7 +438,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.BufferSchemaOutputResolver.java">org/bremersee/comparator/model/BufferSchemaOutputResolver.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.SimpleIsObject.java">org/bremersee/comparator/testmodel/SimpleIsObject.java</a>
                 </td>
                 <td>
                   0
@@ -452,7 +452,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.SimpleIsObject.java">org/bremersee/comparator/testmodel/SimpleIsObject.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.BufferSchemaOutputResolver.java">org/bremersee/comparator/model/BufferSchemaOutputResolver.java</a>
                 </td>
                 <td>
                   0

@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.bremersee.comparator"},{"l":"org.bremersee.comparator.model"},{"l":"org.bremersee.comparator.spring"},{"l":"org.bremersee.comparator.testmodel"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.bremersee.comparator"},{"l":"org.bremersee.comparator.model"},{"l":"org.bremersee.comparator.spring"},{"l":"org.bremersee.comparator.testbeans.converter"},{"l":"org.bremersee.comparator.testmodel"}]

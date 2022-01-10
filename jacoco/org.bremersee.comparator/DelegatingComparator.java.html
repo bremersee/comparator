@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DelegatingComparator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Comparator</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.comparator</a> &gt; <span class="el_source">DelegatingComparator.java</span></div><h1>DelegatingComparator.java</h1><pre class="source lang-java linenums">/*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings(&quot;WeakerAccess&quot;)
 @ToString
 @EqualsAndHashCode
 public class DelegatingComparator implements Comparator&lt;Object&gt; {
@@ -41,38 +40,38 @@ public class DelegatingComparator implements Comparator&lt;Object&gt; {
   /**
    * Instantiates a new delegating comparator.
    *
-   * @param field      the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param comparator the comparator to compare the value of the field
    */
   public DelegatingComparator(String field, Comparator&lt;?&gt; comparator) {
-<span class="fc" id="L48">    this(field, null, comparator);</span>
-<span class="fc" id="L49">  }</span>
+<span class="nc" id="L47">    this(field, null, comparator);</span>
+<span class="nc" id="L48">  }</span>
 
   /**
    * Instantiates a new delegating comparator.
    *
-   * @param field          the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param valueExtractor a custom value extractor (can be {@code null})
-   * @param comparator     the comparator to compare the value of the field
+   * @param comparator the comparator to compare the value of the field
    */
   public DelegatingComparator(
       String field,
       ValueExtractor valueExtractor,
-<span class="fc" id="L61">      Comparator&lt;?&gt; comparator) {</span>
-<span class="fc bfc" id="L62" title="All 2 branches covered.">    if (comparator == null) {</span>
-<span class="fc" id="L63">      throw new IllegalArgumentException(&quot;Comparator must not be null.&quot;);</span>
+<span class="fc" id="L60">      Comparator&lt;?&gt; comparator) {</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">    if (comparator == null) {</span>
+<span class="fc" id="L62">      throw new IllegalArgumentException(&quot;Comparator must not be null.&quot;);</span>
     }
-<span class="fc" id="L65">    this.field = field;</span>
-<span class="fc" id="L66">    this.comparator = comparator;</span>
-<span class="fc bfc" id="L67" title="All 2 branches covered.">    this.valueExtractor = valueExtractor != null ? valueExtractor : new DefaultValueExtractor();</span>
-<span class="fc" id="L68">  }</span>
+<span class="fc" id="L64">    this.field = field;</span>
+<span class="fc" id="L65">    this.comparator = comparator;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">    this.valueExtractor = valueExtractor != null ? valueExtractor : new DefaultValueExtractor();</span>
+<span class="fc" id="L67">  }</span>
 
   @Override
   public int compare(Object o1, Object o2) {
-<span class="fc" id="L72">    final Object v1 = valueExtractor.findValue(o1, field);</span>
-<span class="fc" id="L73">    final Object v2 = valueExtractor.findValue(o2, field);</span>
+<span class="fc" id="L71">    final Object v1 = valueExtractor.findValue(o1, field);</span>
+<span class="fc" id="L72">    final Object v2 = valueExtractor.findValue(o2, field);</span>
     //noinspection unchecked
-<span class="fc" id="L75">    return comparator.compare(v1, v2);</span>
+<span class="fc" id="L74">    return comparator.compare(v1, v2);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

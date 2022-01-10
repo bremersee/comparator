@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WellKnownTextParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Comparator</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.comparator</a> &gt; <span class="el_source">WellKnownTextParser.java</span></div><h1>WellKnownTextParser.java</h1><pre class="source lang-java linenums">/*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@
 package org.bremersee.comparator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.function.Function;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.WellKnownTextProperties;
 
 /**
  * Parses the string representation of a sort order and creates a comparator.
@@ -38,7 +43,18 @@ import org.bremersee.comparator.model.ComparatorField;
  *
  * @author Christian Bremer
  */
+@Valid
 public interface WellKnownTextParser {
+
+  /**
+   * Gets properties.
+   *
+   * @return the properties
+   */
+  @NotNull
+  default WellKnownTextProperties getProperties() {
+<span class="fc" id="L56">    return WellKnownTextProperties.defaults();</span>
+  }
 
   /**
    * Parses the string representation of a sort order and creates a comparator.
@@ -56,16 +72,17 @@ public interface WellKnownTextParser {
    * @param wkt the string representation of a sort order (as well known text)
    * @return the created comparator
    */
+  @NotNull
   default Comparator&lt;Object&gt; parse(String wkt) {
-<span class="fc" id="L60">    ComparatorBuilder builder = ComparatorBuilder.builder();</span>
-<span class="fc bfc" id="L61" title="All 2 branches covered.">    for (ComparatorField comparatorField : buildComparatorFields(wkt)) {</span>
+<span class="fc" id="L77">    ComparatorBuilder builder = ComparatorBuilder.builder();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    for (ComparatorField comparatorField : buildComparatorFields(wkt)) {</span>
       //noinspection rawtypes
-<span class="fc" id="L63">      Comparator comparator = apply(comparatorField);</span>
-<span class="pc bpc" id="L64" title="1 of 2 branches missed.">      if (comparator != null) {</span>
-<span class="fc" id="L65">        builder.add(comparator);</span>
+<span class="fc" id="L80">      Comparator comparator = apply(comparatorField);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">      if (comparator != null) {</span>
+<span class="fc" id="L82">        builder.add(comparator);</span>
       }
-<span class="fc" id="L67">    }</span>
-<span class="fc" id="L68">    return builder.build();</span>
+<span class="fc" id="L84">    }</span>
+<span class="fc" id="L85">    return builder.build();</span>
   }
 
   /**
@@ -84,12 +101,19 @@ public interface WellKnownTextParser {
    * @param wkt the string representation of a sort order (as well known text)
    * @return the list of comparator fields
    */
+  @NotNull
   default List&lt;ComparatorField&gt; buildComparatorFields(String wkt) {
-<span class="fc" id="L88">    List&lt;ComparatorField&gt; fields = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L89" title="All 2 branches covered.">    for (String fieldDescription : wkt.split(Pattern.quote(&quot;|&quot;))) {</span>
-<span class="fc" id="L90">      fields.add(buildComparatorField(fieldDescription));</span>
-    }
-<span class="fc" id="L92">    return fields;</span>
+<span class="fc" id="L106">    return Optional.ofNullable(wkt)</span>
+<span class="fc" id="L107">        .map(text -&gt; {</span>
+<span class="fc" id="L108">          List&lt;ComparatorField&gt; fields = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L109">          StringTokenizer tokenizer = new StringTokenizer(text,</span>
+<span class="fc" id="L110">              getProperties().getFieldSeparator());</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">          while (tokenizer.hasMoreTokens()) {</span>
+<span class="fc" id="L112">            fields.add(buildComparatorField(tokenizer.nextToken()));</span>
+          }
+<span class="fc" id="L114">          return fields;</span>
+        })
+<span class="fc" id="L116">        .orElseGet(List::of);</span>
   }
 
   /**
@@ -109,19 +133,40 @@ public interface WellKnownTextParser {
    * @param fieldDescription the field description
    * @return the comparator field
    */
+  @NotNull
   default ComparatorField buildComparatorField(String fieldDescription) {
-<span class="fc bfc" id="L113" title="All 4 branches covered.">    if (fieldDescription == null || fieldDescription.trim().length() == 0) {</span>
-<span class="fc" id="L114">      return new ComparatorField(null, true, true, false);</span>
+<span class="fc" id="L138">    WellKnownTextProperties props = getProperties();</span>
+<span class="fc" id="L139">    String field = null;</span>
+<span class="fc" id="L140">    boolean asc = props.isAsc(null);</span>
+<span class="fc" id="L141">    boolean ignoreCase = props.isCaseIgnored(null);</span>
+<span class="fc" id="L142">    boolean nullIsFirst = props.isNullFirst(null);</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">    if (fieldDescription != null) {</span>
+<span class="fc" id="L144">      String separator = props.getFieldArgsSeparator();</span>
+<span class="fc" id="L145">      int index = fieldDescription.indexOf(separator);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">      if (index &lt; 0) {</span>
+<span class="fc" id="L147">        field = fieldDescription.trim();</span>
+      } else {
+<span class="fc" id="L149">        field = fieldDescription.substring(0, index).trim();</span>
+<span class="fc" id="L150">        int from = index + separator.length();</span>
+<span class="fc" id="L151">        index = fieldDescription.indexOf(separator, from);</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        if (index &lt; 0) {</span>
+<span class="fc" id="L153">          asc = props.isAsc(fieldDescription.substring(from).trim());</span>
+        } else {
+<span class="fc" id="L155">          asc = props.isAsc(fieldDescription.substring(from, index).trim());</span>
+<span class="fc" id="L156">          from = index + separator.length();</span>
+<span class="fc" id="L157">          index = fieldDescription.indexOf(separator, from);</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">          if (index &lt; 0) {</span>
+<span class="fc" id="L159">            ignoreCase = props.isCaseIgnored(fieldDescription.substring(from).trim());</span>
+          } else {
+<span class="fc" id="L161">            ignoreCase = props.isCaseIgnored(fieldDescription.substring(from, index).trim());</span>
+<span class="fc" id="L162">            from = index + separator.length();</span>
+<span class="fc" id="L163">            nullIsFirst = props.isNullFirst(fieldDescription.substring(from).trim());</span>
+          }
+        }
+      }
     }
-<span class="fc bfc" id="L116" title="All 2 branches covered.">    if (fieldDescription.contains(&quot;|&quot;)) {</span>
-<span class="fc" id="L117">      throw new IllegalArgumentException(&quot;The field description [&quot; + fieldDescription</span>
-          + &quot;] contains more than one field description. Use 'buildComparatorFields' instead.&quot;);
-    }
-<span class="fc" id="L120">    return new ComparatorField(</span>
-<span class="fc" id="L121">        findStringPart(fieldDescription, &quot;,&quot;, 0),</span>
-<span class="fc" id="L122">        findBooleanPart(fieldDescription, &quot;,&quot;, 1, true, &quot;asc&quot;, &quot;true&quot;, &quot;1&quot;),</span>
-<span class="fc" id="L123">        findBooleanPart(fieldDescription, &quot;,&quot;, 2, true, &quot;ignoreCase&quot;, &quot;true&quot;, &quot;1&quot;),</span>
-<span class="fc" id="L124">        findBooleanPart(fieldDescription, &quot;,&quot;, 3, false, &quot;nullIsFirst&quot;, &quot;true&quot;, &quot;1&quot;));</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">    field = field == null || field.length() == 0 ? null : field;</span>
+<span class="fc" id="L169">    return new ComparatorField(field, asc, ignoreCase, nullIsFirst);</span>
   }
 
   /**
@@ -130,50 +175,63 @@ public interface WellKnownTextParser {
    * @param comparatorField the comparator field
    * @return the comparator
    */
+  @NotNull
   @SuppressWarnings(&quot;rawtypes&quot;)
   Comparator apply(ComparatorField comparatorField);
 
   /**
-   * Finds a string part of the field description.
+   * New instance well known text parser.
    *
-   * @param fieldDescription the field description
-   * @param delimiter        the delimiter
-   * @param index            the index
-   * @return the string
+   * @param comparatorFunction the comparator function
+   * @return the well known text parser
    */
-  static String findStringPart(String fieldDescription, String delimiter, int index) {
-<span class="fc bfc" id="L145" title="All 6 branches covered.">    if (delimiter == null || delimiter.length() == 0 || fieldDescription == null) {</span>
-<span class="fc" id="L146">      return fieldDescription;</span>
-    }
-<span class="fc" id="L148">    String[] parts = fieldDescription.split(Pattern.quote(delimiter));</span>
-<span class="fc bfc" id="L149" title="All 2 branches covered.">    if (parts.length &gt; index) {</span>
-<span class="fc" id="L150">      return parts[index].trim();</span>
-    }
-<span class="fc" id="L152">    return null;</span>
+  @NotNull
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  static WellKnownTextParser newInstance(
+      @NotNull Function&lt;ComparatorField, Comparator&gt; comparatorFunction) {
+<span class="fc" id="L192">    return newInstance(comparatorFunction, null);</span>
   }
 
   /**
-   * Finds a boolean part of the field description.
+   * New instance well known text parser.
    *
-   * @param fieldDescription the field description
-   * @param delimiter        the delimiter
-   * @param index            the index
-   * @param defaultValue     the default value
-   * @param expectedValues   the expected values
-   * @return the boolean
+   * @param comparatorFunction the comparator function
+   * @param properties the properties
+   * @return the well known text parser
    */
-  static boolean findBooleanPart(
-      String fieldDescription,
-      String delimiter,
-      int index,
-      boolean defaultValue,
-      String... expectedValues) {
-<span class="fc" id="L171">    String part = findStringPart(fieldDescription, delimiter, index);</span>
-<span class="pc bpc" id="L172" title="2 of 6 branches missed.">    if (part != null &amp;&amp; part.length() &gt; 0 &amp;&amp; expectedValues != null) {</span>
-<span class="fc" id="L173">      return Arrays.stream(expectedValues)</span>
-<span class="fc" id="L174">          .anyMatch(part::equalsIgnoreCase);</span>
+  @NotNull
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  static WellKnownTextParser newInstance(
+      @NotNull Function&lt;ComparatorField, Comparator&gt; comparatorFunction,
+      WellKnownTextProperties properties) {
+<span class="fc" id="L207">    return new Impl(comparatorFunction, properties);</span>
+  }
+
+  /**
+   * An implementation.
+   */
+  @SuppressWarnings(&quot;rawtypes&quot;)
+  class Impl implements WellKnownTextParser {
+
+    private final Function&lt;ComparatorField, Comparator&gt; comparatorFunction;
+
+    private final WellKnownTextProperties properties;
+
+    private Impl(Function&lt;ComparatorField, Comparator&gt; comparatorFunction,
+<span class="fc" id="L221">        WellKnownTextProperties properties) {</span>
+<span class="fc" id="L222">      this.comparatorFunction = comparatorFunction;</span>
+<span class="fc" id="L223">      this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());</span>
+<span class="fc" id="L224">    }</span>
+
+    @Override
+    public WellKnownTextProperties getProperties() {
+<span class="fc" id="L228">      return properties;</span>
     }
-<span class="fc" id="L176">    return defaultValue;</span>
+
+    @Override
+    public Comparator apply(ComparatorField comparatorField) {
+<span class="nc" id="L233">      return comparatorFunction.apply(comparatorField);</span>
+    }
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package org.bremersee.comparator.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,8 @@ class ObjectFactoryTest {
    */
   @Test
   void createComparatorField() {
-    assertEquals(new ComparatorField(), factory.createComparatorField());
+    assertThat(factory.createComparatorField())
+        .isEqualTo(new ComparatorField());
   }
 
   /**
@@ -42,6 +43,7 @@ class ObjectFactoryTest {
    */
   @Test
   public void createComparatorFields() {
-    assertEquals(new ComparatorFields(), factory.createComparatorFields());
+    assertThat(factory.createComparatorFields())
+        .isEqualTo(new ComparatorFields());
   }
 }

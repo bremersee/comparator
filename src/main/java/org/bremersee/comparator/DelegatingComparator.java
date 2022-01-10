@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("WeakerAccess")
 @ToString
 @EqualsAndHashCode
 public class DelegatingComparator implements Comparator<Object> {
@@ -41,7 +40,7 @@ public class DelegatingComparator implements Comparator<Object> {
   /**
    * Instantiates a new delegating comparator.
    *
-   * @param field      the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param comparator the comparator to compare the value of the field
    */
   public DelegatingComparator(String field, Comparator<?> comparator) {
@@ -51,9 +50,9 @@ public class DelegatingComparator implements Comparator<Object> {
   /**
    * Instantiates a new delegating comparator.
    *
-   * @param field          the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param valueExtractor a custom value extractor (can be {@code null})
-   * @param comparator     the comparator to compare the value of the field
+   * @param comparator the comparator to compare the value of the field
    */
   public DelegatingComparator(
       String field,

@@ -13,7 +13,7 @@ java.lang.Comparable.
 
 - [Release](https://bremersee.github.io/comparator/index.html)
 
-- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/2.4.2-SNAPSHOT/index.html)
+- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/2.5.0-SNAPSHOT/index.html)
 
 ### Usage
 
@@ -100,29 +100,29 @@ The definition of the sorting can also be described by a string. The string of t
 look like this:
 
 ```text
-type|name|createdAt,desc
+type;name;createdAt,desc
 ```
 
 The syntax is:
 
 ```text
-fieldName0,asc,ignoreCase,nullIsFirst|fieldName1,desc,ignoreCase,nullIsFirst
+fieldName0,asc,ignoreCase,nullIsFirst;fieldName1,desc,ignoreCase,nullIsFirst
 ```
 
-The pipe (|) character separtes the fields. The field values are separated by comma (,).
+The semicolon (;) character separates the fields. The field values are separated by comma (,).
 The defaults are asc = true, ignoreCase = true and nullIsFirst = false and can be omitted. That's
 why
 ```text
-type|name|createdAt,desc
+type;name;createdAt,desc
 ```
 is a short form for
 ```text
-type,asc,true,false|name,asc,true,false|createdAt,asc,true,false
+type,asc,true,false;name,asc,true,false;createdAt,asc,true,false
 ```
 
 The field name can also be a path to a value, if you have complex objects:
 ```text
-room.number,asc,true,false|person.lastName,asc,true,false|person.firstName,asc,true,false
+room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
 ```
 
 if your class looks like this for example:
@@ -164,7 +164,7 @@ class Example {
     List<Node> list = new ArrayList<>();
     // add nodes
     list.sort(ComparatorBuilder.builder()
-        .fromWellKnownText("type|name|createdAt,desc", comparatorField -> {
+        .fromWellKnownText("type;name;createdAt,desc", comparatorField -> {
           if ("type".equals(comparatorField.getField())) {
             return  (Comparator) (o1, o2) -> (o1 instanceof Branch && o2 instanceof Branch) 
                 ? 0 

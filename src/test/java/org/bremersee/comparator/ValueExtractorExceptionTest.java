@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 
 package org.bremersee.comparator;
 
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,7 +32,7 @@ public class ValueExtractorExceptionTest {
    */
   @Test
   void testWithOneArgument() {
-    Assertions.assertThrows(ValueExtractorException.class, () -> {
+    assertThatExceptionOfType(ValueExtractorException.class).isThrownBy(() -> {
       throw new ValueExtractorException("Test exception");
     });
   }
@@ -41,7 +42,7 @@ public class ValueExtractorExceptionTest {
    */
   @Test
   void testWithTwoArguments() {
-    Assertions.assertThrows(ValueExtractorException.class, () -> {
+    assertThatExceptionOfType(ValueExtractorException.class).isThrownBy(() -> {
       throw new ValueExtractorException("Test exception", new Exception("Cause"));
     });
   }

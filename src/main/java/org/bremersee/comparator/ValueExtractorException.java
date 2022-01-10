@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ package org.bremersee.comparator;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("WeakerAccess")
 public class ValueExtractorException extends ComparatorException {
 
   /**
@@ -37,7 +36,7 @@ public class ValueExtractorException extends ComparatorException {
    * Instantiates a new value extractor exception.
    *
    * @param message the message
-   * @param cause   the cause
+   * @param cause the cause
    */
   public ValueExtractorException(String message, Throwable cause) {
     super(message, cause);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,16 @@
 package org.bremersee.comparator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.function.Function;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.WellKnownTextProperties;
 
 /**
  * Parses the string representation of a sort order and creates a comparator.
@@ -38,7 +43,18 @@ import org.bremersee.comparator.model.ComparatorField;
  *
  * @author Christian Bremer
  */
+@Valid
 public interface WellKnownTextParser {
+
+  /**
+   * Gets properties.
+   *
+   * @return the properties
+   */
+  @NotNull
+  default WellKnownTextProperties getProperties() {
+    return WellKnownTextProperties.defaults();
+  }
 
   /**
    * Parses the string representation of a sort order and creates a comparator.
@@ -56,6 +72,7 @@ public interface WellKnownTextParser {
    * @param wkt the string representation of a sort order (as well known text)
    * @return the created comparator
    */
+  @NotNull
   default Comparator<Object> parse(String wkt) {
     ComparatorBuilder builder = ComparatorBuilder.builder();
     for (ComparatorField comparatorField : buildComparatorFields(wkt)) {
@@ -84,12 +101,19 @@ public interface WellKnownTextParser {
    * @param wkt the string representation of a sort order (as well known text)
    * @return the list of comparator fields
    */
+  @NotNull
   default List<ComparatorField> buildComparatorFields(String wkt) {
-    List<ComparatorField> fields = new ArrayList<>();
-    for (String fieldDescription : wkt.split(Pattern.quote("|"))) {
-      fields.add(buildComparatorField(fieldDescription));
-    }
-    return fields;
+    return Optional.ofNullable(wkt)
+        .map(text -> {
+          List<ComparatorField> fields = new ArrayList<>();
+          StringTokenizer tokenizer = new StringTokenizer(text,
+              getProperties().getFieldSeparator());
+          while (tokenizer.hasMoreTokens()) {
+            fields.add(buildComparatorField(tokenizer.nextToken()));
+          }
+          return fields;
+        })
+        .orElseGet(List::of);
   }
 
   /**
@@ -109,19 +133,40 @@ public interface WellKnownTextParser {
    * @param fieldDescription the field description
    * @return the comparator field
    */
+  @NotNull
   default ComparatorField buildComparatorField(String fieldDescription) {
-    if (fieldDescription == null || fieldDescription.trim().length() == 0) {
-      return new ComparatorField(null, true, true, false);
+    WellKnownTextProperties props = getProperties();
+    String field = null;
+    boolean asc = props.isAsc(null);
+    boolean ignoreCase = props.isCaseIgnored(null);
+    boolean nullIsFirst = props.isNullFirst(null);
+    if (fieldDescription != null) {
+      String separator = props.getFieldArgsSeparator();
+      int index = fieldDescription.indexOf(separator);
+      if (index < 0) {
+        field = fieldDescription.trim();
+      } else {
+        field = fieldDescription.substring(0, index).trim();
+        int from = index + separator.length();
+        index = fieldDescription.indexOf(separator, from);
+        if (index < 0) {
+          asc = props.isAsc(fieldDescription.substring(from).trim());
+        } else {
+          asc = props.isAsc(fieldDescription.substring(from, index).trim());
+          from = index + separator.length();
+          index = fieldDescription.indexOf(separator, from);
+          if (index < 0) {
+            ignoreCase = props.isCaseIgnored(fieldDescription.substring(from).trim());
+          } else {
+            ignoreCase = props.isCaseIgnored(fieldDescription.substring(from, index).trim());
+            from = index + separator.length();
+            nullIsFirst = props.isNullFirst(fieldDescription.substring(from).trim());
+          }
+        }
+      }
     }
-    if (fieldDescription.contains("|")) {
-      throw new IllegalArgumentException("The field description [" + fieldDescription
-          + "] contains more than one field description. Use 'buildComparatorFields' instead.");
-    }
-    return new ComparatorField(
-        findStringPart(fieldDescription, ",", 0),
-        findBooleanPart(fieldDescription, ",", 1, true, "asc", "true", "1"),
-        findBooleanPart(fieldDescription, ",", 2, true, "ignoreCase", "true", "1"),
-        findBooleanPart(fieldDescription, ",", 3, false, "nullIsFirst", "true", "1"));
+    field = field == null || field.length() == 0 ? null : field;
+    return new ComparatorField(field, asc, ignoreCase, nullIsFirst);
   }
 
   /**
@@ -130,50 +175,63 @@ public interface WellKnownTextParser {
    * @param comparatorField the comparator field
    * @return the comparator
    */
+  @NotNull
   @SuppressWarnings("rawtypes")
   Comparator apply(ComparatorField comparatorField);
 
   /**
-   * Finds a string part of the field description.
+   * New instance well known text parser.
    *
-   * @param fieldDescription the field description
-   * @param delimiter        the delimiter
-   * @param index            the index
-   * @return the string
+   * @param comparatorFunction the comparator function
+   * @return the well known text parser
    */
-  static String findStringPart(String fieldDescription, String delimiter, int index) {
-    if (delimiter == null || delimiter.length() == 0 || fieldDescription == null) {
-      return fieldDescription;
-    }
-    String[] parts = fieldDescription.split(Pattern.quote(delimiter));
-    if (parts.length > index) {
-      return parts[index].trim();
-    }
-    return null;
+  @NotNull
+  @SuppressWarnings("rawtypes")
+  static WellKnownTextParser newInstance(
+      @NotNull Function<ComparatorField, Comparator> comparatorFunction) {
+    return newInstance(comparatorFunction, null);
   }
 
   /**
-   * Finds a boolean part of the field description.
+   * New instance well known text parser.
    *
-   * @param fieldDescription the field description
-   * @param delimiter        the delimiter
-   * @param index            the index
-   * @param defaultValue     the default value
-   * @param expectedValues   the expected values
-   * @return the boolean
+   * @param comparatorFunction the comparator function
+   * @param properties the properties
+   * @return the well known text parser
    */
-  static boolean findBooleanPart(
-      String fieldDescription,
-      String delimiter,
-      int index,
-      boolean defaultValue,
-      String... expectedValues) {
-    String part = findStringPart(fieldDescription, delimiter, index);
-    if (part != null && part.length() > 0 && expectedValues != null) {
-      return Arrays.stream(expectedValues)
-          .anyMatch(part::equalsIgnoreCase);
+  @NotNull
+  @SuppressWarnings("rawtypes")
+  static WellKnownTextParser newInstance(
+      @NotNull Function<ComparatorField, Comparator> comparatorFunction,
+      WellKnownTextProperties properties) {
+    return new Impl(comparatorFunction, properties);
+  }
+
+  /**
+   * An implementation.
+   */
+  @SuppressWarnings("rawtypes")
+  class Impl implements WellKnownTextParser {
+
+    private final Function<ComparatorField, Comparator> comparatorFunction;
+
+    private final WellKnownTextProperties properties;
+
+    private Impl(Function<ComparatorField, Comparator> comparatorFunction,
+        WellKnownTextProperties properties) {
+      this.comparatorFunction = comparatorFunction;
+      this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
     }
-    return defaultValue;
+
+    @Override
+    public WellKnownTextProperties getProperties() {
+      return properties;
+    }
+
+    @Override
+    public Comparator apply(ComparatorField comparatorField) {
+      return comparatorFunction.apply(comparatorField);
+    }
   }
 
 }

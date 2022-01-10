@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,20 @@
 
 package org.bremersee.comparator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.testmodel.SimpleObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The value extractor test.
  *
  * @author Christian Bremer
  */
+@ExtendWith(SoftAssertionsExtension.class)
 public class ValueExtractorTest {
 
   private static final ValueExtractor extractor = (obj, field) -> "TestValue";
@@ -36,19 +39,26 @@ public class ValueExtractorTest {
    */
   @Test
   void findFieldWithClassAndName() {
-    assertTrue(extractor.findField(SimpleObject.class, "number").isPresent());
+    assertThat(extractor.findField(SimpleObject.class, "number"))
+        .isPresent();
   }
 
   /**
    * Gets possible method names.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void getPossibleMethodNames() {
-    assertEquals(0, extractor.getPossibleMethodNames(null).length);
-    assertEquals(0, extractor.getPossibleMethodNames("").length);
+  void getPossibleMethodNames(SoftAssertions softly) {
+    softly.assertThat(extractor.getPossibleMethodNames(null))
+        .isEmpty();
+    softly.assertThat(extractor.getPossibleMethodNames(""))
+        .isEmpty();
 
-    assertEquals(3, extractor.getPossibleMethodNames("a").length);
-    assertEquals(3, extractor.getPossibleMethodNames("abc").length);
+    softly.assertThat(extractor.getPossibleMethodNames("a"))
+        .containsExactlyInAnyOrder("a", "getA", "isA");
+    softly.assertThat(extractor.getPossibleMethodNames("abc"))
+        .containsExactlyInAnyOrder("abc", "getAbc", "isAbc");
   }
 
 }

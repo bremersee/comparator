@@ -116,7 +116,8 @@ public class ComparatorFields {
    */
   @NotEmpty
   public String toWkt(WellKnownTextProperties properties) {
-    WellKnownTextProperties props = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
+    WellKnownTextProperties props = Objects.requireNonNullElse(properties,
+        WellKnownTextProperties.defaults());
     return fields.stream()
         .map(comparatorField -> comparatorField.toWkt(props))
         .collect(Collectors.joining(props.getFieldSeparator()));

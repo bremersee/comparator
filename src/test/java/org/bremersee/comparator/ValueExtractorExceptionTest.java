@@ -16,7 +16,8 @@
 
 package org.bremersee.comparator;
 
-import org.junit.jupiter.api.Assertions;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,7 +32,7 @@ public class ValueExtractorExceptionTest {
    */
   @Test
   void testWithOneArgument() {
-    Assertions.assertThrows(ValueExtractorException.class, () -> {
+    assertThatExceptionOfType(ValueExtractorException.class).isThrownBy(() -> {
       throw new ValueExtractorException("Test exception");
     });
   }
@@ -41,7 +42,7 @@ public class ValueExtractorExceptionTest {
    */
   @Test
   void testWithTwoArguments() {
-    Assertions.assertThrows(ValueExtractorException.class, () -> {
+    assertThatExceptionOfType(ValueExtractorException.class).isThrownBy(() -> {
       throw new ValueExtractorException("Test exception", new Exception("Cause"));
     });
   }

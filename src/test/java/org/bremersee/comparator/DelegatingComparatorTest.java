@@ -16,9 +16,8 @@
 
 package org.bremersee.comparator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -27,21 +26,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Comparator;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The delegating comparator tests.
  *
  * @author Christian Bremer
  */
-class DelegatingComparatorTests {
+@ExtendWith(SoftAssertionsExtension.class)
+class DelegatingComparatorTest {
 
   /**
    * Test delegating comparator.
    */
   @Test
-  @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "rawtypes"})
+  @SuppressWarnings({"rawtypes", "unchecked"})
   void testDelegatingComparator() {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(any(), anyString())).thenReturn(1);
@@ -56,7 +57,8 @@ class DelegatingComparatorTests {
 
     int result = delegatingComparator.compare(1, 2);
 
-    assertEquals(-1, result);
+    assertThat(result)
+        .isLessThan(0);
     verify(comparator, times(1)).compare(any(), any());
     verify(valueExtractor, times(2)).findValue(any(), anyString());
   }
@@ -66,47 +68,10 @@ class DelegatingComparatorTests {
    */
   @Test
   void testDelegatingComparatorAndExpectIllegalArgumentException() {
-    Assertions.assertThrows(IllegalArgumentException.class, () -> {
-      DelegatingComparator delegatingComparator = new DelegatingComparator(
-          "someField",
-          null);
-      int result = delegatingComparator.compare(1, 2);
-      assertEquals(-1, result);
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+      //noinspection ConstantConditions,ResultOfMethodCallIgnored
+      new DelegatingComparator("someField", null).compare(1, 2);
     });
-  }
-
-  /**
-   * Test to string.
-   */
-  @Test
-  void testToString() {
-    assertTrue(new DelegatingComparator("number", null, Comparator.naturalOrder())
-        .toString().contains("number"));
-  }
-
-  /**
-   * Test equals and hash code.
-   */
-  @SuppressWarnings({"EqualsWithItself", "SimplifiableJUnitAssertion",
-      "EqualsBetweenInconvertibleTypes", "ConstantConditions"})
-  @Test
-  void testEqualsAndHashCode() {
-    ValueExtractor extractor = new DefaultValueExtractor();
-    Comparator<?> comparator = Comparator.naturalOrder();
-    DelegatingComparator delegate = new DelegatingComparator("number", extractor, comparator);
-    assertTrue(delegate.equals(delegate));
-    assertTrue(delegate.equals(new DelegatingComparator("number", extractor, comparator)));
-    assertFalse(delegate.equals(new DelegatingComparator("ch", extractor, comparator)));
-    assertFalse(delegate.equals("test"));
-    assertFalse(delegate.equals(null));
-
-    assertEquals(
-        new DelegatingComparator("field", comparator),
-        new DelegatingComparator("field", comparator));
-
-    assertEquals(
-        delegate.hashCode(),
-        new DelegatingComparator("number", extractor, comparator).hashCode());
   }
 
 }

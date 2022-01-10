@@ -35,7 +35,7 @@ import org.springframework.data.domain.Sort.NullHandling;
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorSpringUtilsTests {
+class ComparatorSpringUtilsTest {
 
   /**
    * Test to sort.

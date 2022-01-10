@@ -17,12 +17,14 @@
 package org.bremersee.comparator.testmodel;
 
 import java.util.Objects;
+import lombok.ToString;
 
 /**
  * The simple test object of a boolean.
  *
  * @author Christian Bremer
  */
+@ToString
 public class SimpleIsObject {
 
   private final boolean value;

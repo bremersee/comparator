@@ -36,7 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorFieldTests {
+class ComparatorFieldTest {
 
   private static JAXBContext jaxbContext;
 
@@ -57,9 +57,6 @@ class ComparatorFieldTests {
    */
   @Test
   void testXmlComparatorField() throws Exception {
-
-    System.out.println("Testing XML write-read operations ...");
-
     ComparatorField field = new ComparatorField("i0", true, false, true);
 
     Marshaller marshaller = jaxbContext.createMarshaller();
@@ -71,16 +68,12 @@ class ComparatorFieldTests {
 
     String xmlStr = sw.toString();
 
-    System.out.println(xmlStr);
-
     ComparatorField readField = (ComparatorField) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));
 
-    System.out.println(field);
-
-    assertThat(readField).isEqualTo(field);
-
-    System.out.println("OK\n");
+    assertThat(readField)
+        .as("Write and read xml of %s", field)
+        .isEqualTo(field);
   }
 
   /**
@@ -90,30 +83,23 @@ class ComparatorFieldTests {
    */
   @Test
   void testJsonComparatorItem() throws Exception {
-
-    System.out.println("Testing JSON write-read operations ...");
-
     ComparatorField field = new ComparatorField("i0", true, false, true);
 
     ObjectMapper om = new ObjectMapper();
 
     String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(field);
 
-    System.out.println(jsonStr);
-
     ComparatorField readField = om.readValue(jsonStr, ComparatorField.class);
 
-    System.out.println(field);
-
-    assertThat(readField).isEqualTo(field);
-
-    System.out.println("OK\n");
+    assertThat(readField)
+        .as("Write and read json of %s", field)
+        .isEqualTo(field);
   }
 
   /**
    * Test equals and hash code.
    *
-   * @param softly the softly
+   * @param softly the soft assertions
    */
   @SuppressWarnings({"UnnecessaryLocalVariable"})
   @Test
@@ -139,19 +125,21 @@ class ComparatorFieldTests {
   /**
    * Test to wkt.
    *
-   * @param softly the softly
+   * @param softly the soft assertions
    */
   @Test
   void testToWkt(SoftAssertions softly) {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
     ComparatorField field1 = new ComparatorField(null, false, true, false);
     softly.assertThat(field0.toWkt())
+        .as("Create wkt of %s", field0)
         .isEqualTo("i0,asc,false,true");
     softly.assertThat(field1.toWkt(WellKnownTextProperties.builder()
             .fieldArgsSeparator("-")
             .ascValue("true")
             .descValue("false")
             .build()))
+        .as("Create wkt with custom properties of %s", field0)
         .isEqualTo("-false-true-false");
   }
 

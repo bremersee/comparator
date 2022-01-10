@@ -36,7 +36,6 @@ public class ComparatorChain implements Comparator<Object> {
    *
    * @param comparators the comparators (can be {@code null} or empty)
    */
-  @SuppressWarnings("WeakerAccess")
   public ComparatorChain(List<Comparator> comparators) {
     this.comparators = comparators != null ? comparators : new LinkedList<>();
   }

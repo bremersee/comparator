@@ -48,16 +48,19 @@ class ComparatorFieldConverterTest {
 
   /**
    * Convert with properties.
+   *
+   * @param softly the soft assertions
    */
   @Test
   void convertWithProperties(SoftAssertions softly) {
-    ComparatorFieldConverter converter = new ComparatorFieldConverter(WellKnownTextProperties.builder()
-        .fieldArgsSeparator("::")
-        .caseSensitiveValue("cs")
-        .caseInsensitiveValue("cis")
-        .nullIsFirstValue("nif")
-        .nullIsLastValue("nil")
-        .build());
+    ComparatorFieldConverter converter = new ComparatorFieldConverter(
+        WellKnownTextProperties.builder()
+            .fieldArgsSeparator("::")
+            .caseSensitiveValue("cs")
+            .caseInsensitiveValue("cis")
+            .nullIsFirstValue("nif")
+            .nullIsLastValue("nil")
+            .build());
 
     ComparatorField actual = converter.convert("::asc::cis::nif");
     ComparatorField expected = new ComparatorField(null, true, true, true);

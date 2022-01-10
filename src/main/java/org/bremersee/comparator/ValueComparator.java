@@ -59,7 +59,7 @@ public class ValueComparator implements Comparator<Object> {
    * Instantiates a new value comparator.
    *
    * @param comparatorField the comparator field (cannot be {@code null})
-   * @param valueExtractor  the value extractor (if it is {@code null}, a default will be used)
+   * @param valueExtractor the value extractor (if it is {@code null}, a default will be used)
    */
   public ValueComparator(ComparatorField comparatorField, ValueExtractor valueExtractor) {
     this(comparatorField.getField(),
@@ -72,9 +72,9 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param field       the field name or path
-   * @param asc         ascending or descending
-   * @param ignoreCase  case insensitive or sensitive
+   * @param field the field name or path
+   * @param asc ascending or descending
+   * @param ignoreCase case insensitive or sensitive
    * @param nullIsFirst null is first
    */
   public ValueComparator(
@@ -88,11 +88,12 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param field          the field name or path
-   * @param asc            ascending or descending
-   * @param ignoreCase     case insensitive or sensitive
-   * @param nullIsFirst    null is first
-   * @param valueExtractor a custom value extractor (if it is {@code null}, a default will be used)
+   * @param field the field name or path
+   * @param asc ascending or descending
+   * @param ignoreCase case insensitive or sensitive
+   * @param nullIsFirst null is first
+   * @param valueExtractor a custom value extractor (if it is {@code null}, a default will be
+   *     used)
    */
   public ValueComparator(
       String field,

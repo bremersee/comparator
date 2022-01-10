@@ -21,7 +21,6 @@ package org.bremersee.comparator;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("WeakerAccess")
 public class ComparatorException extends RuntimeException {
 
   /**
@@ -37,7 +36,7 @@ public class ComparatorException extends RuntimeException {
    * Instantiates a new comparator exception.
    *
    * @param message the message
-   * @param cause   the cause
+   * @param cause the cause
    */
   public ComparatorException(String message, Throwable cause) {
     super(message, cause);

@@ -17,9 +17,9 @@
 package org.bremersee.comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 import java.util.List;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.bremersee.comparator.model.ComparatorField;
 import org.bremersee.comparator.model.ComparatorFields;
 import org.bremersee.comparator.model.WellKnownTextProperties;
@@ -56,7 +56,7 @@ class ComparatorFieldsConverterTest {
     List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(ComparatorFields::getFields, InstanceOfAssertFactories.list(ComparatorField.class))
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -65,14 +65,15 @@ class ComparatorFieldsConverterTest {
    */
   @Test
   void convertWithProperties() {
-    ComparatorFieldsConverter converter = new ComparatorFieldsConverter(WellKnownTextProperties.builder()
-        .fieldArgsSeparator("-:-")
-        .fieldSeparator("&&")
-        .caseSensitiveValue("cs")
-        .caseInsensitiveValue("cis")
-        .nullIsFirstValue("nif")
-        .nullIsLastValue("nil")
-        .build());
+    ComparatorFieldsConverter converter = new ComparatorFieldsConverter(
+        WellKnownTextProperties.builder()
+            .fieldArgsSeparator("-:-")
+            .fieldSeparator("&&")
+            .caseSensitiveValue("cs")
+            .caseInsensitiveValue("cis")
+            .nullIsFirstValue("nif")
+            .nullIsLastValue("nil")
+            .build());
 
     ComparatorFields actual = converter.convert(
         "-:-asc-:-cis-:-nif"
@@ -92,7 +93,7 @@ class ComparatorFieldsConverterTest {
     List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(ComparatorFields::getFields, InstanceOfAssertFactories.list(ComparatorField.class))
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -106,7 +107,7 @@ class ComparatorFieldsConverterTest {
     ComparatorFields fields = converter.convert(null);
     assertThat(fields)
         .isNotNull()
-        .extracting(ComparatorFields::getFields, InstanceOfAssertFactories.list(ComparatorField.class))
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
         .isEmpty();
   }
 

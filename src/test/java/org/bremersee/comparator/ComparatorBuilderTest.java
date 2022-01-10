@@ -17,13 +17,14 @@
 package org.bremersee.comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.ComparatorField;
 import org.bremersee.comparator.model.ComparatorFields;
 import org.bremersee.comparator.testmodel.ComplexObject;
@@ -33,13 +34,15 @@ import org.bremersee.comparator.testmodel.SimpleGetObject;
 import org.bremersee.comparator.testmodel.SimpleIsObject;
 import org.bremersee.comparator.testmodel.SimpleObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The comparator builder tests.
  *
  * @author Christian Bremer
  */
-class ComparatorBuilderTests {
+@ExtendWith(SoftAssertionsExtension.class)
+class ComparatorBuilderTest {
 
   /**
    * Test primitive type.
@@ -88,46 +91,48 @@ class ComparatorBuilderTests {
 
   /**
    * Test simple get object with comparator fields.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void testSimpleGetObjectWithComparatorFields() {
-    System.out.println("Testing simple 'get' object with list of comparator fields...");
+  void testSimpleGetObjectWithComparatorFields(SoftAssertions softly) {
     List<ComparatorField> fields = List.of(
         new ComparatorField("number", true, false, false),
         new ComparatorField("anotherNumber", true, false, false));
+    SimpleGetObject one = new SimpleGetObject(1, 1);
+    SimpleGetObject two = new SimpleGetObject(1, 3);
     int result = ComparatorBuilder.builder()
         .addAll(fields)
         .build()
-        .compare(new SimpleGetObject(1, 1),
-            new SimpleGetObject(1, 2));
-    System.out.println(result);
-    assertTrue(result < 0);
+        .compare(one, two);
+    softly.assertThat(result)
+        .as("Compare %s with %s", one, two)
+        .isLessThan(0);
 
     result = ComparatorBuilder.builder()
         .addAll(fields, new DefaultValueExtractor())
         .build()
-        .compare(new SimpleGetObject(1, 1),
-            new SimpleGetObject(1, 2));
-    System.out.println(result);
-    assertTrue(result < 0);
+        .compare(two, one);
+    softly.assertThat(result)
+        .as("Compare with given value extractor %s with %s", two, one)
+        .isGreaterThan(0);
+
+    ComparatorFields comparatorFields = new ComparatorFields(fields);
+    result = ComparatorBuilder.builder()
+        .addAll(comparatorFields)
+        .build()
+        .compare(one, two);
+    softly.assertThat(result)
+        .as("Compare %s with %s using %s", one, two, comparatorFields)
+        .isLessThan(0);
 
     result = ComparatorBuilder.builder()
-        .addAll(new ComparatorFields(fields))
+        .addAll(comparatorFields, new DefaultValueExtractor())
         .build()
-        .compare(new SimpleGetObject(1, 1),
-            new SimpleGetObject(1, 2));
-    System.out.println(result);
-    assertTrue(result < 0);
-
-    result = ComparatorBuilder.builder()
-        .addAll(new ComparatorFields(fields), new DefaultValueExtractor())
-        .build()
-        .compare(new SimpleGetObject(1, 1),
-            new SimpleGetObject(1, 2));
-    System.out.println(result);
-    assertTrue(result < 0);
-
-    System.out.println("OK\n");
+        .compare(two, one);
+    softly.assertThat(result)
+        .as("Compare with given value extractor %s with %s using %s", two, one, comparatorFields)
+        .isGreaterThan(0);
   }
 
   /**
@@ -135,15 +140,15 @@ class ComparatorBuilderTests {
    */
   @Test
   void testSimpleIsObject() {
-    System.out.println("Testing simple 'is' object ...");
+    SimpleIsObject one = new SimpleIsObject(true);
+    SimpleIsObject two = new SimpleIsObject(false);
     int result = ComparatorBuilder.builder()
         .add("nice", false, true, false)
         .build()
-        .compare(new SimpleIsObject(true),
-            new SimpleIsObject(false));
-    System.out.println(result);
-    assertTrue(result < 0);
-    System.out.println("OK\n");
+        .compare(one, two);
+    assertThat(result)
+        .as("Compare %s with %s", one, two)
+        .isLessThan(0);
   }
 
   /**
@@ -151,34 +156,33 @@ class ComparatorBuilderTests {
    */
   @Test
   void testComplexObject() {
-    System.out.println("Testing complex object ...");
+    ComplexObject one = new ComplexObject(new SimpleObject(1));
+    ComplexObject two = new ComplexObject(new SimpleObject(2));
     int result = ComparatorBuilder.builder()
         .add("simple.number", true, true, false)
         .build()
-        .compare(
-            new ComplexObject(new SimpleObject(1)),
-            new ComplexObject(new SimpleObject(2)));
-    System.out.println(result);
-    assertTrue(result < 0);
-    System.out.println("OK\n");
+        .compare(one, two);
+    assertThat(result)
+        .as("Compare %s with %s", one, two)
+        .isLessThan(0);
   }
 
   /**
    * Test comparing of complex objects.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void testComparingOfComplexObjects() {
+  void testComparingOfComplexObjects(SoftAssertions softly) {
     ComplexObject a = new ComplexObjectExtension(new SimpleObject(1), "same");
     ComplexObject b = new ComplexObjectExtension(new SimpleObject(2), "same");
     List<ComplexObject> list = new ArrayList<>(List.of(b, a));
-    assertEquals(b, list.get(0));
-    assertEquals(a, list.get(1));
     list.sort(ComparatorBuilder.builder()
         .add(new ComparatorField("value", true, true, false))
         .fromWellKnownText(new ComparatorField("simple.number", true, true, false).toWkt())
         .build());
-    assertEquals(a, list.get(0));
-    assertEquals(b, list.get(1));
+    softly.assertThat(list)
+        .containsExactly(a, b);
 
     ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "first");
     list = new ArrayList<>(List.of(b, a, c));
@@ -190,10 +194,10 @@ class ComparatorBuilderTests {
           return new ValueComparator(comparatorField);
         })
         .build());
-    assertEquals(c, list.get(0));
-    assertEquals(a, list.get(1));
-    assertEquals(b, list.get(2));
+    softly.assertThat(list)
+        .containsExactly(c, a, b);
 
+    Collections.shuffle(list);
     list.sort(ComparatorBuilder.builder()
         .fromWellKnownText("not_exists;simple.number", comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
@@ -202,9 +206,8 @@ class ComparatorBuilderTests {
           return new ValueComparator(comparatorField, new DefaultValueExtractor());
         })
         .build());
-    assertEquals(c, list.get(0));
-    assertEquals(a, list.get(1));
-    assertEquals(b, list.get(2));
+    softly.assertThat(list)
+        .containsExactly(c, a, b);
   }
 
   /**
@@ -216,7 +219,8 @@ class ComparatorBuilderTests {
     SimpleObject b = new SimpleObject(1);
     List<SimpleObject> list = new ArrayList<>(List.of(b, a));
     list.sort(ComparatorBuilder.builder().fromWellKnownText("number").build());
-    assertEquals(list.get(0), list.get(1));
+    assertThat(list)
+        .containsExactly(b, a);
   }
 
   /**
@@ -226,8 +230,8 @@ class ComparatorBuilderTests {
   void testStrings() {
     List<String> list = new ArrayList<>(List.of("b", "a"));
     list.sort(ComparatorBuilder.builder().add(null, Comparator.naturalOrder()).build());
-    assertEquals("a", list.get(0));
-    assertEquals("b", list.get(1));
+    assertThat(list)
+        .containsExactly("a", "b");
   }
 
   /**
@@ -235,12 +239,11 @@ class ComparatorBuilderTests {
    */
   @Test
   void testObjectsAndExpectIllegalArgumentException() {
-    assertThrows(IllegalArgumentException.class, () -> {
+    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
       SimpleObject a = new SimpleObject(1);
       SimpleObject b = new SimpleObject(1);
       List<SimpleObject> list = new ArrayList<>(List.of(b, a));
       list.sort(ComparatorBuilder.builder().add(null, new DefaultValueExtractor()).build());
-      assertEquals(list.get(0), list.get(1));
     });
   }
 

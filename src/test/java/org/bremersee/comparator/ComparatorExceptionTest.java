@@ -16,7 +16,7 @@
 
 package org.bremersee.comparator;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ public class ComparatorExceptionTest {
    */
   @Test
   void testWithOneArgument() {
-    assertThrows(ComparatorException.class, () -> {
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
       throw new ComparatorException("Test exception");
     });
   }
@@ -42,7 +42,7 @@ public class ComparatorExceptionTest {
    */
   @Test
   void testWithTwoArguments() {
-    assertThrows(ComparatorException.class, () -> {
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
       throw new ComparatorException("Test exception", new Exception("Cause"));
     });
   }

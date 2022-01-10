@@ -21,7 +21,6 @@ package org.bremersee.comparator;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("WeakerAccess")
 public class ValueExtractorException extends ComparatorException {
 
   /**
@@ -37,7 +36,7 @@ public class ValueExtractorException extends ComparatorException {
    * Instantiates a new value extractor exception.
    *
    * @param message the message
-   * @param cause   the cause
+   * @param cause the cause
    */
   public ValueExtractorException(String message, Throwable cause) {
     super(message, cause);

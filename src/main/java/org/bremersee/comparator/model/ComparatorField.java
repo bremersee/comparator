@@ -121,7 +121,8 @@ public class ComparatorField {
    *
    * @param field the field name or path (can be {@code null})
    * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case     sensitive order
+   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
+   *     sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
    */
   @JsonCreator
@@ -210,7 +211,8 @@ public class ComparatorField {
    */
   @NotEmpty
   public String toWkt(WellKnownTextProperties properties) {
-    WellKnownTextProperties props = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
+    WellKnownTextProperties props = Objects.requireNonNullElse(properties,
+        WellKnownTextProperties.defaults());
     return (field != null ? field : "") + props.getFieldArgsSeparator()
         + props.getDirectionValue(asc) + props.getFieldArgsSeparator()
         + props.getIgnoreCaseValue(ignoreCase) + props.getFieldArgsSeparator()

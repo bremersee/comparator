@@ -16,9 +16,8 @@
 
 package org.bremersee.comparator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,7 +26,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -35,30 +33,19 @@ import org.junit.jupiter.api.Test;
  *
  * @author Christian Bremer
  */
-class ValueComparatorTests {
+class ValueComparatorTest {
 
   /**
    * Test with non comparable values and expect comparator exception.
    */
   @Test
   void testWithNonComparableValuesAndExpectComparatorException() {
-    Assertions.assertThrows(ComparatorException.class, () -> {
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
       ValueExtractor valueExtractor = mock(ValueExtractor.class);
       when(valueExtractor.findValue(any(), anyString())).thenReturn(new Object());
-
-      int result = new ValueComparator("someField", true, true, false, valueExtractor)
+      //noinspection EqualsWithItself,ResultOfMethodCallIgnored
+      new ValueComparator("someField", true, true, false, valueExtractor)
           .compare(new Object(), new Object());
-
-      assertEquals(0, result);
-      verify(valueExtractor, times(2)).findValue(any(), anyString());
-
-      result = new ValueComparator("someField", true, true, false)
-          .compare(new Object(), new Object());
-      assertEquals(0, result);
-
-      result = new ValueComparator("someField", true, true, true)
-          .compare(new Object(), new Object());
-      assertEquals(0, result);
     });
   }
 
@@ -70,10 +57,12 @@ class ValueComparatorTests {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(any(), anyString())).thenReturn(null);
 
+    //noinspection EqualsWithItself
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare(new Object(), new Object());
 
-    assertEquals(0, result);
+    assertThat(result)
+        .isEqualTo(0);
     verify(valueExtractor, times(2)).findValue(any(), anyString());
   }
 
@@ -89,7 +78,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, true, valueExtractor)
         .compare("null", 1);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -106,7 +96,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, true, valueExtractor)
         .compare("null", 1);
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -123,7 +114,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare("null", 1);
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -140,7 +132,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, false, valueExtractor)
         .compare("null", 1);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -157,7 +150,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, true, valueExtractor)
         .compare(1, "null");
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -174,7 +168,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, true, valueExtractor)
         .compare(1, "null");
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -191,7 +186,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare(1, "null");
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -208,7 +204,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, false, valueExtractor)
         .compare(1, "null");
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -221,10 +218,12 @@ class ValueComparatorTests {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
 
+    //noinspection EqualsWithItself
     int result = new ValueComparator("someField", true, false, false, valueExtractor)
         .compare("A", "A");
 
-    assertEquals(0, result);
+    assertThat(result)
+        .isEqualTo(0);
     verify(valueExtractor, times(2)).findValue(anyString(), anyString());
   }
 
@@ -240,7 +239,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, false, false, valueExtractor)
         .compare("A", 8);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -257,7 +257,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, false, false, valueExtractor)
         .compare("A", 8);
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -274,7 +275,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, false, false, valueExtractor)
         .compare(8, "A");
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -291,7 +293,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, false, false, valueExtractor)
         .compare(8, "A");
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -304,10 +307,12 @@ class ValueComparatorTests {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
 
+    //noinspection EqualsWithItself
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare("A", "A");
 
-    assertEquals(0, result);
+    assertThat(result)
+        .isEqualTo(0);
     verify(valueExtractor, times(2)).findValue(anyString(), anyString());
   }
 
@@ -323,7 +328,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare("A", 8);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -340,7 +346,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, false, valueExtractor)
         .compare("A", 8);
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -357,7 +364,8 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", true, true, false, valueExtractor)
         .compare(8, "A");
 
-    assertTrue(result > 0);
+    assertThat(result)
+        .isGreaterThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
   }
@@ -374,43 +382,10 @@ class ValueComparatorTests {
     int result = new ValueComparator("someField", false, true, false, valueExtractor)
         .compare(8, "A");
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
-  }
-
-  /**
-   * Test to string.
-   */
-  @Test
-  void testToString() {
-    ValueExtractor valueExtractor = new DefaultValueExtractor();
-    ValueComparator valueComparator = new ValueComparator(
-        "someField", true, true, false, valueExtractor);
-    assertTrue(valueComparator.toString().contains("someField"));
-  }
-
-  /**
-   * Test equals and hash code.
-   */
-  @SuppressWarnings({"EqualsWithItself", "SimplifiableJUnitAssertion",
-      "EqualsBetweenInconvertibleTypes"})
-  @Test
-  void testEqualsAndHashCode() {
-    ValueExtractor valueExtractor = new DefaultValueExtractor();
-    ValueComparator valueComparator = new ValueComparator(
-        "someField", true, true, false, valueExtractor);
-    assertTrue(valueComparator.equals(valueComparator));
-    assertTrue(valueComparator
-        .equals(new ValueComparator("someField", true, true, false, valueExtractor)));
-    assertFalse(valueComparator.equals(new ValueComparator("anotherField", true, true, true)));
-    assertFalse(valueComparator.equals("test"));
-    //noinspection ConstantConditions
-    assertFalse(valueComparator.equals(null));
-
-    assertEquals(
-        valueComparator.hashCode(),
-        new ValueComparator("someField", true, true, false, valueExtractor).hashCode());
   }
 
 }

@@ -21,20 +21,35 @@ import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
 
 /**
+ * The comparator field converter.
+ *
  * @author Christian Bremer
  */
 public class ComparatorFieldConverter implements Converter<String, ComparatorField> {
 
   private final WellKnownTextParser wellKnownTextParser;
 
+  /**
+   * Instantiates a new Comparator field converter.
+   */
   public ComparatorFieldConverter() {
     this(WellKnownTextParser.newInstance(ValueComparator::new));
   }
 
+  /**
+   * Instantiates a new Comparator field converter.
+   *
+   * @param properties the properties
+   */
   public ComparatorFieldConverter(WellKnownTextProperties properties) {
     this(WellKnownTextParser.newInstance(ValueComparator::new, properties));
   }
 
+  /**
+   * Instantiates a new Comparator field converter.
+   *
+   * @param wellKnownTextParser the well known text parser
+   */
   public ComparatorFieldConverter(WellKnownTextParser wellKnownTextParser) {
     this.wellKnownTextParser = wellKnownTextParser != null
         ? wellKnownTextParser

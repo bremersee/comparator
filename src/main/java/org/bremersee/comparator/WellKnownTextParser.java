@@ -107,7 +107,8 @@ public interface WellKnownTextParser {
     return Optional.ofNullable(wkt)
         .map(text -> {
           List<ComparatorField> fields = new ArrayList<>();
-          StringTokenizer tokenizer = new StringTokenizer(text, getProperties().getFieldSeparator());
+          StringTokenizer tokenizer = new StringTokenizer(text,
+              getProperties().getFieldSeparator());
           while (tokenizer.hasMoreTokens()) {
             fields.add(buildComparatorField(tokenizer.nextToken()));
           }
@@ -117,7 +118,8 @@ public interface WellKnownTextParser {
   }
 
   /**
-   * Builds a comparator field from the string representation of a sort order (must be a single field, not a path).
+   * Builds a comparator field from the string representation of a sort order (must be a single
+   * field, not a path).
    *
    * <p>The default implementation supports the following syntax:
    * <pre>
@@ -186,7 +188,8 @@ public interface WellKnownTextParser {
    */
   @NotNull
   @SuppressWarnings("rawtypes")
-  static WellKnownTextParser newInstance(@NotNull Function<ComparatorField, Comparator> comparatorFunction) {
+  static WellKnownTextParser newInstance(
+      @NotNull Function<ComparatorField, Comparator> comparatorFunction) {
     return newInstance(comparatorFunction, null);
   }
 
@@ -215,7 +218,8 @@ public interface WellKnownTextParser {
 
     private final WellKnownTextProperties properties;
 
-    private Impl(Function<ComparatorField, Comparator> comparatorFunction, WellKnownTextProperties properties) {
+    private Impl(Function<ComparatorField, Comparator> comparatorFunction,
+        WellKnownTextProperties properties) {
       this.comparatorFunction = comparatorFunction;
       this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
       Assert.notNull(this.comparatorFunction, "Comparator function must be present.");

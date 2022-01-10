@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ public class ComparatorChain implements Comparator<Object> {
    *
    * @param comparators the comparators (can be {@code null} or empty)
    */
-  @SuppressWarnings("WeakerAccess")
   public ComparatorChain(List<Comparator> comparators) {
     this.comparators = comparators != null ? comparators : new LinkedList<>();
   }

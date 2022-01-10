@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,11 +52,10 @@ public interface ComparatorBuilder {
   /**
    * Adds the given comparator for the given field name or path to this builder.
    *
-   * @param field      the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param comparator the comparator (can be {@code null} - then no comparator is added)
    * @return the comparator builder
    */
-  @SuppressWarnings("unused")
   default ComparatorBuilder add(String field, Comparator<?> comparator) {
     return add(field, null, comparator);
   }
@@ -65,9 +64,9 @@ public interface ComparatorBuilder {
    * Adds the given comparator for the given field name or path to this builder. A custom value
    * extractor can be specified.
    *
-   * @param field          the field name or path (can be {@code null})
+   * @param field the field name or path (can be {@code null})
    * @param valueExtractor the value extractor (can be {@code null})
-   * @param comparator     the comparator (can be {@code null} - then no comparator is added)
+   * @param comparator the comparator (can be {@code null} - then no comparator is added)
    * @return the comparator builder
    */
   ComparatorBuilder add(
@@ -78,10 +77,10 @@ public interface ComparatorBuilder {
   /**
    * Creates and adds a value comparator for the given field name or path to this builder.
    *
-   * @param field       the field name or path (can be {@code null})
-   * @param asc         {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase  {@code true} for a case insensitive order,  {@code false} for a case
-   *                    sensitive order
+   * @param field the field name or path (can be {@code null})
+   * @param asc {@code true} for an ascending order, {@code false} for a descending order
+   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
+   *     sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
    * @return the comparator builder
    */
@@ -97,12 +96,11 @@ public interface ComparatorBuilder {
    * Creates and adds a value comparator for the given field name or path to this builder. A custom
    * value extractor can be specified.
    *
-   * @param field          the field name or path (can be {@code null})
-   * @param asc            {@code true} for an ascending order, {@code false} for a descending
-   *                       order
-   * @param ignoreCase     {@code true} for a case insensitive order,  {@code false} for a case
-   *                       sensitive order
-   * @param nullIsFirst    specifies the order of {@code null} values
+   * @param field the field name or path (can be {@code null})
+   * @param asc {@code true} for an ascending order, {@code false} for a descending order
+   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
+   *     sensitive order
+   * @param nullIsFirst specifies the order of {@code null} values
    * @param valueExtractor the value extractor
    * @return the comparator builder
    */
@@ -127,7 +125,7 @@ public interface ComparatorBuilder {
    * Creates and adds a value comparator for the given field ordering description. A custom value
    * extractor can be specified.
    *
-   * @param field          the field ordering description (can be {@code null})
+   * @param field the field ordering description (can be {@code null})
    * @param valueExtractor the value extractor
    * @return the comparator builder
    */
@@ -142,10 +140,10 @@ public interface ComparatorBuilder {
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be added)
+   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
    * @return the comparator builder
    */
-  @SuppressWarnings("unused")
   default ComparatorBuilder addAll(Collection<? extends ComparatorField> fields) {
     return addAll(fields, null);
   }
@@ -154,8 +152,8 @@ public interface ComparatorBuilder {
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param fields         the ordering descriptions (can be {@code null} - no comparator will be
-   *                       added)
+   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
    * @param valueExtractor the value extractor
    * @return the comparator builder
    */
@@ -173,11 +171,10 @@ public interface ComparatorBuilder {
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will be
-   *                         added)
+   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will
+   *     be                         added)
    * @return the comparator builder
    */
-  @SuppressWarnings("unused")
   default ComparatorBuilder addAll(ComparatorFields comparatorFields) {
     return comparatorFields != null ? addAll(comparatorFields.getFields()) : this;
   }
@@ -186,12 +183,11 @@ public interface ComparatorBuilder {
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will be
-   *                         added)
-   * @param valueExtractor   the value extractor
+   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will
+   *     be                         added)
+   * @param valueExtractor the value extractor
    * @return the comparator builder
    */
-  @SuppressWarnings("unused")
   default ComparatorBuilder addAll(
       ComparatorFields comparatorFields,
       ValueExtractor valueExtractor) {
@@ -200,7 +196,7 @@ public interface ComparatorBuilder {
 
   /**
    * Creates and adds value comparators for the given well known text description (see {@link
-   * ComparatorField#toWkt()}, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
+   * ComparatorField#toWkt()}*, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
    *
    * <p>The syntax of the field ordering description is
    * <pre>
@@ -221,7 +217,7 @@ public interface ComparatorBuilder {
 
   /**
    * Creates and adds value comparators for the given well known text description (see {@link
-   * ComparatorField#toWkt()}, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
+   * ComparatorField#toWkt()}*, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
    *
    * <p>The syntax of the field ordering depends on the {@link WellKnownTextParser}. The default is
    * <pre>
@@ -233,7 +229,7 @@ public interface ComparatorBuilder {
    * person.lastName,asc,true,false|person.firstName,asc,true,false
    * </pre>
    *
-   * @param wkt       the well known text (field ordering description)
+   * @param wkt the well known text (field ordering description)
    * @param wktParser the well known text parser (can be {@code null})
    * @return the comparator builder
    */

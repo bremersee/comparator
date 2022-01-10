@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 
 package org.bremersee.comparator.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.StringReader;
@@ -26,15 +24,19 @@ import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The comparator field tests.
  *
  * @author Christian Bremer
  */
-class ComparatorFieldTests {
+@ExtendWith(SoftAssertionsExtension.class)
+class ComparatorFieldTest {
 
   private static JAXBContext jaxbContext;
 
@@ -55,9 +57,6 @@ class ComparatorFieldTests {
    */
   @Test
   void testXmlComparatorField() throws Exception {
-
-    System.out.println("Testing XML write-read operations ...");
-
     ComparatorField field = new ComparatorField("i0", true, false, true);
 
     Marshaller marshaller = jaxbContext.createMarshaller();
@@ -69,16 +68,12 @@ class ComparatorFieldTests {
 
     String xmlStr = sw.toString();
 
-    System.out.println(xmlStr);
-
     ComparatorField readField = (ComparatorField) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));
 
-    System.out.println(field);
-
-    assertEquals(field, readField);
-
-    System.out.println("OK\n");
+    assertThat(readField)
+        .as("Write and read xml of %s", field)
+        .isEqualTo(field);
   }
 
   /**
@@ -88,56 +83,64 @@ class ComparatorFieldTests {
    */
   @Test
   void testJsonComparatorItem() throws Exception {
-
-    System.out.println("Testing JSON write-read operations ...");
-
     ComparatorField field = new ComparatorField("i0", true, false, true);
 
     ObjectMapper om = new ObjectMapper();
 
     String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(field);
 
-    System.out.println(jsonStr);
-
     ComparatorField readField = om.readValue(jsonStr, ComparatorField.class);
 
-    System.out.println(field);
-
-    assertEquals(field, readField);
-
-    System.out.println("OK\n");
+    assertThat(readField)
+        .as("Write and read json of %s", field)
+        .isEqualTo(field);
   }
 
   /**
    * Test equals and hash code.
+   *
+   * @param softly the soft assertions
    */
   @SuppressWarnings({"UnnecessaryLocalVariable"})
   @Test
-  void testEqualsAndHashCode() {
+  void testEqualsAndHashCode(SoftAssertions softly) {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
     ComparatorField field1 = field0;
     ComparatorField field2 = new ComparatorField("i0", true, false, true);
-    assertEquals(field0.hashCode(), field2.hashCode());
-    assertEquals(field0, field0);
-    assertEquals(field0, field1);
-    assertEquals(field0, field2);
+
+    softly.assertThat(field0.hashCode()).isEqualTo(field2.hashCode());
+    //noinspection EqualsWithItself
+    softly.assertThat(field0.equals(field0)).isTrue();
+    //noinspection ConstantConditions
+    softly.assertThat(field0.equals(field1)).isTrue();
+    softly.assertThat(field0.equals(field2)).isTrue();
 
     ComparatorField field3 = new ComparatorField("i1", true, false, true);
-    assertNotEquals(field0, field3);
+    softly.assertThat(field0.equals(field3)).isFalse();
 
-    //noinspection EqualsBetweenInconvertibleTypes,SimplifiableJUnitAssertion
-    assertFalse(field0.equals(new ComparatorFields()));
+    //noinspection EqualsBetweenInconvertibleTypes
+    softly.assertThat(field0.equals(new ComparatorFields())).isFalse();
   }
 
   /**
    * Test to wkt.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void testToWkt() {
+  void testToWkt(SoftAssertions softly) {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = new ComparatorField(null, false, false, true);
-    assertEquals("i0,asc,false,true", field0.toWkt());
-    assertEquals(",desc,false,true", field1.toWkt());
+    ComparatorField field1 = new ComparatorField(null, false, true, false);
+    softly.assertThat(field0.toWkt())
+        .as("Create wkt of %s", field0)
+        .isEqualTo("i0,asc,false,true");
+    softly.assertThat(field1.toWkt(WellKnownTextProperties.builder()
+            .fieldArgsSeparator("-")
+            .ascValue("true")
+            .descValue("false")
+            .build()))
+        .as("Create wkt with custom properties of %s", field0)
+        .isEqualTo("-false-true-false");
   }
 
 }

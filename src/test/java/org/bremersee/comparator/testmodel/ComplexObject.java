@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,20 @@
 
 package org.bremersee.comparator.testmodel;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * The complex test object.
  *
  * @author Christian Bremer
  */
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class ComplexObject {
 
   private final SimpleObject simple;
 
-  /**
-   * Instantiates a new complex test object.
-   *
-   * @param simple the simple
-   */
-  public ComplexObject(SimpleObject simple) {
-    this.simple = simple;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof ComplexObject)) {
-      return false;
-    }
-    ComplexObject that = (ComplexObject) o;
-    return Objects.equals(simple, that.simple);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(simple);
-  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.EqualsAndHashCode;
 
 /**
  * The list of comparator fields.
@@ -40,7 +43,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "comparatorFieldsType")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "A list of comparator fields.")
-@SuppressWarnings("WeakerAccess")
+@EqualsAndHashCode
+@Valid
 public class ComparatorFields {
 
   @SuppressWarnings("FieldMayBeFinal")
@@ -89,32 +93,39 @@ public class ComparatorFields {
    *
    * @return the well known text
    */
+  @NotEmpty
   public String toWkt() {
+    return toWkt(null);
+  }
+
+  /**
+   * Creates the well known text of this list of field ordering descriptions.
+   *
+   * <p>The syntax of the field ordering description is
+   * <pre>
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst|fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * room.number,asc,true,false|person.lastName,asc,true,false|person.firstName,asc,true,false
+   * </pre>
+   *
+   * @param properties the properties
+   * @return the well known text
+   */
+  @NotEmpty
+  public String toWkt(WellKnownTextProperties properties) {
+    WellKnownTextProperties props = Objects.requireNonNullElse(properties,
+        WellKnownTextProperties.defaults());
     return fields.stream()
-        .map(ComparatorField::toWkt)
-        .collect(Collectors.joining("|"));
+        .map(comparatorField -> comparatorField.toWkt(props))
+        .collect(Collectors.joining(props.getFieldSeparator()));
   }
 
   @Override
   public String toString() {
     return toWkt();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof ComparatorFields)) {
-      return false;
-    }
-    ComparatorFields fields1 = (ComparatorFields) o;
-    return Objects.equals(fields, fields1.fields);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(fields);
   }
 
 }

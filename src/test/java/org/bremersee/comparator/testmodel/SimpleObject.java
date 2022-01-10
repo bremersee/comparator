@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,20 @@
 
 package org.bremersee.comparator.testmodel;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
  * The simple test object.
  *
  * @author Christian Bremer
  */
+@ToString
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class SimpleObject {
 
   private final int number;
 
-  /**
-   * Instantiates a new simple test object.
-   *
-   * @param number the number
-   */
-  public SimpleObject(int number) {
-    this.number = number;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof SimpleObject)) {
-      return false;
-    }
-    SimpleObject that = (SimpleObject) o;
-    return number == that.number;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(number);
-  }
 }

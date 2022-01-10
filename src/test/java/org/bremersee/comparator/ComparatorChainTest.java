@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,46 @@
 
 package org.bremersee.comparator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The comparator chain tests.
  *
  * @author Christian Bremer
  */
-class ComparatorChainTests {
+@ExtendWith(SoftAssertionsExtension.class)
+class ComparatorChainTest {
 
   /**
    * Test empty comparator chain.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void testEmptyComparatorChain() {
-    int result = new ComparatorChain(Collections.emptyList())
-        .compare(1, 2);
-    assertTrue(result < 0);
+  void testEmptyComparatorChain(SoftAssertions softly) {
+    softly.assertThat(new ComparatorChain(List.of()).compare(1, 3))
+        .isLessThan(0);
 
-    result = new ComparatorChain(Collections.emptyList())
-        .compare(2, 1);
-    assertTrue(result > 0);
+    softly.assertThat(new ComparatorChain(List.of()).compare(4, 1))
+        .isGreaterThan(0);
 
-    result = new ComparatorChain(Collections.emptyList())
-        .compare(1, 1);
-    assertEquals(0, result);
+    //noinspection EqualsWithItself
+    softly.assertThat(new ComparatorChain(List.of()).compare(2, 2))
+        .isEqualTo(0);
   }
 
   /**
@@ -60,8 +63,8 @@ class ComparatorChainTests {
    */
   @Test
   void testNotComparableObjectsAndExpectComparatorException() {
-    assertThrows(ComparatorException.class, () -> {
-      //noinspection ResultOfMethodCallIgnored
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
+      //noinspection EqualsWithItself,ResultOfMethodCallIgnored
       new ComparatorChain(Collections.emptyList())
           .compare(new Object(), new Object());
     });
@@ -72,8 +75,8 @@ class ComparatorChainTests {
    */
   @Test
   void testNullObjectsAndExpectComparatorException() {
-    assertThrows(ComparatorException.class, () -> {
-      //noinspection ResultOfMethodCallIgnored
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
+      //noinspection ResultOfMethodCallIgnored,EqualsWithItself
       new ComparatorChain(Collections.emptyList())
           .compare(null, null);
     });
@@ -82,8 +85,8 @@ class ComparatorChainTests {
   /**
    * Test two comparators and use both.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Test
-  @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "rawtypes"})
   void testTwoComparatorsAndUseBoth() {
     Comparator comparatorA = mock(Comparator.class);
     when(comparatorA.compare(any(), any())).thenReturn(0);
@@ -91,10 +94,11 @@ class ComparatorChainTests {
     Comparator comparatorB = mock(Comparator.class);
     when(comparatorB.compare(any(), any())).thenReturn(-1);
 
-    int result = new ComparatorChain(Arrays.asList(comparatorA, comparatorB))
+    int result = new ComparatorChain(List.of(comparatorA, comparatorB))
         .compare(1, 2);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
 
     verify(comparatorA, times(1)).compare(any(), any());
     verify(comparatorB, times(1)).compare(any(), any());
@@ -104,7 +108,7 @@ class ComparatorChainTests {
    * Test two comparators and use only first.
    */
   @Test
-  @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored", "rawtypes"})
+  @SuppressWarnings({"rawtypes", "unchecked"})
   void testTwoComparatorsAndUseOnlyFirst() {
     Comparator comparatorA = mock(Comparator.class);
     when(comparatorA.compare(any(), any())).thenReturn(-1);
@@ -112,10 +116,11 @@ class ComparatorChainTests {
     Comparator comparatorB = mock(Comparator.class);
     when(comparatorB.compare(any(), any())).thenReturn(1);
 
-    int result = new ComparatorChain(Arrays.asList(comparatorA, comparatorB))
+    int result = new ComparatorChain(List.of(comparatorA, comparatorB))
         .compare(1, 2);
 
-    assertTrue(result < 0);
+    assertThat(result)
+        .isLessThan(0);
 
     verify(comparatorA, times(1)).compare(any(), any());
     verify(comparatorB, times(0)).compare(any(), any());

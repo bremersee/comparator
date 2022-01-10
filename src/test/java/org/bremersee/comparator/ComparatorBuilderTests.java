@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2020 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package org.bremersee.comparator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import org.bremersee.comparator.model.ComparatorField;
@@ -45,13 +46,12 @@ class ComparatorBuilderTests {
    */
   @Test
   void testPrimitiveType() {
-    System.out.println("Testing primitive type ...");
     int result = ComparatorBuilder.builder()
         .build()
         .compare(1, 2);
-    System.out.println(result);
-    assertTrue(result < 0);
-    System.out.println("OK\n");
+    assertThat(result)
+        .as("Compare 1 with 2")
+        .isLessThan(0);
   }
 
   /**
@@ -59,14 +59,15 @@ class ComparatorBuilderTests {
    */
   @Test
   void testSimpleObject() {
-    System.out.println("Testing simple object ...");
+    SimpleObject one = new SimpleObject(1);
+    SimpleObject two = new SimpleObject(2);
     int result = ComparatorBuilder.builder()
         .add("number", true, true, false)
         .build()
-        .compare(new SimpleObject(1), new SimpleObject(2));
-    System.out.println(result);
-    assertTrue(result < 0);
-    System.out.println("OK\n");
+        .compare(one, two);
+    assertThat(result)
+        .as("Compare %s with %s", one, two)
+        .isLessThan(0);
   }
 
   /**
@@ -74,15 +75,15 @@ class ComparatorBuilderTests {
    */
   @Test
   void testSimpleGetObject() {
-    System.out.println("Testing simple 'get' object ...");
+    SimpleGetObject one = new SimpleGetObject(1);
+    SimpleGetObject two = new SimpleGetObject(2);
     int result = ComparatorBuilder.builder()
         .add("number", true, true, false)
         .build()
-        .compare(new SimpleGetObject(1),
-            new SimpleGetObject(2));
-    System.out.println(result);
-    assertTrue(result < 0);
-    System.out.println("OK\n");
+        .compare(one, two);
+    assertThat(result)
+        .as("Compare %s with %s", one, two)
+        .isLessThan(0);
   }
 
   /**
@@ -91,7 +92,7 @@ class ComparatorBuilderTests {
   @Test
   void testSimpleGetObjectWithComparatorFields() {
     System.out.println("Testing simple 'get' object with list of comparator fields...");
-    List<ComparatorField> fields = Arrays.asList(
+    List<ComparatorField> fields = List.of(
         new ComparatorField("number", true, false, false),
         new ComparatorField("anotherNumber", true, false, false));
     int result = ComparatorBuilder.builder()
@@ -169,7 +170,7 @@ class ComparatorBuilderTests {
   void testComparingOfComplexObjects() {
     ComplexObject a = new ComplexObjectExtension(new SimpleObject(1), "same");
     ComplexObject b = new ComplexObjectExtension(new SimpleObject(2), "same");
-    List<ComplexObject> list = Arrays.asList(b, a);
+    List<ComplexObject> list = new ArrayList<>(List.of(b, a));
     assertEquals(b, list.get(0));
     assertEquals(a, list.get(1));
     list.sort(ComparatorBuilder.builder()
@@ -180,9 +181,9 @@ class ComparatorBuilderTests {
     assertEquals(b, list.get(1));
 
     ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "first");
-    list = Arrays.asList(b, a, c);
+    list = new ArrayList<>(List.of(b, a, c));
     list.sort(ComparatorBuilder.builder()
-        .fromWellKnownText("not_exists|simple.number", comparatorField -> {
+        .fromWellKnownText("not_exists;simple.number", comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
             return new ComplexObjectExtensionComparator();
           }
@@ -194,7 +195,7 @@ class ComparatorBuilderTests {
     assertEquals(b, list.get(2));
 
     list.sort(ComparatorBuilder.builder()
-        .fromWellKnownText("not_exists|simple.number", comparatorField -> {
+        .fromWellKnownText("not_exists;simple.number", comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
             return new ComplexObjectExtensionComparator();
           }
@@ -213,7 +214,7 @@ class ComparatorBuilderTests {
   void testObjectsWithSameValues() {
     SimpleObject a = new SimpleObject(1);
     SimpleObject b = new SimpleObject(1);
-    List<SimpleObject> list = Arrays.asList(b, a);
+    List<SimpleObject> list = new ArrayList<>(List.of(b, a));
     list.sort(ComparatorBuilder.builder().fromWellKnownText("number").build());
     assertEquals(list.get(0), list.get(1));
   }
@@ -223,7 +224,7 @@ class ComparatorBuilderTests {
    */
   @Test
   void testStrings() {
-    List<String> list = Arrays.asList("b", "a");
+    List<String> list = new ArrayList<>(List.of("b", "a"));
     list.sort(ComparatorBuilder.builder().add(null, Comparator.naturalOrder()).build());
     assertEquals("a", list.get(0));
     assertEquals("b", list.get(1));
@@ -237,7 +238,7 @@ class ComparatorBuilderTests {
     assertThrows(IllegalArgumentException.class, () -> {
       SimpleObject a = new SimpleObject(1);
       SimpleObject b = new SimpleObject(1);
-      List<SimpleObject> list = Arrays.asList(b, a);
+      List<SimpleObject> list = new ArrayList<>(List.of(b, a));
       list.sort(ComparatorBuilder.builder().add(null, new DefaultValueExtractor()).build());
       assertEquals(list.get(0), list.get(1));
     });

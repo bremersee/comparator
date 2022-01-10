@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.EqualsAndHashCode;
 
 /**
  * This class defines the sort order of a field.
@@ -85,7 +88,9 @@ import javax.xml.bind.annotation.XmlType;
     "nullIsFirst"
 })
 @Schema(description = "A comparator field defines how a field of an object is sorted.")
-@SuppressWarnings({"UnusedAssignment", "unused", "FieldMayBeFinal"})
+@SuppressWarnings({"FieldMayBeFinal"})
+@EqualsAndHashCode
+@Valid
 public class ComparatorField {
 
   @Schema(description = "The field name or path.")
@@ -94,15 +99,15 @@ public class ComparatorField {
 
   @Schema(description = "Is ascending or descending order.", required = true)
   @XmlElement(name = "asc", defaultValue = "true")
-  private boolean asc = true;
+  private boolean asc;
 
   @Schema(description = "Is case insensitive or sensitive order.", required = true)
   @XmlElement(name = "ignoreCase", defaultValue = "true")
-  private boolean ignoreCase = true;
+  private boolean ignoreCase;
 
   @Schema(description = "Is null is first.", required = true)
   @XmlElement(name = "nullIsFirst", defaultValue = "false")
-  private boolean nullIsFirst = false;
+  private boolean nullIsFirst;
 
   /**
    * Instantiates a new comparator field.
@@ -116,8 +121,7 @@ public class ComparatorField {
    *
    * @param field the field name or path (can be {@code null})
    * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
-   *     sensitive order
+   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case     sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
    */
   @JsonCreator
@@ -183,36 +187,39 @@ public class ComparatorField {
    *
    * @return the well known text
    */
+  @NotEmpty
   public String toWkt() {
-    return (field != null ? field : "") + ","
-        + (asc ? "asc," : "desc,")
-        + ignoreCase + ","
-        + nullIsFirst;
+    return toWkt(null);
+  }
+
+  /**
+   * Creates the well known text of this field ordering description.
+   *
+   * <p>The syntax of the field ordering description is
+   * <pre>
+   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * person.lastName,asc,true,false
+   * </pre>
+   *
+   * @param properties the properties (can be {@code null}
+   * @return the well known text
+   */
+  @NotEmpty
+  public String toWkt(WellKnownTextProperties properties) {
+    WellKnownTextProperties props = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
+    return (field != null ? field : "") + props.getFieldArgsSeparator()
+        + props.getDirectionValue(asc) + props.getFieldArgsSeparator()
+        + props.getIgnoreCaseValue(ignoreCase) + props.getFieldArgsSeparator()
+        + props.getNullIsFirstValue(nullIsFirst);
   }
 
   @Override
   public String toString() {
     return toWkt();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof ComparatorField)) {
-      return false;
-    }
-    ComparatorField that = (ComparatorField) o;
-    return asc == that.asc
-        && ignoreCase == that.ignoreCase
-        && nullIsFirst == that.nullIsFirst
-        && Objects.equals(field, that.field);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(field, asc, ignoreCase, nullIsFirst);
   }
 
 }

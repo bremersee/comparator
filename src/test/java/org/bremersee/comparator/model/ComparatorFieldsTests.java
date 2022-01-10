@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,27 @@
 
 package org.bremersee.comparator.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Arrays;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The comparator fields tests.
  *
  * @author Christian Bremer
  */
+@ExtendWith(SoftAssertionsExtension.class)
 class ComparatorFieldsTests {
 
   private static JAXBContext jaxbContext;
@@ -63,7 +65,7 @@ class ComparatorFieldsTests {
     ComparatorField field1 = new ComparatorField("i1", false, true, false);
     ComparatorField field2 = new ComparatorField("i2", true, true, false);
 
-    ComparatorFields fields = new ComparatorFields(Arrays.asList(field0, field1, field2));
+    ComparatorFields fields = new ComparatorFields(List.of(field0, field1, field2));
 
     Marshaller marshaller = jaxbContext.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -81,7 +83,7 @@ class ComparatorFieldsTests {
 
     System.out.println(fields);
 
-    assertEquals(fields, readFields);
+    assertThat(readFields).isEqualTo(fields);
 
     System.out.println("OK\n");
   }
@@ -99,7 +101,7 @@ class ComparatorFieldsTests {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
     ComparatorField field1 = new ComparatorField("i1", false, true, false);
 
-    ComparatorFields fields = new ComparatorFields(Arrays.asList(field0, field1));
+    ComparatorFields fields = new ComparatorFields(List.of(field0, field1));
 
     ObjectMapper om = new ObjectMapper();
 
@@ -111,35 +113,61 @@ class ComparatorFieldsTests {
 
     System.out.println(fields);
 
-    assertEquals(fields, readFields);
+    assertThat(readFields).isEqualTo(fields);
 
     System.out.println("OK\n");
   }
 
   /**
    * Test equals and hash code.
+   *
+   * @param softly the soft assertions
    */
-  @SuppressWarnings({"UnnecessaryLocalVariable"})
   @Test
-  void testEqualsAndHashCode() {
+  void testEqualsAndHashCode(SoftAssertions softly) {
     ComparatorField field0 = new ComparatorField("i0", true, false, true);
     ComparatorField field1 = new ComparatorField("i1", true, false, true);
     ComparatorField field2 = new ComparatorField("i0", true, false, true);
     ComparatorField field3 = new ComparatorField("i1", true, false, true);
-    ComparatorFields fields0 = new ComparatorFields(Arrays.asList(field0, field1));
-    ComparatorFields fields2 = new ComparatorFields(Arrays.asList(field2, field3));
+    ComparatorFields fields0 = new ComparatorFields(List.of(field0, field1));
+    ComparatorFields fields2 = new ComparatorFields(List.of(field2, field3));
 
-    assertEquals(fields0.hashCode(), fields2.hashCode());
+    softly.assertThat(fields0.hashCode()).isEqualTo(fields2.hashCode());
+
+    //noinspection UnnecessaryLocalVariable
     ComparatorFields fields1 = fields0;
-    assertEquals(fields0, fields1);
-    assertEquals(fields0, fields2);
+    //noinspection ConstantConditions
+    softly.assertThat(fields0.equals(fields1)).isTrue();
+    softly.assertThat(fields0.equals(fields2)).isTrue();
 
-    ComparatorFields fields3 = new ComparatorFields(Arrays.asList(field1, field3));
-    assertNotEquals(fields0, fields3);
-    //noinspection EqualsBetweenInconvertibleTypes,SimplifiableJUnitAssertion
-    assertFalse(fields0.equals(field0));
+    ComparatorFields fields3 = new ComparatorFields(List.of(field1, field3));
+    softly.assertThat(fields3.equals(fields0)).isFalse();
+    //noinspection EqualsBetweenInconvertibleTypes
+    softly.assertThat(fields0.equals(field0)).isFalse();
 
-    assertEquals(new ComparatorFields(null), new ComparatorFields());
+    softly.assertThat(new ComparatorFields(null).equals(new ComparatorFields())).isTrue();
+  }
+
+  /**
+   * Test to wkt.
+   *
+   * @param softly the soft assertions
+   */
+  @Test
+  void testToWkt(SoftAssertions softly) {
+    ComparatorField field0 = new ComparatorField("i0", true, false, true);
+    ComparatorField field1 = new ComparatorField("i1", false, true, false);
+    ComparatorFields fields0 = new ComparatorFields(List.of(field0, field1));
+    String actual = fields0.toWkt();
+    softly.assertThat(actual)
+        .isEqualTo("i0,asc,false,true;i1,desc,true,false");
+
+    actual = fields0.toWkt(WellKnownTextProperties.builder()
+        .fieldSeparator("&")
+        .fieldArgsSeparator(":")
+        .build());
+    softly.assertThat(actual)
+        .isEqualTo("i0:asc:false:true&i1:desc:true:false");
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
 
 package org.bremersee.comparator.spring;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.BOOLEAN;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.ComparatorField;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.NullHandling;
 
@@ -35,37 +34,52 @@ import org.springframework.data.domain.Sort.NullHandling;
  *
  * @author Christian Bremer
  */
+@ExtendWith(SoftAssertionsExtension.class)
 class ComparatorSpringUtilsTests {
 
   /**
    * Test to sort.
+   *
+   * @param softly the soft assertions
    */
   @Test
-  void toSort() {
-
-    System.out.println("Testing ComparatorSpringUtils 'toSort' ...");
-
+  void toSort(SoftAssertions softly) {
     ComparatorField field0 = new ComparatorField("f0", true, true, true);
     ComparatorField field1 = new ComparatorField("f1", false, false, false);
-    List<ComparatorField> fields = Arrays.asList(field0, field1);
+    List<ComparatorField> fields = List.of(field0, field1);
 
     Sort sort = ComparatorSpringUtils.toSort(fields);
 
-    assertNotNull(sort);
+    softly.assertThat(sort)
+        .isNotNull();
 
     Sort.Order sortOrder = sort.getOrderFor("f0");
-    assertNotNull(sortOrder);
-    assertTrue(sortOrder.isAscending());
-    assertTrue(sortOrder.isIgnoreCase());
-    assertEquals(NullHandling.NULLS_FIRST, sortOrder.getNullHandling());
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isAscending, BOOLEAN)
+        .isTrue();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
+        .isTrue();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::getNullHandling)
+        .isEqualTo(NullHandling.NULLS_FIRST);
 
     sortOrder = sort.getOrderFor("f1");
-    assertNotNull(sortOrder);
-    assertFalse(sortOrder.isAscending());
-    assertFalse(sortOrder.isIgnoreCase());
-    assertEquals(NullHandling.NULLS_LAST, sortOrder.getNullHandling());
-
-    System.out.println("OK\n");
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isAscending, BOOLEAN)
+        .isFalse();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
+        .isFalse();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::getNullHandling)
+        .isEqualTo(NullHandling.NULLS_LAST);
   }
 
   /**
@@ -74,7 +88,7 @@ class ComparatorSpringUtilsTests {
   @Test
   void toSortWithEmptyList() {
     Sort sort = ComparatorSpringUtils.toSort(Collections.emptyList());
-    assertTrue(sort.isUnsorted());
+    assertThat(sort.isUnsorted()).isTrue();
   }
 
   /**
@@ -82,19 +96,13 @@ class ComparatorSpringUtilsTests {
    */
   @Test
   void fromSort() {
-
-    System.out.println("Testing ComparatorSpringUtils 'fromSort' ...");
-
     ComparatorField field0 = new ComparatorField("f0", true, true, true);
     ComparatorField field1 = new ComparatorField("f1", false, false, false);
-    List<ComparatorField> fields = Arrays.asList(field0, field1);
-    Sort sort = ComparatorSpringUtils.toSort(fields);
-    assertNotNull(sort);
-
-    List<ComparatorField> actualFields = ComparatorSpringUtils.fromSort(sort);
-    assertEquals(fields, actualFields);
-
-    System.out.println("OK\n");
+    List<ComparatorField> fields = List.of(field0, field1);
+    List<ComparatorField> actualFields = ComparatorSpringUtils
+        .fromSort(ComparatorSpringUtils.toSort(fields));
+    assertThat(actualFields)
+        .isEqualTo(fields);
   }
 
   /**
@@ -103,7 +111,7 @@ class ComparatorSpringUtilsTests {
   @Test
   void fromSortWithNull() {
     List<ComparatorField> fields = ComparatorSpringUtils.fromSort(null);
-    assertTrue(fields.isEmpty());
+    assertThat(fields).isEmpty();
   }
 
   /**
@@ -111,9 +119,12 @@ class ComparatorSpringUtilsTests {
    */
   @Test
   void toSortOrder() {
-    assertNull(ComparatorSpringUtils.toSortOrder(null));
-    assertNull(ComparatorSpringUtils.toSortOrder(new ComparatorField()));
-    assertNull(ComparatorSpringUtils.toSortOrder(new ComparatorField("", true, true, true)));
+    assertThat(ComparatorSpringUtils.toSortOrder(null))
+        .isNull();
+    assertThat(ComparatorSpringUtils.toSortOrder(new ComparatorField()))
+        .isNull();
+    assertThat(ComparatorSpringUtils.toSortOrder(new ComparatorField("", true, true, true)))
+        .isNull();
   }
 
   /**
@@ -121,7 +132,8 @@ class ComparatorSpringUtilsTests {
    */
   @Test
   void fromSortOrder() {
-    assertNull(ComparatorSpringUtils.fromSortOrder(null));
+    assertThat(ComparatorSpringUtils.fromSortOrder(null))
+        .isNull();
   }
 
 }

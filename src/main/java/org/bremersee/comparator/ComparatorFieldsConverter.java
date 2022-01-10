@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,32 +17,41 @@
 package org.bremersee.comparator;
 
 import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;
 
 /**
- * The well known text converter.
+ * The comparator fields converter.
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("WeakerAccess")
-public class WellKnownTextConverter implements Converter<String, ComparatorFields> {
+public class ComparatorFieldsConverter implements Converter<String, ComparatorFields> {
 
   private final WellKnownTextParser wellKnownTextParser;
 
   /**
-   * Instantiates a new well known text converter.
+   * Instantiates a new Comparator fields converter.
    */
-  public WellKnownTextConverter() {
-    this(ValueComparator::new);
+  public ComparatorFieldsConverter() {
+    this(WellKnownTextParser.newInstance(ValueComparator::new));
   }
 
   /**
-   * Instantiates a new well known text converter.
+   * Instantiates a new Comparator fields converter.
+   *
+   * @param properties the properties
+   */
+  public ComparatorFieldsConverter(WellKnownTextProperties properties) {
+    this(WellKnownTextParser.newInstance(ValueComparator::new, properties));
+  }
+
+  /**
+   * Instantiates a new Comparator fields converter.
    *
    * @param wellKnownTextParser the well known text parser
    */
-  public WellKnownTextConverter(WellKnownTextParser wellKnownTextParser) {
+  public ComparatorFieldsConverter(WellKnownTextParser wellKnownTextParser) {
     this.wellKnownTextParser = wellKnownTextParser != null
         ? wellKnownTextParser
         : ValueComparator::new;

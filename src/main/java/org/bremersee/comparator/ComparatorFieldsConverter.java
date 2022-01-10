@@ -19,7 +19,7 @@ package org.bremersee.comparator;
 import org.bremersee.comparator.model.ComparatorFields;
 import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * The comparator fields converter.
@@ -59,7 +59,7 @@ public class ComparatorFieldsConverter implements Converter<String, ComparatorFi
 
   @Override
   public ComparatorFields convert(String source) {
-    if (!StringUtils.hasText(source)) {
+    if (ObjectUtils.isEmpty(source)) {
       return new ComparatorFields();
     }
     return new ComparatorFields(wellKnownTextParser.buildComparatorFields(source));

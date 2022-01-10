@@ -27,7 +27,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.bremersee.comparator.model.ComparatorField;
 import org.bremersee.comparator.model.WellKnownTextProperties;
-import org.springframework.util.Assert;
 
 /**
  * Parses the string representation of a sort order and creates a comparator.
@@ -222,7 +221,6 @@ public interface WellKnownTextParser {
         WellKnownTextProperties properties) {
       this.comparatorFunction = comparatorFunction;
       this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
-      Assert.notNull(this.comparatorFunction, "Comparator function must be present.");
     }
 
     @Override

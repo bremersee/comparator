@@ -39,8 +39,9 @@ import lombok.EqualsAndHashCode;
  *  ---------------------------------------------------------------------------------------------
  * | Attribute    | Description                                                       | Default  |
  * |--------------|-------------------------------------------------------------------|----------|
- * | add          | The add name (or method name) of the object. It can be a path.    | null     |
+ * | field        | The field name (or method name) of the object. It can be a path.  | null     |
  * |              | The segments are separated by a dot (.): field0.field1.field2     |          |
+ * |              | It can be null. Then the object itself must be comparable.        |          |
  * |--------------|-------------------------------------------------------------------|----------|
  * | asc or desc  | Defines ascending or descending ordering.                         | asc      |
  * |--------------|-------------------------------------------------------------------|----------|

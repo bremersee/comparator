@@ -17,7 +17,6 @@
 package org.bremersee.comparator;
 
 import java.util.Comparator;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.bremersee.comparator.model.ComparatorField;
 
@@ -29,7 +28,6 @@ import org.bremersee.comparator.model.ComparatorField;
  * @author Christian Bremer
  */
 @ToString
-@EqualsAndHashCode
 public class ValueComparator implements Comparator<Object> {
 
   private final ValueExtractor valueExtractor;

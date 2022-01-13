@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringTokenizer;
+import org.bremersee.comparator.model.ComparatorField;
 import org.bremersee.comparator.model.ComparatorFields;
 import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.util.ObjectUtils;
 
 /**
  * The comparator fields converter.
@@ -28,13 +32,15 @@ import org.springframework.util.ObjectUtils;
  */
 public class ComparatorFieldsConverter implements Converter<String, ComparatorFields> {
 
-  private final WellKnownTextParser wellKnownTextParser;
+  private final WellKnownTextProperties properties;
+
+  private final Converter<String, ComparatorField> fieldConverter;
 
   /**
    * Instantiates a new Comparator fields converter.
    */
   public ComparatorFieldsConverter() {
-    this(WellKnownTextParser.newInstance(ValueComparator::new));
+    this(WellKnownTextProperties.defaults());
   }
 
   /**
@@ -43,25 +49,24 @@ public class ComparatorFieldsConverter implements Converter<String, ComparatorFi
    * @param properties the properties
    */
   public ComparatorFieldsConverter(WellKnownTextProperties properties) {
-    this(WellKnownTextParser.newInstance(ValueComparator::new, properties));
+    this(properties, null);
   }
 
-  /**
-   * Instantiates a new Comparator fields converter.
-   *
-   * @param wellKnownTextParser the well known text parser
-   */
-  public ComparatorFieldsConverter(WellKnownTextParser wellKnownTextParser) {
-    this.wellKnownTextParser = wellKnownTextParser != null
-        ? wellKnownTextParser
-        : ValueComparator::new;
+  public ComparatorFieldsConverter(WellKnownTextProperties properties,
+      Converter<String, ComparatorField> fieldConverter) {
+    this.properties = Objects
+        .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+    this.fieldConverter = Objects
+        .requireNonNullElse(fieldConverter, new ComparatorFieldConverter(this.properties));
   }
 
   @Override
   public ComparatorFields convert(String source) {
-    if (ObjectUtils.isEmpty(source)) {
-      return new ComparatorFields();
+    List<ComparatorField> fields = new ArrayList<>();
+    StringTokenizer tokenizer = new StringTokenizer(source, properties.getFieldSeparator());
+    while (tokenizer.hasMoreTokens()) {
+      fields.add(fieldConverter.convert(tokenizer.nextToken()));
     }
-    return new ComparatorFields(wellKnownTextParser.buildComparatorFields(source));
+    return new ComparatorFields(fields);
   }
 }

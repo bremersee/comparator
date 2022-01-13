@@ -148,6 +148,9 @@ class ComparatorFieldsTest {
     softly.assertThat(actual)
         .as("Create wkt of %s", fields0)
         .isEqualTo("i0,asc,false,true;i1,desc,true,false");
+    softly.assertThat(fields0.toString())
+        .as("toString is equal to WKT")
+        .isEqualTo(actual);
 
     actual = fields0.toWkt(WellKnownTextProperties.builder()
         .fieldSeparator("&")

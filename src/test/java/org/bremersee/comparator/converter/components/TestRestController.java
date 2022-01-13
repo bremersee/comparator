@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.testbeans.converter;
+package org.bremersee.comparator.converter.components;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.comparator.model.ComparatorField;
@@ -40,9 +44,15 @@ public class TestRestController {
    * @param sort the sort
    * @return the something sorted
    */
+  @Operation(
+      summary = "Get something that can be sorted.",
+      operationId = "getSomethingSorted",
+      tags = {"test-controller"}
+  )
   @GetMapping(path = "/")
   @SuppressWarnings("unused")
   public ResponseEntity<String> getSomethingSorted(
+      @Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
       @RequestParam(name = "sort", required = false) List<ComparatorField> sort) {
 
     log.info("Received sort orders {}", sort);

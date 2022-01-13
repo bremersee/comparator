@@ -134,6 +134,10 @@ class ComparatorFieldTest {
     softly.assertThat(field0.toWkt())
         .as("Create wkt of %s", field0)
         .isEqualTo("i0,asc,false,true");
+    softly.assertThat(field0.toString())
+        .as("toString is equal to WKT")
+        .isEqualTo(field0.toWkt());
+
     softly.assertThat(field1.toWkt(WellKnownTextProperties.builder()
             .fieldArgsSeparator("-")
             .ascValue("true")

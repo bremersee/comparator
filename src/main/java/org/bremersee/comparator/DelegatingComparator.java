@@ -17,7 +17,6 @@
 package org.bremersee.comparator;
 
 import java.util.Comparator;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
@@ -27,7 +26,6 @@ import lombok.ToString;
  * @author Christian Bremer
  */
 @ToString
-@EqualsAndHashCode
 public class DelegatingComparator implements Comparator<Object> {
 
   private final ValueExtractor valueExtractor;

@@ -174,20 +174,49 @@ class ComparatorBuilderTest {
    */
   @Test
   void testComparingOfComplexObjects(SoftAssertions softly) {
-    ComplexObject a = new ComplexObjectExtension(new SimpleObject(1), "same");
-    ComplexObject b = new ComplexObjectExtension(new SimpleObject(2), "same");
+    ComplexObject a = new ComplexObjectExtension(new SimpleObject(1), "a");
+    ComplexObject b = new ComplexObjectExtension(new SimpleObject(1), "b");
     List<ComplexObject> list = new ArrayList<>(List.of(b, a));
+    // natural order
+    list.sort(ComparatorBuilder.builder().build());
+    softly.assertThat(list)
+        .containsExactly(a, b);
+
+    list = new ArrayList<>(List.of(b, a));
+    // natural order
     list.sort(ComparatorBuilder.builder()
-        .add(new ComparatorField("value", true, true, false))
-        .fromWellKnownText(new ComparatorField("simple.number", true, true, false).toWkt())
+        .add(new ComplexObjectExtensionComparator())
         .build());
     softly.assertThat(list)
         .containsExactly(a, b);
 
-    ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "first");
-    list = new ArrayList<>(List.of(b, a, c));
+    list = new ArrayList<>(List.of(b, a));
+    // natural order
     list.sort(ComparatorBuilder.builder()
-        .fromWellKnownText("not_exists;simple.number", comparatorField -> {
+        .add((ComparatorField) null)
+        .build());
+    softly.assertThat(list)
+        .containsExactly(a, b);
+
+    list = new ArrayList<>(List.of(a, b));
+    // natural order
+    list.sort(ComparatorBuilder.builder()
+        .add(new ComparatorField("value", false, true, false))
+        .build());
+    softly.assertThat(list)
+        .containsExactly(b, a);
+
+    a = new ComplexObjectExtension(new SimpleObject(4), "d");
+    b = new ComplexObjectExtension(new SimpleObject(3), "d");
+    ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "c");
+    list = new ArrayList<>(List.of(b, c, a));
+
+    List<ComparatorField> comparatorFields = List.of(
+        new ComparatorField("not_exists", true, true, false),
+        new ComparatorField("simple.number", false, true, false)
+    );
+    list.sort(ComparatorBuilder.builder()
+        .addAll(comparatorFields, comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
             return new ComplexObjectExtensionComparator();
           }
@@ -199,11 +228,11 @@ class ComparatorBuilderTest {
 
     Collections.shuffle(list);
     list.sort(ComparatorBuilder.builder()
-        .fromWellKnownText("not_exists;simple.number", comparatorField -> {
+        .addAll(new ComparatorFields(comparatorFields), comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
             return new ComplexObjectExtensionComparator();
           }
-          return new ValueComparator(comparatorField, new DefaultValueExtractor());
+          return new ValueComparator(comparatorField);
         })
         .build());
     softly.assertThat(list)
@@ -218,7 +247,9 @@ class ComparatorBuilderTest {
     SimpleObject a = new SimpleObject(1);
     SimpleObject b = new SimpleObject(1);
     List<SimpleObject> list = new ArrayList<>(List.of(b, a));
-    list.sort(ComparatorBuilder.builder().fromWellKnownText("number").build());
+    list.sort(ComparatorBuilder.builder()
+        .add("number")
+        .build());
     assertThat(list)
         .containsExactly(b, a);
   }
@@ -235,11 +266,11 @@ class ComparatorBuilderTest {
   }
 
   /**
-   * Test objects and expect illegal argument exception.
+   * Test objects and expect comparator exception.
    */
   @Test
-  void testObjectsAndExpectIllegalArgumentException() {
-    assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+  void testObjectsAndExpectComparatorException() {
+    assertThatExceptionOfType(ComparatorException.class).isThrownBy(() -> {
       SimpleObject a = new SimpleObject(1);
       SimpleObject b = new SimpleObject(1);
       List<SimpleObject> list = new ArrayList<>(List.of(b, a));

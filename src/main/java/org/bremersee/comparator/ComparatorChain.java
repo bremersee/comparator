@@ -19,6 +19,7 @@ package org.bremersee.comparator;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.ToString;
 
 /**
  * The comparator chain has a list of comparators. Beginning with the first each comparator is
@@ -27,6 +28,7 @@ import java.util.List;
  * @author Christian Bremer
  */
 @SuppressWarnings("rawtypes")
+@ToString
 public class ComparatorChain implements Comparator<Object> {
 
   private final List<Comparator> comparators;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.converter;
 
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
@@ -35,7 +35,10 @@ import org.springframework.http.ResponseEntity;
  */
 @SpringBootTest(
     classes = {ComparatorFieldConverterIntegrationTestConfiguration.class},
-    webEnvironment = WebEnvironment.RANDOM_PORT
+    webEnvironment = WebEnvironment.RANDOM_PORT,
+    properties = {
+        "springdoc.packagesToScan=org.bremersee.comparator.converter.components"
+    }
 )
 @ExtendWith(SoftAssertionsExtension.class)
 public class ComparatorFieldConverterIntegrationTest {
@@ -69,4 +72,33 @@ public class ComparatorFieldConverterIntegrationTest {
         .as("Convert sort parameters in Spring application")
         .isEqualTo("field0,desc,true,false;field1,desc,false,true");
   }
+
+  /**
+   * Test open api.
+   *
+   * @param softly the soft assertions
+   */
+  @Test
+  void testOpenApi(SoftAssertions softly) {
+    ResponseEntity<String> response = restTemplateBuilder.build().getForEntity(
+        "http://localhost:" + port + "/v3/api-docs",
+        String.class);
+    String expected = "{"
+        + "\"name\":\"sort\","
+        + "\"in\":\"query\","
+        + "\"required\":false,"
+        + "\"schema\":{"
+        + "\"type\":\"array\","
+        + "\"items\":{"
+        + "\"type\":\"string\""
+        + "}}}";
+    softly.assertThat(response.getStatusCode())
+        .isEqualTo(HttpStatus.OK);
+    String body = response.getBody();
+    softly.assertThat(body)
+        .as("Rest parameter 'sort' should be of type 'array' "
+            + "with items of type 'string'; generated api: %s", body)
+        .contains(expected);
+  }
+
 }

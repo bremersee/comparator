@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
@@ -95,20 +95,6 @@ class ComparatorFieldsConverterTest {
     assertThat(actual)
         .extracting(ComparatorFields::getFields, list(ComparatorField.class))
         .containsExactlyElementsOf(expected);
-  }
-
-  /**
-   * Convert and expect empty.
-   */
-  @Test
-  void convertAndExpectEmpty() {
-    ComparatorFieldsConverter converter = new ComparatorFieldsConverter(ValueComparator::new);
-    //noinspection ConstantConditions
-    ComparatorFields fields = converter.convert(null);
-    assertThat(fields)
-        .isNotNull()
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
-        .isEmpty();
   }
 
 }

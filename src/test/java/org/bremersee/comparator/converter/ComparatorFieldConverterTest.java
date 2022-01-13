@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -85,18 +85,6 @@ class ComparatorFieldConverterTest {
     actual = converter.convert("::desc");
     expected = new ComparatorField(null, false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
-  }
-
-  /**
-   * Convert and expect empty.
-   */
-  @Test
-  void convertAndExpectEmpty() {
-    ComparatorFieldConverter converter = new ComparatorFieldConverter(ValueComparator::new);
-    //noinspection ConstantConditions
-    ComparatorField actual = converter.convert(null);
-    assertThat(actual)
-        .isEqualTo(new ComparatorField());
   }
 
 }

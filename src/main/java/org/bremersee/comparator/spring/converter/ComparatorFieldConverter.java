@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;
 
 import java.util.Objects;
 import org.bremersee.comparator.model.ComparatorField;
@@ -47,35 +47,7 @@ public class ComparatorFieldConverter implements Converter<String, ComparatorFie
   }
 
   @Override
-  public ComparatorField convert(String fieldDescription) {
-    String field;
-    boolean asc = properties.isAsc(null);
-    boolean ignoreCase = properties.isCaseIgnored(null);
-    boolean nullIsFirst = properties.isNullFirst(null);
-    String separator = properties.getFieldArgsSeparator();
-    int index = fieldDescription.indexOf(separator);
-    if (index < 0) {
-      field = fieldDescription.trim();
-    } else {
-      field = fieldDescription.substring(0, index).trim();
-      int from = index + separator.length();
-      index = fieldDescription.indexOf(separator, from);
-      if (index < 0) {
-        asc = properties.isAsc(fieldDescription.substring(from).trim());
-      } else {
-        asc = properties.isAsc(fieldDescription.substring(from, index).trim());
-        from = index + separator.length();
-        index = fieldDescription.indexOf(separator, from);
-        if (index < 0) {
-          ignoreCase = properties.isCaseIgnored(fieldDescription.substring(from).trim());
-        } else {
-          ignoreCase = properties.isCaseIgnored(fieldDescription.substring(from, index).trim());
-          from = index + separator.length();
-          nullIsFirst = properties.isNullFirst(fieldDescription.substring(from).trim());
-        }
-      }
-    }
-    field = field.length() == 0 ? null : field;
-    return new ComparatorField(field, asc, ignoreCase, nullIsFirst);
+  public ComparatorField convert(String source) {
+    return ComparatorField.fromWkt(source, properties);
   }
 }

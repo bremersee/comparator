@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;
 
-import org.bremersee.comparator.converter.components.TestRestController;
+import org.bremersee.comparator.spring.converter.components.TestRestController;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;

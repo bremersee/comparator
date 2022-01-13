@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

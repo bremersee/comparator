@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.spring;
+package org.bremersee.comparator.spring.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.BOOLEAN;
@@ -30,12 +30,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.NullHandling;
 
 /**
- * The comparator spring utilities tests.
+ * The sort mapper tests.
  *
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorSpringUtilsTest {
+class SortMapperTest {
 
   /**
    * Test to sort.
@@ -48,7 +48,7 @@ class ComparatorSpringUtilsTest {
     ComparatorField field1 = new ComparatorField("f1", false, false, false);
     List<ComparatorField> fields = List.of(field0, field1);
 
-    Sort sort = ComparatorSpringUtils.toSort(fields);
+    Sort sort = SortMapper.toSort(fields);
 
     softly.assertThat(sort)
         .isNotNull();
@@ -87,7 +87,7 @@ class ComparatorSpringUtilsTest {
    */
   @Test
   void toSortWithEmptyList() {
-    Sort sort = ComparatorSpringUtils.toSort(Collections.emptyList());
+    Sort sort = SortMapper.toSort(Collections.emptyList());
     assertThat(sort.isUnsorted()).isTrue();
   }
 
@@ -99,8 +99,8 @@ class ComparatorSpringUtilsTest {
     ComparatorField field0 = new ComparatorField("f0", true, true, true);
     ComparatorField field1 = new ComparatorField("f1", false, false, false);
     List<ComparatorField> fields = List.of(field0, field1);
-    List<ComparatorField> actualFields = ComparatorSpringUtils
-        .fromSort(ComparatorSpringUtils.toSort(fields));
+    List<ComparatorField> actualFields = SortMapper
+        .fromSort(SortMapper.toSort(fields));
     assertThat(actualFields)
         .isEqualTo(fields);
   }
@@ -110,7 +110,7 @@ class ComparatorSpringUtilsTest {
    */
   @Test
   void fromSortWithNull() {
-    List<ComparatorField> fields = ComparatorSpringUtils.fromSort(null);
+    List<ComparatorField> fields = SortMapper.fromSort(null);
     assertThat(fields).isEmpty();
   }
 
@@ -119,11 +119,11 @@ class ComparatorSpringUtilsTest {
    */
   @Test
   void toSortOrder() {
-    assertThat(ComparatorSpringUtils.toSortOrder(null))
+    assertThat(SortMapper.toSortOrder(null))
         .isNull();
-    assertThat(ComparatorSpringUtils.toSortOrder(new ComparatorField()))
+    assertThat(SortMapper.toSortOrder(new ComparatorField()))
         .isNull();
-    assertThat(ComparatorSpringUtils.toSortOrder(new ComparatorField("", true, true, true)))
+    assertThat(SortMapper.toSortOrder(new ComparatorField("", true, true, true)))
         .isNull();
   }
 
@@ -132,7 +132,7 @@ class ComparatorSpringUtilsTest {
    */
   @Test
   void fromSortOrder() {
-    assertThat(ComparatorSpringUtils.fromSortOrder(null))
+    assertThat(SortMapper.fromSortOrder(null))
         .isNull();
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;
 
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
@@ -37,7 +37,7 @@ import org.springframework.http.ResponseEntity;
     classes = {ComparatorFieldConverterIntegrationTestConfiguration.class},
     webEnvironment = WebEnvironment.RANDOM_PORT,
     properties = {
-        "springdoc.packagesToScan=org.bremersee.comparator.converter.components"
+        "springdoc.packagesToScan=org.bremersee.comparator.spring.converter.components"
     }
 )
 @ExtendWith(SoftAssertionsExtension.class)

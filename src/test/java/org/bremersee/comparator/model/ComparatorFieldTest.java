@@ -147,4 +147,61 @@ class ComparatorFieldTest {
         .isEqualTo("-false-true-false");
   }
 
+  /**
+   * Test from wkt.
+   *
+   * @param softly the softly
+   */
+  @Test
+  void testFromWkt(SoftAssertions softly) {
+    ComparatorField actual = ComparatorField.fromWkt("field0,desc,false,true");
+    ComparatorField expected = new ComparatorField("field0", false, false, true);
+
+    softly.assertThat(actual)
+        .isEqualTo(expected);
+
+    softly.assertThat(ComparatorField.fromWkt(null))
+        .isEqualTo(new ComparatorField(null, true, true, false));
+  }
+
+  /**
+   * Test from wkt with properties.
+   *
+   * @param softly the softly
+   */
+  @Test
+  void testFromWktWithProperties(SoftAssertions softly) {
+    WellKnownTextProperties properties = WellKnownTextProperties.builder()
+        .fieldArgsSeparator("::")
+        .caseSensitiveValue("cs")
+        .caseInsensitiveValue("cis")
+        .nullIsFirstValue("nif")
+        .nullIsLastValue("nil")
+        .build();
+
+    ComparatorField actual = ComparatorField.fromWkt("::asc::cis::nif", properties);
+    ComparatorField expected = new ComparatorField(null, true, true, true);
+    softly.assertThat(actual).isEqualTo(expected);
+
+    actual = ComparatorField.fromWkt("field1", properties);
+    expected = new ComparatorField("field1", true, true, false);
+    softly.assertThat(actual).isEqualTo(expected);
+
+    actual = ComparatorField.fromWkt("field2::desc", properties);
+    expected = new ComparatorField("field2", false, true, false);
+    softly.assertThat(actual).isEqualTo(expected);
+
+    actual = ComparatorField.fromWkt("field3::desc::cs", properties);
+    expected = new ComparatorField("field3", false, false, false);
+    softly.assertThat(actual).isEqualTo(expected);
+
+    actual = ComparatorField.fromWkt("field4::desc::cs::nif", properties);
+    expected = new ComparatorField("field4", false, false, true);
+    softly.assertThat(actual).isEqualTo(expected);
+
+    actual = ComparatorField.fromWkt("::desc", properties);
+    expected = new ComparatorField(null, false, true, false);
+    softly.assertThat(actual).isEqualTo(expected);
+  }
+
 }

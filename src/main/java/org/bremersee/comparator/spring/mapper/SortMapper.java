@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.spring;
+package org.bremersee.comparator.spring.mapper;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,14 +25,14 @@ import org.bremersee.comparator.model.ComparatorField;
 import org.springframework.data.domain.Sort;
 
 /**
- * This utility class provides methods to transform a {@link ComparatorField} into a {@code Sort}
- * object from the Spring framework (spring-data-common) and vice versa.
+ * This mapper provides methods to transform a {@link ComparatorField} into a {@code Sort} object
+ * from the Spring framework (spring-data-common) and vice versa.
  *
  * @author Christian Bremer
  */
-public abstract class ComparatorSpringUtils {
+public abstract class SortMapper {
 
-  private ComparatorSpringUtils() {
+  private SortMapper() {
   }
 
   /**
@@ -43,7 +43,7 @@ public abstract class ComparatorSpringUtils {
    */
   public static Sort toSort(Collection<? extends ComparatorField> comparatorFields) {
     List<Sort.Order> orderList = comparatorFields.stream()
-        .map(ComparatorSpringUtils::toSortOrder)
+        .map(SortMapper::toSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
     if (orderList.isEmpty()) {
@@ -63,7 +63,7 @@ public abstract class ComparatorSpringUtils {
       return Collections.emptyList();
     }
     return sort.stream()
-        .map(ComparatorSpringUtils::fromSortOrder)
+        .map(SortMapper::fromSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
   }

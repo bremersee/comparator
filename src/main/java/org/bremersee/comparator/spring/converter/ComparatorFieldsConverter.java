@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.StringTokenizer;
-import org.bremersee.comparator.model.ComparatorField;
 import org.bremersee.comparator.model.ComparatorFields;
 import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
@@ -33,8 +29,6 @@ import org.springframework.core.convert.converter.Converter;
 public class ComparatorFieldsConverter implements Converter<String, ComparatorFields> {
 
   private final WellKnownTextProperties properties;
-
-  private final Converter<String, ComparatorField> fieldConverter;
 
   /**
    * Instantiates a new Comparator fields converter.
@@ -49,24 +43,12 @@ public class ComparatorFieldsConverter implements Converter<String, ComparatorFi
    * @param properties the properties
    */
   public ComparatorFieldsConverter(WellKnownTextProperties properties) {
-    this(properties, null);
-  }
-
-  public ComparatorFieldsConverter(WellKnownTextProperties properties,
-      Converter<String, ComparatorField> fieldConverter) {
     this.properties = Objects
         .requireNonNullElse(properties, WellKnownTextProperties.defaults());
-    this.fieldConverter = Objects
-        .requireNonNullElse(fieldConverter, new ComparatorFieldConverter(this.properties));
   }
 
   @Override
   public ComparatorFields convert(String source) {
-    List<ComparatorField> fields = new ArrayList<>();
-    StringTokenizer tokenizer = new StringTokenizer(source, properties.getFieldSeparator());
-    while (tokenizer.hasMoreTokens()) {
-      fields.add(fieldConverter.convert(tokenizer.nextToken()));
-    }
-    return new ComparatorFields(fields);
+    return ComparatorFields.fromWkt(source, properties);
   }
 }

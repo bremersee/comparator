@@ -19,4 +19,4 @@
  *
  * @author Christian Bremer
  */
-package org.bremersee.comparator.converter;
+package org.bremersee.comparator.spring.converter;

@@ -17,6 +17,7 @@
 package org.bremersee.comparator.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.StringReader;
@@ -159,6 +160,79 @@ class ComparatorFieldsTest {
     softly.assertThat(actual)
         .as("Create wkt with custom properties of %s", fields0)
         .isEqualTo("i0:asc:false:true&i1:desc:true:false");
+  }
+
+  /**
+   * Test from wkt.
+   */
+  @Test
+  void testFromWkt(SoftAssertions softly) {
+    ComparatorFields actual = ComparatorFields.fromWkt(null);
+    softly.assertThat(actual)
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .isEmpty();
+
+    actual = ComparatorFields.fromWkt(
+        "field0,asc,true,true");
+    ComparatorField field0 = new ComparatorField("field0", true, true, true);
+    List<ComparatorField> expected = List.of(field0);
+    softly.assertThat(actual)
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .containsExactlyElementsOf(expected);
+
+    actual = ComparatorFields.fromWkt(
+        "field0,asc,true,true"
+            + ";field1,asc,false,true"
+            + ";field2,asc,true,false"
+            + ";field3,asc,false,false"
+            + ";field4,desc,false,true"
+            + ";field5,desc,false,false");
+    ComparatorField field1 = new ComparatorField("field1", true, false, true);
+    ComparatorField field2 = new ComparatorField("field2", true, true, false);
+    ComparatorField field3 = new ComparatorField("field3", true, false, false);
+    ComparatorField field4 = new ComparatorField("field4", false, false, true);
+    ComparatorField field5 = new ComparatorField("field5", false, false, false);
+    expected = List.of(field0, field1, field2, field3, field4, field5);
+    softly.assertThat(actual)
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .containsExactlyElementsOf(expected);
+  }
+
+  /**
+   * Test from wkt with properties.
+   */
+  @Test
+  void testFromWktWithProperties() {
+    WellKnownTextProperties properties = WellKnownTextProperties.builder()
+        .fieldArgsSeparator("-:-")
+        .fieldSeparator("&&")
+        .caseSensitiveValue("cs")
+        .caseInsensitiveValue("cis")
+        .nullIsFirstValue("nif")
+        .nullIsLastValue("nil")
+        .build();
+
+    ComparatorFields actual = ComparatorFields.fromWkt(
+        "-:-asc-:-cis-:-nif"
+            + "&&field1"
+            + "&&field2-:-desc"
+            + "&&field3-:-desc-:-cs"
+            + "&&field4-:-desc-:-cs-:-nif"
+            + "&&-:-desc",
+        properties
+    );
+
+    ComparatorField field0 = new ComparatorField(null, true, true, true);
+    ComparatorField field1 = new ComparatorField("field1", true, true, false);
+    ComparatorField field2 = new ComparatorField("field2", false, true, false);
+    ComparatorField field3 = new ComparatorField("field3", false, false, false);
+    ComparatorField field4 = new ComparatorField("field4", false, false, true);
+    ComparatorField field5 = new ComparatorField(null, false, true, false);
+    List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
+
+    assertThat(actual)
+        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .containsExactlyElementsOf(expected);
   }
 
 }

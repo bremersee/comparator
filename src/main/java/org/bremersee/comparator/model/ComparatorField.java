@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -222,6 +223,61 @@ public class ComparatorField {
   @Override
   public String toString() {
     return toWkt();
+  }
+
+  /**
+   * From well known text.
+   *
+   * @param source the well known text
+   * @return the comparator field
+   */
+  public static ComparatorField fromWkt(String source) {
+    return fromWkt(source, WellKnownTextProperties.defaults());
+  }
+
+  /**
+   * From well known text.
+   *
+   * @param source the well known text
+   * @param properties the properties
+   * @return the comparator field
+   */
+  public static ComparatorField fromWkt(String source, WellKnownTextProperties properties) {
+    return Optional.ofNullable(source)
+        .map(wkt -> {
+          WellKnownTextProperties props = Objects
+              .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+          String field;
+          boolean asc = props.isAsc(null);
+          boolean ignoreCase = props.isCaseIgnored(null);
+          boolean nullIsFirst = props.isNullFirst(null);
+          String separator = props.getFieldArgsSeparator();
+          int index = wkt.indexOf(separator);
+          if (index < 0) {
+            field = wkt.trim();
+          } else {
+            field = wkt.substring(0, index).trim();
+            int from = index + separator.length();
+            index = wkt.indexOf(separator, from);
+            if (index < 0) {
+              asc = props.isAsc(wkt.substring(from).trim());
+            } else {
+              asc = props.isAsc(wkt.substring(from, index).trim());
+              from = index + separator.length();
+              index = wkt.indexOf(separator, from);
+              if (index < 0) {
+                ignoreCase = props.isCaseIgnored(wkt.substring(from).trim());
+              } else {
+                ignoreCase = props.isCaseIgnored(wkt.substring(from, index).trim());
+                from = index + separator.length();
+                nullIsFirst = props.isNullFirst(wkt.substring(from).trim());
+              }
+            }
+          }
+          field = field.length() == 0 ? null : field;
+          return new ComparatorField(field, asc, ignoreCase, nullIsFirst);
+        })
+        .orElseGet(() -> new ComparatorField(null, true, true, false));
   }
 
 }

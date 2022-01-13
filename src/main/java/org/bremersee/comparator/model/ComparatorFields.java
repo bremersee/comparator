@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -126,6 +128,38 @@ public class ComparatorFields {
   @Override
   public String toString() {
     return toWkt();
+  }
+
+  /**
+   * From well known text.
+   *
+   * @param source the well known text
+   * @return the comparator fields
+   */
+  public static ComparatorFields fromWkt(String source) {
+    return fromWkt(source, WellKnownTextProperties.defaults());
+  }
+
+  /**
+   * From well known text.
+   *
+   * @param source the well known text
+   * @param properties the properties
+   * @return the comparator fields
+   */
+  public static ComparatorFields fromWkt(String source, WellKnownTextProperties properties) {
+    return Optional.ofNullable(source)
+        .map(wkt -> {
+          WellKnownTextProperties props = Objects
+              .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+          List<ComparatorField> fields = new ArrayList<>();
+          StringTokenizer tokenizer = new StringTokenizer(wkt, props.getFieldSeparator());
+          while (tokenizer.hasMoreTokens()) {
+            fields.add(ComparatorField.fromWkt(tokenizer.nextToken(), props));
+          }
+          return new ComparatorFields(fields);
+        })
+        .orElseGet(ComparatorFields::new);
   }
 
 }

@@ -49,6 +49,6 @@ public class SortOrdersConverter implements Converter<String, SortOrders> {
 
   @Override
   public SortOrders convert(String source) {
-    return SortOrders.fromWkt(source, properties);
+    return SortOrders.fromSortOrdersText(source, properties);
   }
 }

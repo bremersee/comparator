@@ -48,6 +48,6 @@ public class SortOrderConverter implements Converter<String, SortOrder> {
 
   @Override
   public SortOrder convert(String source) {
-    return SortOrder.fromWkt(source, properties);
+    return SortOrder.fromSortOrderText(source, properties);
   }
 }

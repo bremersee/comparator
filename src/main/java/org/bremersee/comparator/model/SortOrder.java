@@ -90,31 +90,30 @@ import lombok.EqualsAndHashCode;
     "nullIsFirst"
 })
 @Schema(description = "A sort order defines how a field of an object is sorted.")
-@SuppressWarnings({"FieldMayBeFinal"})
 @EqualsAndHashCode
 @Valid
 public class SortOrder {
 
   @Schema(description = "The field name or path.")
   @XmlElement(name = "field")
-  private String field;
+  private final String field;
 
   @Schema(description = "Is ascending or descending order.", required = true)
   @XmlElement(name = "asc", defaultValue = "true")
-  private boolean asc;
+  private final boolean asc;
 
   @Schema(description = "Is case insensitive or sensitive order.", required = true)
   @XmlElement(name = "ignoreCase", defaultValue = "true")
-  private boolean ignoreCase;
+  private final boolean ignoreCase;
 
   @Schema(description = "Is null is first.", required = true)
   @XmlElement(name = "nullIsFirst", defaultValue = "false")
-  private boolean nullIsFirst;
+  private final boolean nullIsFirst;
 
   /**
    * Instantiates a new sort order.
    */
-  public SortOrder() {
+  protected SortOrder() {
     this(null, true, true, false);
   }
 
@@ -191,8 +190,8 @@ public class SortOrder {
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt() {
-    return toWkt(null);
+  public String toSortOrderText() {
+    return toSortOrderText(null);
   }
 
   /**
@@ -212,7 +211,7 @@ public class SortOrder {
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt(SortOrdersTextProperties properties) {
+  public String toSortOrderText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());
     return (field != null ? field : "") + props.getSortOrderArgsSeparator()
@@ -223,7 +222,7 @@ public class SortOrder {
 
   @Override
   public String toString() {
-    return toWkt();
+    return toSortOrderText();
   }
 
   /**
@@ -232,8 +231,8 @@ public class SortOrder {
    * @param source the well known text
    * @return the sort order
    */
-  public static SortOrder fromWkt(String source) {
-    return fromWkt(source, SortOrdersTextProperties.defaults());
+  public static SortOrder fromSortOrderText(String source) {
+    return fromSortOrderText(source, SortOrdersTextProperties.defaults());
   }
 
   /**
@@ -243,7 +242,7 @@ public class SortOrder {
    * @param properties the properties
    * @return the sort order
    */
-  public static SortOrder fromWkt(String source, SortOrdersTextProperties properties) {
+  public static SortOrder fromSortOrderText(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
           SortOrdersTextProperties props = Objects

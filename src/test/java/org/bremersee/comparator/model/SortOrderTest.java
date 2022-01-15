@@ -131,14 +131,14 @@ class SortOrderTest {
   void testToWkt(SoftAssertions softly) {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder(null, false, true, false);
-    softly.assertThat(sortOrder0.toWkt())
+    softly.assertThat(sortOrder0.toSortOrderText())
         .as("Create wkt of %s", sortOrder0)
         .isEqualTo("i0,asc,false,true");
     softly.assertThat(sortOrder0.toString())
         .as("toString is equal to WKT")
-        .isEqualTo(sortOrder0.toWkt());
+        .isEqualTo(sortOrder0.toSortOrderText());
 
-    softly.assertThat(sortOrder1.toWkt(SortOrdersTextProperties.builder()
+    softly.assertThat(sortOrder1.toSortOrderText(SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-")
             .ascValue("true")
             .descValue("false")
@@ -154,13 +154,13 @@ class SortOrderTest {
    */
   @Test
   void testFromWkt(SoftAssertions softly) {
-    SortOrder actual = SortOrder.fromWkt("field0,desc,false,true");
+    SortOrder actual = SortOrder.fromSortOrderText("field0,desc,false,true");
     SortOrder expected = new SortOrder("field0", false, false, true);
 
     softly.assertThat(actual)
         .isEqualTo(expected);
 
-    softly.assertThat(SortOrder.fromWkt(null))
+    softly.assertThat(SortOrder.fromSortOrderText(null))
         .isEqualTo(new SortOrder(null, true, true, false));
   }
 
@@ -179,27 +179,27 @@ class SortOrderTest {
         .nullIsLastValue("nil")
         .build();
 
-    SortOrder actual = SortOrder.fromWkt("::asc::cis::nif", properties);
+    SortOrder actual = SortOrder.fromSortOrderText("::asc::cis::nif", properties);
     SortOrder expected = new SortOrder(null, true, true, true);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = SortOrder.fromWkt("field1", properties);
+    actual = SortOrder.fromSortOrderText("field1", properties);
     expected = new SortOrder("field1", true, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = SortOrder.fromWkt("field2::desc", properties);
+    actual = SortOrder.fromSortOrderText("field2::desc", properties);
     expected = new SortOrder("field2", false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = SortOrder.fromWkt("field3::desc::cs", properties);
+    actual = SortOrder.fromSortOrderText("field3::desc::cs", properties);
     expected = new SortOrder("field3", false, false, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = SortOrder.fromWkt("field4::desc::cs::nif", properties);
+    actual = SortOrder.fromSortOrderText("field4::desc::cs::nif", properties);
     expected = new SortOrder("field4", false, false, true);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = SortOrder.fromWkt("::desc", properties);
+    actual = SortOrder.fromSortOrderText("::desc", properties);
     expected = new SortOrder(null, false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
   }

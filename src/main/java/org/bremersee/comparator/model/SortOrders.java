@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,18 +50,17 @@ import lombok.EqualsAndHashCode;
 @Valid
 public class SortOrders {
 
-  @SuppressWarnings("FieldMayBeFinal")
   @Schema(description = "The list of sort orders.")
-  private List<SortOrder> sortOrders = new ArrayList<>();
+  private final List<SortOrder> sortOrders = new ArrayList<>();
 
   /**
-   * Instantiates a new list of sort orders.
+   * Instantiates an empty list of sort orders.
    */
-  public SortOrders() {
+  protected SortOrders() {
   }
 
   /**
-   * Instantiates a new list of sort orders.
+   * Instantiates a new unmodifiable list of sort orders.
    *
    * @param sortOrders the sort orders
    */
@@ -72,12 +72,12 @@ public class SortOrders {
   }
 
   /**
-   * Gets the list of sort orders.
+   * Gets the unmodifiable list of sort orders.
    *
    * @return the list of sort orders
    */
   public List<SortOrder> getSortOrders() {
-    return sortOrders;
+    return Collections.unmodifiableList(sortOrders);
   }
 
   /**
@@ -85,19 +85,19 @@ public class SortOrders {
    *
    * <p>The syntax of the field ordering description is
    * <pre>
-   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst|fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
    * </pre>
    *
    * <p>For example
    * <pre>
-   * room.number,asc,true,false|person.lastName,asc,true,false|person.firstName,asc,true,false
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
    * </pre>
    *
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt() {
-    return toWkt(null);
+  public String toSortOrdersText() {
+    return toSortOrdersText(null);
   }
 
   /**
@@ -105,29 +105,29 @@ public class SortOrders {
    *
    * <p>The syntax of the field ordering description is
    * <pre>
-   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst|fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
    * </pre>
    *
    * <p>For example
    * <pre>
-   * room.number,asc,true,false|person.lastName,asc,true,false|person.firstName,asc,true,false
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
    * </pre>
    *
    * @param properties the properties
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt(SortOrdersTextProperties properties) {
+  public String toSortOrdersText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());
     return sortOrders.stream()
-        .map(sortOrder -> sortOrder.toWkt(props))
+        .map(sortOrder -> sortOrder.toSortOrderText(props))
         .collect(Collectors.joining(props.getSortOrderSeparator()));
   }
 
   @Override
   public String toString() {
-    return toWkt();
+    return toSortOrdersText();
   }
 
   /**
@@ -136,8 +136,8 @@ public class SortOrders {
    * @param source the well known text
    * @return the sort orders
    */
-  public static SortOrders fromWkt(String source) {
-    return fromWkt(source, SortOrdersTextProperties.defaults());
+  public static SortOrders fromSortOrdersText(String source) {
+    return fromSortOrdersText(source, SortOrdersTextProperties.defaults());
   }
 
   /**
@@ -147,7 +147,7 @@ public class SortOrders {
    * @param properties the properties
    * @return the sort orders
    */
-  public static SortOrders fromWkt(String source, SortOrdersTextProperties properties) {
+  public static SortOrders fromSortOrdersText(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
           SortOrdersTextProperties props = Objects
@@ -155,7 +155,7 @@ public class SortOrders {
           List<SortOrder> sortOrders = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(wkt, props.getSortOrderSeparator());
           while (tokenizer.hasMoreTokens()) {
-            sortOrders.add(SortOrder.fromWkt(tokenizer.nextToken(), props));
+            sortOrders.add(SortOrder.fromSortOrderText(tokenizer.nextToken(), props));
           }
           return new SortOrders(sortOrders);
         })

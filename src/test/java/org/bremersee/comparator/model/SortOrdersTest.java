@@ -145,7 +145,7 @@ class SortOrdersTest {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder("i1", false, true, false);
     SortOrders sortOrders0 = new SortOrders(List.of(sortOrder0, sortOrder1));
-    String actual = sortOrders0.toWkt();
+    String actual = sortOrders0.toSortOrdersText();
     softly.assertThat(actual)
         .as("Create wkt of %s", sortOrders0)
         .isEqualTo("i0,asc,false,true;i1,desc,true,false");
@@ -153,7 +153,7 @@ class SortOrdersTest {
         .as("toString is equal to WKT")
         .isEqualTo(actual);
 
-    actual = sortOrders0.toWkt(SortOrdersTextProperties.builder()
+    actual = sortOrders0.toSortOrdersText(SortOrdersTextProperties.builder()
         .sortOrderSeparator("&")
         .sortOrderArgsSeparator(":")
         .build());
@@ -167,12 +167,12 @@ class SortOrdersTest {
    */
   @Test
   void testFromWkt(SoftAssertions softly) {
-    SortOrders actual = SortOrders.fromWkt(null);
+    SortOrders actual = SortOrders.fromSortOrdersText(null);
     softly.assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .isEmpty();
 
-    actual = SortOrders.fromWkt(
+    actual = SortOrders.fromSortOrdersText(
         "field0,asc,true,true");
     SortOrder sortOrder0 = new SortOrder("field0", true, true, true);
     List<SortOrder> expected = List.of(sortOrder0);
@@ -180,7 +180,7 @@ class SortOrdersTest {
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
 
-    actual = SortOrders.fromWkt(
+    actual = SortOrders.fromSortOrdersText(
         "field0,asc,true,true"
             + ";field1,asc,false,true"
             + ";field2,asc,true,false"
@@ -212,7 +212,7 @@ class SortOrdersTest {
         .nullIsLastValue("nil")
         .build();
 
-    SortOrders actual = SortOrders.fromWkt(
+    SortOrders actual = SortOrders.fromSortOrdersText(
         "-:-asc-:-cis-:-nif"
             + "&&field1"
             + "&&field2-:-desc"

@@ -121,7 +121,7 @@ class SortMapperTest {
   void toSortOrder() {
     assertThat(SortMapper.toSortOrder(null))
         .isNull();
-    assertThat(SortMapper.toSortOrder(new SortOrder()))
+    assertThat(SortMapper.toSortOrder(new SortOrder(null, true, true, true)))
         .isNull();
     assertThat(SortMapper.toSortOrder(new SortOrder("", true, true, true)))
         .isNull();

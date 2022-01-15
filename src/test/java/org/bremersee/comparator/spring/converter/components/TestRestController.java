@@ -61,7 +61,7 @@ public class TestRestController {
       @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     log.info("Received sort orders {}", sort);
-    return ResponseEntity.ok(new SortOrders(sort).toWkt());
+    return ResponseEntity.ok(new SortOrders(sort).toSortOrdersText());
   }
 
   @Operation(

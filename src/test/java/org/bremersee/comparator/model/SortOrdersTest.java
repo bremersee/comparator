@@ -59,18 +59,18 @@ class SortOrdersTest {
    */
   @Test
   void testXmlSortOrders() throws Exception {
-    SortOrder field0 = new SortOrder("i0", true, true, false);
-    SortOrder field1 = new SortOrder("i1", false, true, false);
-    SortOrder field2 = new SortOrder("i2", true, true, false);
+    SortOrder sortOrder0 = new SortOrder("i0", true, true, false);
+    SortOrder sortOrder1 = new SortOrder("i1", false, true, false);
+    SortOrder sortOrder2 = new SortOrder("i2", true, true, false);
 
-    SortOrders fields = new SortOrders(List.of(field0, field1, field2));
+    SortOrders sortOrders = new SortOrders(List.of(sortOrder0, sortOrder1, sortOrder2));
 
     Marshaller marshaller = jaxbContext.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
     StringWriter sw = new StringWriter();
 
-    marshaller.marshal(fields, sw);
+    marshaller.marshal(sortOrders, sw);
 
     String xmlStr = sw.toString();
 
@@ -78,8 +78,8 @@ class SortOrdersTest {
         .unmarshal(new StringReader(xmlStr));
 
     assertThat(readFields)
-        .as("Write and read xml of %s", fields)
-        .isEqualTo(fields);
+        .as("Write and read xml of %s", sortOrders)
+        .isEqualTo(sortOrders);
   }
 
   /**
@@ -89,20 +89,20 @@ class SortOrdersTest {
    */
   @Test
   void testJsonSortOrders() throws Exception {
-    SortOrder field0 = new SortOrder("i0", true, false, true);
-    SortOrder field1 = new SortOrder("i1", false, true, false);
+    SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder1 = new SortOrder("i1", false, true, false);
 
-    SortOrders fields = new SortOrders(List.of(field0, field1));
+    SortOrders sortOrders = new SortOrders(List.of(sortOrder0, sortOrder1));
 
     ObjectMapper om = new ObjectMapper();
 
-    String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(fields);
+    String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(sortOrders);
 
     SortOrders readFields = om.readValue(jsonStr, SortOrders.class);
 
     assertThat(readFields)
-        .as("Write and read json of %s", fields)
-        .isEqualTo(fields);
+        .as("Write and read json of %s", sortOrders)
+        .isEqualTo(sortOrders);
   }
 
   /**
@@ -112,25 +112,25 @@ class SortOrdersTest {
    */
   @Test
   void testEqualsAndHashCode(SoftAssertions softly) {
-    SortOrder field0 = new SortOrder("i0", true, false, true);
-    SortOrder field1 = new SortOrder("i1", true, false, true);
-    SortOrder field2 = new SortOrder("i0", true, false, true);
-    SortOrder field3 = new SortOrder("i1", true, false, true);
-    SortOrders fields0 = new SortOrders(List.of(field0, field1));
-    SortOrders fields2 = new SortOrders(List.of(field2, field3));
+    SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder1 = new SortOrder("i1", true, false, true);
+    SortOrder sortOrder2 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder3 = new SortOrder("i1", true, false, true);
+    SortOrders sortOrders0 = new SortOrders(List.of(sortOrder0, sortOrder1));
+    SortOrders sortOrders2 = new SortOrders(List.of(sortOrder2, sortOrder3));
 
-    softly.assertThat(fields0.hashCode()).isEqualTo(fields2.hashCode());
+    softly.assertThat(sortOrders0.hashCode()).isEqualTo(sortOrders2.hashCode());
 
     //noinspection UnnecessaryLocalVariable
-    SortOrders fields1 = fields0;
+    SortOrders sortOrders1 = sortOrders0;
     //noinspection ConstantConditions
-    softly.assertThat(fields0.equals(fields1)).isTrue();
-    softly.assertThat(fields0.equals(fields2)).isTrue();
+    softly.assertThat(sortOrders0.equals(sortOrders1)).isTrue();
+    softly.assertThat(sortOrders0.equals(sortOrders2)).isTrue();
 
-    SortOrders fields3 = new SortOrders(List.of(field1, field3));
-    softly.assertThat(fields3.equals(fields0)).isFalse();
+    SortOrders sortOrders3 = new SortOrders(List.of(sortOrder1, sortOrder3));
+    softly.assertThat(sortOrders3.equals(sortOrders0)).isFalse();
     //noinspection EqualsBetweenInconvertibleTypes
-    softly.assertThat(fields0.equals(field0)).isFalse();
+    softly.assertThat(sortOrders0.equals(sortOrder0)).isFalse();
 
     softly.assertThat(new SortOrders(null).equals(new SortOrders())).isTrue();
   }
@@ -142,23 +142,23 @@ class SortOrdersTest {
    */
   @Test
   void testToWkt(SoftAssertions softly) {
-    SortOrder field0 = new SortOrder("i0", true, false, true);
-    SortOrder field1 = new SortOrder("i1", false, true, false);
-    SortOrders fields0 = new SortOrders(List.of(field0, field1));
-    String actual = fields0.toWkt();
+    SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder1 = new SortOrder("i1", false, true, false);
+    SortOrders sortOrders0 = new SortOrders(List.of(sortOrder0, sortOrder1));
+    String actual = sortOrders0.toWkt();
     softly.assertThat(actual)
-        .as("Create wkt of %s", fields0)
+        .as("Create wkt of %s", sortOrders0)
         .isEqualTo("i0,asc,false,true;i1,desc,true,false");
-    softly.assertThat(fields0.toString())
+    softly.assertThat(sortOrders0.toString())
         .as("toString is equal to WKT")
         .isEqualTo(actual);
 
-    actual = fields0.toWkt(WellKnownTextProperties.builder()
+    actual = sortOrders0.toWkt(WellKnownTextProperties.builder()
         .fieldSeparator("&")
         .fieldArgsSeparator(":")
         .build());
     softly.assertThat(actual)
-        .as("Create wkt with custom properties of %s", fields0)
+        .as("Create wkt with custom properties of %s", sortOrders0)
         .isEqualTo("i0:asc:false:true&i1:desc:true:false");
   }
 
@@ -174,8 +174,8 @@ class SortOrdersTest {
 
     actual = SortOrders.fromWkt(
         "field0,asc,true,true");
-    SortOrder field0 = new SortOrder("field0", true, true, true);
-    List<SortOrder> expected = List.of(field0);
+    SortOrder sortOrder0 = new SortOrder("field0", true, true, true);
+    List<SortOrder> expected = List.of(sortOrder0);
     softly.assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
@@ -187,12 +187,12 @@ class SortOrdersTest {
             + ";field3,asc,false,false"
             + ";field4,desc,false,true"
             + ";field5,desc,false,false");
-    SortOrder field1 = new SortOrder("field1", true, false, true);
-    SortOrder field2 = new SortOrder("field2", true, true, false);
-    SortOrder field3 = new SortOrder("field3", true, false, false);
-    SortOrder field4 = new SortOrder("field4", false, false, true);
-    SortOrder field5 = new SortOrder("field5", false, false, false);
-    expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder sortOrder1 = new SortOrder("field1", true, false, true);
+    SortOrder sortOrder2 = new SortOrder("field2", true, true, false);
+    SortOrder sortOrder3 = new SortOrder("field3", true, false, false);
+    SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
+    SortOrder sortOrder5 = new SortOrder("field5", false, false, false);
+    expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
     softly.assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
@@ -222,13 +222,13 @@ class SortOrdersTest {
         properties
     );
 
-    SortOrder field0 = new SortOrder(null, true, true, true);
-    SortOrder field1 = new SortOrder("field1", true, true, false);
-    SortOrder field2 = new SortOrder("field2", false, true, false);
-    SortOrder field3 = new SortOrder("field3", false, false, false);
-    SortOrder field4 = new SortOrder("field4", false, false, true);
-    SortOrder field5 = new SortOrder(null, false, true, false);
-    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder sortOrder0 = new SortOrder(null, true, true, true);
+    SortOrder sortOrder1 = new SortOrder("field1", true, true, false);
+    SortOrder sortOrder2 = new SortOrder("field2", false, true, false);
+    SortOrder sortOrder3 = new SortOrder("field3", false, false, false);
+    SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
+    SortOrder sortOrder5 = new SortOrder(null, false, true, false);
+    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))

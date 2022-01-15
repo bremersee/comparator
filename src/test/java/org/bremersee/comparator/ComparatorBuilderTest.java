@@ -96,13 +96,13 @@ class ComparatorBuilderTest {
    */
   @Test
   void testSimpleGetObjectWithSortOrders(SoftAssertions softly) {
-    List<SortOrder> fields = List.of(
+    List<SortOrder> orders = List.of(
         new SortOrder("number", true, false, false),
         new SortOrder("anotherNumber", true, false, false));
     SimpleGetObject one = new SimpleGetObject(1, 1);
     SimpleGetObject two = new SimpleGetObject(1, 3);
     int result = ComparatorBuilder.builder()
-        .addAll(fields)
+        .addAll(orders)
         .build()
         .compare(one, two);
     softly.assertThat(result)
@@ -110,14 +110,14 @@ class ComparatorBuilderTest {
         .isLessThan(0);
 
     result = ComparatorBuilder.builder()
-        .addAll(fields, new DefaultValueExtractor())
+        .addAll(orders, new DefaultValueExtractor())
         .build()
         .compare(two, one);
     softly.assertThat(result)
         .as("Compare with given value extractor %s with %s", two, one)
         .isGreaterThan(0);
 
-    SortOrders sortOrders = new SortOrders(fields);
+    SortOrders sortOrders = new SortOrders(orders);
     result = ComparatorBuilder.builder()
         .addAll(sortOrders)
         .build()

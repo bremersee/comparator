@@ -161,47 +161,47 @@ public interface ComparatorBuilder {
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
    *     added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(Collection<? extends SortOrder> fields) {
-    return addAll(fields, (ValueExtractor) null);
+  default ComparatorBuilder addAll(Collection<? extends SortOrder> sortOrders) {
+    return addAll(sortOrders, (ValueExtractor) null);
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
    *     added)
    * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends SortOrder> fields,
+      Collection<? extends SortOrder> sortOrders,
       ValueExtractor valueExtractor) {
-    Optional.ofNullable(fields)
-        .ifPresent(sortOrders -> sortOrders.stream()
+    Optional.ofNullable(sortOrders)
+        .ifPresent(orders -> orders.stream()
             .filter(Objects::nonNull)
             .forEach(sortOrder -> add(sortOrder, valueExtractor)));
     return this;
   }
 
   /**
-   * Adds comparators for the given fields ordering descriptions.
+   * Adds comparators for the given sortOrders ordering descriptions.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
    *     added)
    * @param comparatorFunction the comparator function
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends SortOrder> fields,
+      Collection<? extends SortOrder> sortOrders,
       Function<SortOrder, Comparator<?>> comparatorFunction) {
 
-    Optional.ofNullable(fields)
-        .ifPresent(sortOrders -> sortOrders.stream()
+    Optional.ofNullable(sortOrders)
+        .ifPresent(orders -> orders.stream()
             .filter(Objects::nonNull)
             .forEach(sortOrder -> add(comparatorFunction.apply(sortOrder))));
     return this;
@@ -211,12 +211,12 @@ public interface ComparatorBuilder {
    * Creates and adds value comparators for the given field ordering descriptions.
    *
    * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will
-   *     be                         added)
+   *     be added)
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(SortOrders sortOrders) {
     return Optional.ofNullable(sortOrders)
-        .map(fields -> addAll(fields.getSortOrders()))
+        .map(orders -> addAll(orders.getSortOrders()))
         .orElse(this);
   }
 
@@ -233,7 +233,7 @@ public interface ComparatorBuilder {
       SortOrders sortOrders,
       ValueExtractor valueExtractor) {
     return Optional.ofNullable(sortOrders)
-        .map(fields -> addAll(fields.getSortOrders(), valueExtractor))
+        .map(orders -> addAll(orders.getSortOrders(), valueExtractor))
         .orElse(this);
   }
 
@@ -248,7 +248,7 @@ public interface ComparatorBuilder {
       SortOrders sortOrders,
       Function<SortOrder, Comparator<?>> comparatorFunction) {
     return Optional.ofNullable(sortOrders)
-        .map(fields -> addAll(fields.getSortOrders(), comparatorFunction))
+        .map(orders -> addAll(orders.getSortOrders(), comparatorFunction))
         .orElse(this);
   }
 

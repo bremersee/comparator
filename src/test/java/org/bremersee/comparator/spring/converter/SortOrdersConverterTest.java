@@ -47,13 +47,13 @@ class SortOrdersConverterTest {
             + ";field4,desc,false,true"
             + ";field5,desc,false,false");
 
-    SortOrder field0 = new SortOrder("field0", true, true, true);
-    SortOrder field1 = new SortOrder("field1", true, false, true);
-    SortOrder field2 = new SortOrder("field2", true, true, false);
-    SortOrder field3 = new SortOrder("field3", true, false, false);
-    SortOrder field4 = new SortOrder("field4", false, false, true);
-    SortOrder field5 = new SortOrder("field5", false, false, false);
-    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder sortOrder0 = new SortOrder("field0", true, true, true);
+    SortOrder sortOrder1 = new SortOrder("field1", true, false, true);
+    SortOrder sortOrder2 = new SortOrder("field2", true, true, false);
+    SortOrder sortOrder3 = new SortOrder("field3", true, false, false);
+    SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
+    SortOrder sortOrder5 = new SortOrder("field5", false, false, false);
+    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
@@ -84,13 +84,13 @@ class SortOrdersConverterTest {
             + "&&-:-desc"
     );
 
-    SortOrder field0 = new SortOrder(null, true, true, true);
-    SortOrder field1 = new SortOrder("field1", true, true, false);
-    SortOrder field2 = new SortOrder("field2", false, true, false);
-    SortOrder field3 = new SortOrder("field3", false, false, false);
-    SortOrder field4 = new SortOrder("field4", false, false, true);
-    SortOrder field5 = new SortOrder(null, false, true, false);
-    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder sortOrder0 = new SortOrder(null, true, true, true);
+    SortOrder sortOrder1 = new SortOrder("field1", true, true, false);
+    SortOrder sortOrder2 = new SortOrder("field2", false, true, false);
+    SortOrder sortOrder3 = new SortOrder("field3", false, false, false);
+    SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
+    SortOrder sortOrder5 = new SortOrder(null, false, true, false);
+    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))

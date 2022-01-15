@@ -65,7 +65,7 @@ public class SortOrders {
    * @param sortOrders the sort orders
    */
   @JsonCreator
-  public SortOrders(@JsonProperty("fields") Collection<? extends SortOrder> sortOrders) {
+  public SortOrders(@JsonProperty("sortOrders") Collection<? extends SortOrder> sortOrders) {
     if (sortOrders != null) {
       this.sortOrders.addAll(sortOrders);
     }
@@ -152,12 +152,12 @@ public class SortOrders {
         .map(wkt -> {
           WellKnownTextProperties props = Objects
               .requireNonNullElse(properties, WellKnownTextProperties.defaults());
-          List<SortOrder> fields = new ArrayList<>();
+          List<SortOrder> sortOrders = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(wkt, props.getFieldSeparator());
           while (tokenizer.hasMoreTokens()) {
-            fields.add(SortOrder.fromWkt(tokenizer.nextToken(), props));
+            sortOrders.add(SortOrder.fromWkt(tokenizer.nextToken(), props));
           }
-          return new SortOrders(fields);
+          return new SortOrders(sortOrders);
         })
         .orElseGet(SortOrders::new);
   }

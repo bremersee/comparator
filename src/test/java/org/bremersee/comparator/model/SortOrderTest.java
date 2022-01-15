@@ -57,14 +57,14 @@ class SortOrderTest {
    */
   @Test
   void testXmlSortOrder() throws Exception {
-    SortOrder field = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder = new SortOrder("i0", true, false, true);
 
     Marshaller marshaller = jaxbContext.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
     StringWriter sw = new StringWriter();
 
-    marshaller.marshal(field, sw);
+    marshaller.marshal(sortOrder, sw);
 
     String xmlStr = sw.toString();
 
@@ -72,8 +72,8 @@ class SortOrderTest {
         .unmarshal(new StringReader(xmlStr));
 
     assertThat(readField)
-        .as("Write and read xml of %s", field)
-        .isEqualTo(field);
+        .as("Write and read xml of %s", sortOrder)
+        .isEqualTo(sortOrder);
   }
 
   /**
@@ -83,17 +83,17 @@ class SortOrderTest {
    */
   @Test
   void testJsonComparatorItem() throws Exception {
-    SortOrder field = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder = new SortOrder("i0", true, false, true);
 
     ObjectMapper om = new ObjectMapper();
 
-    String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(field);
+    String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(sortOrder);
 
     SortOrder readField = om.readValue(jsonStr, SortOrder.class);
 
     assertThat(readField)
-        .as("Write and read json of %s", field)
-        .isEqualTo(field);
+        .as("Write and read json of %s", sortOrder)
+        .isEqualTo(sortOrder);
   }
 
   /**
@@ -104,22 +104,22 @@ class SortOrderTest {
   @SuppressWarnings({"UnnecessaryLocalVariable"})
   @Test
   void testEqualsAndHashCode(SoftAssertions softly) {
-    SortOrder field0 = new SortOrder("i0", true, false, true);
-    SortOrder field1 = field0;
-    SortOrder field2 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder1 = sortOrder0;
+    SortOrder sortOrder2 = new SortOrder("i0", true, false, true);
 
-    softly.assertThat(field0.hashCode()).isEqualTo(field2.hashCode());
+    softly.assertThat(sortOrder0.hashCode()).isEqualTo(sortOrder2.hashCode());
     //noinspection EqualsWithItself
-    softly.assertThat(field0.equals(field0)).isTrue();
+    softly.assertThat(sortOrder0.equals(sortOrder0)).isTrue();
     //noinspection ConstantConditions
-    softly.assertThat(field0.equals(field1)).isTrue();
-    softly.assertThat(field0.equals(field2)).isTrue();
+    softly.assertThat(sortOrder0.equals(sortOrder1)).isTrue();
+    softly.assertThat(sortOrder0.equals(sortOrder2)).isTrue();
 
-    SortOrder field3 = new SortOrder("i1", true, false, true);
-    softly.assertThat(field0.equals(field3)).isFalse();
+    SortOrder sortOrder3 = new SortOrder("i1", true, false, true);
+    softly.assertThat(sortOrder0.equals(sortOrder3)).isFalse();
 
     //noinspection EqualsBetweenInconvertibleTypes
-    softly.assertThat(field0.equals(new SortOrders())).isFalse();
+    softly.assertThat(sortOrder0.equals(new SortOrders())).isFalse();
   }
 
   /**
@@ -129,21 +129,21 @@ class SortOrderTest {
    */
   @Test
   void testToWkt(SoftAssertions softly) {
-    SortOrder field0 = new SortOrder("i0", true, false, true);
-    SortOrder field1 = new SortOrder(null, false, true, false);
-    softly.assertThat(field0.toWkt())
-        .as("Create wkt of %s", field0)
+    SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
+    SortOrder sortOrder1 = new SortOrder(null, false, true, false);
+    softly.assertThat(sortOrder0.toWkt())
+        .as("Create wkt of %s", sortOrder0)
         .isEqualTo("i0,asc,false,true");
-    softly.assertThat(field0.toString())
+    softly.assertThat(sortOrder0.toString())
         .as("toString is equal to WKT")
-        .isEqualTo(field0.toWkt());
+        .isEqualTo(sortOrder0.toWkt());
 
-    softly.assertThat(field1.toWkt(WellKnownTextProperties.builder()
+    softly.assertThat(sortOrder1.toWkt(WellKnownTextProperties.builder()
             .fieldArgsSeparator("-")
             .ascValue("true")
             .descValue("false")
             .build()))
-        .as("Create wkt with custom properties of %s", field0)
+        .as("Create wkt with custom properties of %s", sortOrder0)
         .isEqualTo("-false-true-false");
   }
 

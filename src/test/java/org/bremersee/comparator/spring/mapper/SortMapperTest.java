@@ -44,11 +44,11 @@ class SortMapperTest {
    */
   @Test
   void toSort(SoftAssertions softly) {
-    SortOrder field0 = new SortOrder("f0", true, true, true);
-    SortOrder field1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> fields = List.of(field0, field1);
+    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
+    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
+    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
 
-    Sort sort = SortMapper.toSort(fields);
+    Sort sort = SortMapper.toSort(sortOrders);
 
     softly.assertThat(sort)
         .isNotNull();
@@ -96,13 +96,13 @@ class SortMapperTest {
    */
   @Test
   void fromSort() {
-    SortOrder field0 = new SortOrder("f0", true, true, true);
-    SortOrder field1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> fields = List.of(field0, field1);
+    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
+    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
+    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
     List<SortOrder> actualFields = SortMapper
-        .fromSort(SortMapper.toSort(fields));
+        .fromSort(SortMapper.toSort(sortOrders));
     assertThat(actualFields)
-        .isEqualTo(fields);
+        .isEqualTo(sortOrders);
   }
 
   /**
@@ -110,8 +110,8 @@ class SortMapperTest {
    */
   @Test
   void fromSortWithNull() {
-    List<SortOrder> fields = SortMapper.fromSort(null);
-    assertThat(fields).isEmpty();
+    List<SortOrder> sortOrders = SortMapper.fromSort(null);
+    assertThat(sortOrders).isEmpty();
   }
 
   /**

@@ -17,16 +17,17 @@
 package org.bremersee.comparator.spring.mapper;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
 import org.springframework.data.domain.Sort;
 
 /**
- * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object
- * from the Spring framework (spring-data-common) and vice versa.
+ * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object from the
+ * Spring framework (spring-data-common) and vice versa.
  *
  * @author Christian Bremer
  */
@@ -36,20 +37,29 @@ public abstract class SortMapper {
   }
 
   /**
+   * Transforms sort orders into a {@code Sort} object.
+   *
+   * @param sortOrders the sort orders
+   * @return the sort
+   */
+  public static Sort toSort(SortOrders sortOrders) {
+    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);
+  }
+
+  /**
    * Transforms the sort order into a {@code Sort} object.
    *
    * @param sortOrders the sort orders
    * @return the sort object
    */
   public static Sort toSort(Collection<? extends SortOrder> sortOrders) {
-    List<Sort.Order> orderList = sortOrders.stream()
+    List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
+        .stream()
+        .flatMap(Collection::stream)
         .map(SortMapper::toSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
-    if (orderList.isEmpty()) {
-      return Sort.unsorted();
-    }
-    return Sort.by(orderList);
+    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
   }
 
   /**
@@ -59,10 +69,9 @@ public abstract class SortMapper {
    * @return the sort order list
    */
   public static List<SortOrder> fromSort(Sort sort) {
-    if (sort == null) {
-      return Collections.emptyList();
-    }
-    return sort.stream()
+    return Optional.ofNullable(sort)
+        .stream()
+        .flatMap(Sort::stream)
         .map(SortMapper::fromSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
@@ -84,10 +93,7 @@ public abstract class SortMapper {
         sortOrder.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST
             : Sort.NullHandling.NULLS_LAST;
     Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);
-    if (sortOrder.isIgnoreCase()) {
-      return order.ignoreCase();
-    }
-    return order;
+    return sortOrder.isIgnoreCase() ? order.ignoreCase() : order;
   }
 
   /**

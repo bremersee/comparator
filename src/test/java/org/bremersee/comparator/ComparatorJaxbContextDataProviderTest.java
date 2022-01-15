@@ -17,6 +17,7 @@
 package org.bremersee.comparator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 import java.util.Collection;
 import javax.xml.bind.annotation.XmlSchema;
@@ -40,7 +41,7 @@ class ComparatorJaxbContextDataProviderTest {
    */
   @Test
   void namespace() {
-    XmlSchema schema = ObjectFactory.class.getPackage().getAnnotation(XmlSchema.class);
+    XmlSchema schema = findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class);
     assertThat(schema)
         .isNotNull()
         .extracting(XmlSchema::namespace)

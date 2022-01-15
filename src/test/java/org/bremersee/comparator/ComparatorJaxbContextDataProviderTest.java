@@ -50,7 +50,7 @@ class ComparatorJaxbContextDataProviderTest {
   /**
    * Gets jaxb context data.
    *
-   * @param softly the softly
+   * @param softly the soft assertions
    */
   @Test
   void getJaxbContextData(SoftAssertions softly) {

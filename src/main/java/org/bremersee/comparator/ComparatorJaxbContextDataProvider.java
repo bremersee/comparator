@@ -16,8 +16,11 @@
 
 package org.bremersee.comparator;
 
+import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+
 import java.util.Collection;
 import java.util.List;
+import javax.xml.bind.annotation.XmlSchema;
 import org.bremersee.comparator.model.ObjectFactory;
 import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
@@ -30,9 +33,17 @@ import org.bremersee.xml.JaxbContextDataProvider;
 public class ComparatorJaxbContextDataProvider implements JaxbContextDataProvider {
 
   /**
-   * The comparator name space.
+   * Gets namespace.
+   *
+   * @return the namespace
    */
-  public static final String NAMESPACE = "http://bremersee.org/xmlschemas/comparator/v3";
+  public static String getNamespace() {
+    XmlSchema xmlSchema = findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class);
+    if (xmlSchema != null && xmlSchema.namespace().trim().length() > 0) {
+      return xmlSchema.namespace().trim();
+    }
+    throw new IllegalStateException("Comparator model is missing xml namespace.");
+  }
 
   @Override
   public Collection<JaxbContextData> getJaxbContextData() {

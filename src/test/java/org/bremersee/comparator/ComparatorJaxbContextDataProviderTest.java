@@ -37,15 +37,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class ComparatorJaxbContextDataProviderTest {
 
   /**
-   * Namespace.
+   * Get namespace.
    */
   @Test
-  void namespace() {
+  void getNamespace() {
     XmlSchema schema = findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class);
-    assertThat(schema)
-        .isNotNull()
-        .extracting(XmlSchema::namespace)
-        .isEqualTo(ComparatorJaxbContextDataProvider.NAMESPACE);
+    String expected = schema != null ? schema.namespace() : null;
+    String actual = ComparatorJaxbContextDataProvider.getNamespace();
+    assertThat(actual)
+        .isEqualTo(expected);
   }
 
   /**
@@ -61,6 +61,6 @@ class ComparatorJaxbContextDataProviderTest {
         .containsExactly(new JaxbContextData(ObjectFactory.class.getPackage()));
     softly.assertThat(actual)
         .map(JaxbContextData::getNameSpace)
-        .containsExactly(ComparatorJaxbContextDataProvider.NAMESPACE);
+        .containsExactly(ComparatorJaxbContextDataProvider.getNamespace());
   }
 }

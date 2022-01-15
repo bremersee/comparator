@@ -153,7 +153,7 @@ class SortOrdersTest {
         .as("toString is equal to WKT")
         .isEqualTo(actual);
 
-    actual = sortOrders0.toWkt(WellKnownTextProperties.builder()
+    actual = sortOrders0.toWkt(SortOrdersTextProperties.builder()
         .sortOrderSeparator("&")
         .sortOrderArgsSeparator(":")
         .build());
@@ -203,7 +203,7 @@ class SortOrdersTest {
    */
   @Test
   void testFromWktWithProperties() {
-    WellKnownTextProperties properties = WellKnownTextProperties.builder()
+    SortOrdersTextProperties properties = SortOrdersTextProperties.builder()
         .sortOrderArgsSeparator("-:-")
         .sortOrderSeparator("&&")
         .caseSensitiveValue("cs")

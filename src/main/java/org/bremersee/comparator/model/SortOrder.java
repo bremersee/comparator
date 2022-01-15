@@ -212,9 +212,9 @@ public class SortOrder {
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt(WellKnownTextProperties properties) {
-    WellKnownTextProperties props = Objects.requireNonNullElse(properties,
-        WellKnownTextProperties.defaults());
+  public String toWkt(SortOrdersTextProperties properties) {
+    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
+        SortOrdersTextProperties.defaults());
     return (field != null ? field : "") + props.getSortOrderArgsSeparator()
         + props.getDirectionValue(asc) + props.getSortOrderArgsSeparator()
         + props.getIgnoreCaseValue(ignoreCase) + props.getSortOrderArgsSeparator()
@@ -233,7 +233,7 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder fromWkt(String source) {
-    return fromWkt(source, WellKnownTextProperties.defaults());
+    return fromWkt(source, SortOrdersTextProperties.defaults());
   }
 
   /**
@@ -243,11 +243,11 @@ public class SortOrder {
    * @param properties the properties
    * @return the sort order
    */
-  public static SortOrder fromWkt(String source, WellKnownTextProperties properties) {
+  public static SortOrder fromWkt(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
-          WellKnownTextProperties props = Objects
-              .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+          SortOrdersTextProperties props = Objects
+              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());
           String field;
           boolean asc = props.isAsc(null);
           boolean ignoreCase = props.isCaseIgnored(null);

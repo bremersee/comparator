@@ -18,7 +18,7 @@ package org.bremersee.comparator.spring.converter;
 
 import java.util.Objects;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.WellKnownTextProperties;
+import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.springframework.core.convert.converter.Converter;
 
 /**
@@ -28,13 +28,13 @@ import org.springframework.core.convert.converter.Converter;
  */
 public class SortOrderConverter implements Converter<String, SortOrder> {
 
-  private final WellKnownTextProperties properties;
+  private final SortOrdersTextProperties properties;
 
   /**
    * Instantiates a new sort order converter.
    */
   public SortOrderConverter() {
-    this(WellKnownTextProperties.defaults());
+    this(SortOrdersTextProperties.defaults());
   }
 
   /**
@@ -42,8 +42,8 @@ public class SortOrderConverter implements Converter<String, SortOrder> {
    *
    * @param properties the properties
    */
-  public SortOrderConverter(WellKnownTextProperties properties) {
-    this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
+  public SortOrderConverter(SortOrdersTextProperties properties) {
+    this.properties = Objects.requireNonNullElse(properties, SortOrdersTextProperties.defaults());
   }
 
   @Override

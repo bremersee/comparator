@@ -117,9 +117,9 @@ public class SortOrders {
    * @return the well known text
    */
   @NotEmpty
-  public String toWkt(WellKnownTextProperties properties) {
-    WellKnownTextProperties props = Objects.requireNonNullElse(properties,
-        WellKnownTextProperties.defaults());
+  public String toWkt(SortOrdersTextProperties properties) {
+    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
+        SortOrdersTextProperties.defaults());
     return sortOrders.stream()
         .map(sortOrder -> sortOrder.toWkt(props))
         .collect(Collectors.joining(props.getSortOrderSeparator()));
@@ -137,7 +137,7 @@ public class SortOrders {
    * @return the sort orders
    */
   public static SortOrders fromWkt(String source) {
-    return fromWkt(source, WellKnownTextProperties.defaults());
+    return fromWkt(source, SortOrdersTextProperties.defaults());
   }
 
   /**
@@ -147,11 +147,11 @@ public class SortOrders {
    * @param properties the properties
    * @return the sort orders
    */
-  public static SortOrders fromWkt(String source, WellKnownTextProperties properties) {
+  public static SortOrders fromWkt(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
-          WellKnownTextProperties props = Objects
-              .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+          SortOrdersTextProperties props = Objects
+              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());
           List<SortOrder> sortOrders = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(wkt, props.getSortOrderSeparator());
           while (tokenizer.hasMoreTokens()) {

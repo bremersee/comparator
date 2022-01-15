@@ -18,7 +18,6 @@ package org.bremersee.comparator.model;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import org.bremersee.comparator.model.ImmutableWellKnownTextProperties.Builder;
 import org.immutables.value.Value;
 
 /**
@@ -28,15 +27,15 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @Valid
-public interface WellKnownTextProperties {
+public interface SortOrdersTextProperties {
 
   /**
    * Properties builder.
    *
    * @return the builder
    */
-  static Builder builder() {
-    return ImmutableWellKnownTextProperties.builder();
+  static ImmutableSortOrdersTextProperties.Builder builder() {
+    return ImmutableSortOrdersTextProperties.builder();
   }
 
   /**
@@ -44,7 +43,7 @@ public interface WellKnownTextProperties {
    *
    * @return the well known text properties
    */
-  static WellKnownTextProperties defaults() {
+  static SortOrdersTextProperties defaults() {
     return builder().build();
   }
 

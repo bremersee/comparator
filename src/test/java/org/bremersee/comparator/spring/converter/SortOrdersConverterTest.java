@@ -22,7 +22,7 @@ import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import java.util.List;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
-import org.bremersee.comparator.model.WellKnownTextProperties;
+import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -66,7 +66,7 @@ class SortOrdersConverterTest {
   @Test
   void convertWithProperties() {
     SortOrdersConverter converter = new SortOrdersConverter(
-        WellKnownTextProperties.builder()
+        SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-:-")
             .sortOrderSeparator("&&")
             .caseSensitiveValue("cs")

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.WellKnownTextProperties;
+import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -54,7 +54,7 @@ class SortOrderConverterTest {
   @Test
   void convertWithProperties(SoftAssertions softly) {
     SortOrderConverter converter = new SortOrderConverter(
-        WellKnownTextProperties.builder()
+        SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("::")
             .caseSensitiveValue("cs")
             .caseInsensitiveValue("cis")

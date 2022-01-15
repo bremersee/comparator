@@ -138,7 +138,7 @@ class SortOrderTest {
         .as("toString is equal to WKT")
         .isEqualTo(sortOrder0.toWkt());
 
-    softly.assertThat(sortOrder1.toWkt(WellKnownTextProperties.builder()
+    softly.assertThat(sortOrder1.toWkt(SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-")
             .ascValue("true")
             .descValue("false")
@@ -171,7 +171,7 @@ class SortOrderTest {
    */
   @Test
   void testFromWktWithProperties(SoftAssertions softly) {
-    WellKnownTextProperties properties = WellKnownTextProperties.builder()
+    SortOrdersTextProperties properties = SortOrdersTextProperties.builder()
         .sortOrderArgsSeparator("::")
         .caseSensitiveValue("cs")
         .caseInsensitiveValue("cis")

@@ -41,8 +41,8 @@ import lombok.EqualsAndHashCode;
  * @author Christian Bremer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "comparatorFields")
-@XmlType(name = "comparatorFieldsType")
+@XmlRootElement(name = "sortOrders")
+@XmlType(name = "sortOrdersType")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "A list of sort orders.")
 @EqualsAndHashCode
@@ -51,7 +51,7 @@ public class SortOrders {
 
   @SuppressWarnings("FieldMayBeFinal")
   @Schema(description = "The list of sort orders.")
-  private List<SortOrder> fields = new ArrayList<>();
+  private List<SortOrder> sortOrders = new ArrayList<>();
 
   /**
    * Instantiates a new list of sort orders.
@@ -62,12 +62,12 @@ public class SortOrders {
   /**
    * Instantiates a new list of sort orders.
    *
-   * @param fields the sort orders
+   * @param sortOrders the sort orders
    */
   @JsonCreator
-  public SortOrders(@JsonProperty("fields") Collection<? extends SortOrder> fields) {
-    if (fields != null) {
-      this.fields.addAll(fields);
+  public SortOrders(@JsonProperty("fields") Collection<? extends SortOrder> sortOrders) {
+    if (sortOrders != null) {
+      this.sortOrders.addAll(sortOrders);
     }
   }
 
@@ -76,8 +76,8 @@ public class SortOrders {
    *
    * @return the list of sort orders
    */
-  public List<SortOrder> getFields() {
-    return fields;
+  public List<SortOrder> getSortOrders() {
+    return sortOrders;
   }
 
   /**
@@ -120,8 +120,8 @@ public class SortOrders {
   public String toWkt(WellKnownTextProperties properties) {
     WellKnownTextProperties props = Objects.requireNonNullElse(properties,
         WellKnownTextProperties.defaults());
-    return fields.stream()
-        .map(comparatorField -> comparatorField.toWkt(props))
+    return sortOrders.stream()
+        .map(sortOrder -> sortOrder.toWkt(props))
         .collect(Collectors.joining(props.getFieldSeparator()));
   }
 

@@ -39,7 +39,7 @@ public class SortOrderConverterIntegrationTestConfiguration {
    * @return the sort order converter
    */
   @Bean
-  public SortOrderConverter comparatorFieldConverter() {
+  public SortOrderConverter sortOrderConverter() {
     return new SortOrderConverter();
   }
 

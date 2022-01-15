@@ -227,7 +227,7 @@ import org.springframework.context.annotation.Configuration;
 public class SortOrderConverterConfiguration {
 
   @Bean
-  public SortOrderConverter comparatorFieldConverter() {
+  public SortOrderConverter sortOrderConverter() {
     return new SortOrderConverter();
   }
 

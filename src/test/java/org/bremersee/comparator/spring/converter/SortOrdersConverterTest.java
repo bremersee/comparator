@@ -56,7 +56,7 @@ class SortOrdersConverterTest {
     List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -93,7 +93,7 @@ class SortOrdersConverterTest {
     List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 

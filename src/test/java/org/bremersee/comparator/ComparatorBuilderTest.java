@@ -117,21 +117,21 @@ class ComparatorBuilderTest {
         .as("Compare with given value extractor %s with %s", two, one)
         .isGreaterThan(0);
 
-    SortOrders comparatorFields = new SortOrders(fields);
+    SortOrders sortOrders = new SortOrders(fields);
     result = ComparatorBuilder.builder()
-        .addAll(comparatorFields)
+        .addAll(sortOrders)
         .build()
         .compare(one, two);
     softly.assertThat(result)
-        .as("Compare %s with %s using %s", one, two, comparatorFields)
+        .as("Compare %s with %s using %s", one, two, sortOrders)
         .isLessThan(0);
 
     result = ComparatorBuilder.builder()
-        .addAll(comparatorFields, new DefaultValueExtractor())
+        .addAll(sortOrders, new DefaultValueExtractor())
         .build()
         .compare(two, one);
     softly.assertThat(result)
-        .as("Compare with given value extractor %s with %s using %s", two, one, comparatorFields)
+        .as("Compare with given value extractor %s with %s using %s", two, one, sortOrders)
         .isGreaterThan(0);
   }
 
@@ -211,16 +211,16 @@ class ComparatorBuilderTest {
     ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "c");
     list = new ArrayList<>(List.of(b, c, a));
 
-    List<SortOrder> comparatorFields = List.of(
+    List<SortOrder> sortOrders = List.of(
         new SortOrder("not_exists", true, true, false),
         new SortOrder("simple.number", false, true, false)
     );
     list.sort(ComparatorBuilder.builder()
-        .addAll(comparatorFields, comparatorField -> {
-          if ("not_exists".equals(comparatorField.getField())) {
+        .addAll(sortOrders, sortOrder -> {
+          if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
           }
-          return new ValueComparator(comparatorField);
+          return new ValueComparator(sortOrder);
         })
         .build());
     softly.assertThat(list)
@@ -228,11 +228,11 @@ class ComparatorBuilderTest {
 
     Collections.shuffle(list);
     list.sort(ComparatorBuilder.builder()
-        .addAll(new SortOrders(comparatorFields), comparatorField -> {
-          if ("not_exists".equals(comparatorField.getField())) {
+        .addAll(new SortOrders(sortOrders), sortOrder -> {
+          if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
           }
-          return new ValueComparator(comparatorField);
+          return new ValueComparator(sortOrder);
         })
         .build());
     softly.assertThat(list)

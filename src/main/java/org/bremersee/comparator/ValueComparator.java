@@ -43,27 +43,27 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the sort order (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    */
-  public ValueComparator(SortOrder comparatorField) {
-    this(comparatorField.getField(),
-        comparatorField.isAsc(),
-        comparatorField.isIgnoreCase(),
-        comparatorField.isNullIsFirst(),
+  public ValueComparator(SortOrder sortOrder) {
+    this(sortOrder.getField(),
+        sortOrder.isAsc(),
+        sortOrder.isIgnoreCase(),
+        sortOrder.isNullIsFirst(),
         null);
   }
 
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the sort order (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    * @param valueExtractor the value extractor (if it is {@code null}, a default will be used)
    */
-  public ValueComparator(SortOrder comparatorField, ValueExtractor valueExtractor) {
-    this(comparatorField.getField(),
-        comparatorField.isAsc(),
-        comparatorField.isIgnoreCase(),
-        comparatorField.isNullIsFirst(),
+  public ValueComparator(SortOrder sortOrder, ValueExtractor valueExtractor) {
+    this(sortOrder.getField(),
+        sortOrder.isAsc(),
+        sortOrder.isIgnoreCase(),
+        sortOrder.isNullIsFirst(),
         valueExtractor);
   }
 

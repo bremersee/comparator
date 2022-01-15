@@ -169,7 +169,7 @@ class SortOrdersTest {
   void testFromWkt(SoftAssertions softly) {
     SortOrders actual = SortOrders.fromWkt(null);
     softly.assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .isEmpty();
 
     actual = SortOrders.fromWkt(
@@ -177,7 +177,7 @@ class SortOrdersTest {
     SortOrder field0 = new SortOrder("field0", true, true, true);
     List<SortOrder> expected = List.of(field0);
     softly.assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
 
     actual = SortOrders.fromWkt(
@@ -194,7 +194,7 @@ class SortOrdersTest {
     SortOrder field5 = new SortOrder("field5", false, false, false);
     expected = List.of(field0, field1, field2, field3, field4, field5);
     softly.assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -231,7 +231,7 @@ class SortOrdersTest {
     List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(SortOrders::getFields, list(SortOrder.class))
+        .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 

@@ -38,11 +38,11 @@ public abstract class SortMapper {
   /**
    * Transforms the sort order into a {@code Sort} object.
    *
-   * @param comparatorFields the sort orders
+   * @param sortOrders the sort orders
    * @return the sort object
    */
-  public static Sort toSort(Collection<? extends SortOrder> comparatorFields) {
-    List<Sort.Order> orderList = comparatorFields.stream()
+  public static Sort toSort(Collection<? extends SortOrder> sortOrders) {
+    List<Sort.Order> orderList = sortOrders.stream()
         .map(SortMapper::toSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
@@ -71,20 +71,20 @@ public abstract class SortMapper {
   /**
    * Transforms the sort order into a {@code Sort.Order} object.
    *
-   * @param comparatorField the sort order
+   * @param sortOrder the sort order
    * @return the sort object
    */
-  public static Sort.Order toSortOrder(SortOrder comparatorField) {
-    if (comparatorField == null || comparatorField.getField() == null
-        || comparatorField.getField().trim().length() == 0) {
+  public static Sort.Order toSortOrder(SortOrder sortOrder) {
+    if (sortOrder == null || sortOrder.getField() == null
+        || sortOrder.getField().trim().length() == 0) {
       return null;
     }
-    Sort.Direction direction = comparatorField.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
+    Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
     Sort.NullHandling nullHandlingHint =
-        comparatorField.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST
+        sortOrder.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST
             : Sort.NullHandling.NULLS_LAST;
-    Sort.Order order = new Sort.Order(direction, comparatorField.getField(), nullHandlingHint);
-    if (comparatorField.isIgnoreCase()) {
+    Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);
+    if (sortOrder.isIgnoreCase()) {
       return order.ignoreCase();
     }
     return order;

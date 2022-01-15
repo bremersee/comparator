@@ -74,9 +74,9 @@ import lombok.EqualsAndHashCode;
  *
  * @author Christian Bremer
  */
-@XmlRootElement(name = "comparatorField")
+@XmlRootElement(name = "sortOrder")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "comparatorFieldType", propOrder = {
+@XmlType(name = "sortOrderType", propOrder = {
     "field",
     "asc",
     "ignoreCase",

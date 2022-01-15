@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
 
 /**
  * The comparator builder.
@@ -135,7 +135,7 @@ public interface ComparatorBuilder {
    * @param field the field ordering description (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(ComparatorField field) {
+  default ComparatorBuilder add(SortOrder field) {
     return add(field, null);
   }
 
@@ -147,7 +147,7 @@ public interface ComparatorBuilder {
    * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(ComparatorField field, ValueExtractor valueExtractor) {
+  default ComparatorBuilder add(SortOrder field, ValueExtractor valueExtractor) {
     return Optional.ofNullable(field)
         .map(comparatorField -> add(
             comparatorField.getField(),
@@ -165,7 +165,7 @@ public interface ComparatorBuilder {
    *     added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(Collection<? extends ComparatorField> fields) {
+  default ComparatorBuilder addAll(Collection<? extends SortOrder> fields) {
     return addAll(fields, (ValueExtractor) null);
   }
 
@@ -179,7 +179,7 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends ComparatorField> fields,
+      Collection<? extends SortOrder> fields,
       ValueExtractor valueExtractor) {
     Optional.ofNullable(fields)
         .ifPresent(comparatorFields -> comparatorFields.stream()
@@ -197,8 +197,8 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends ComparatorField> fields,
-      Function<ComparatorField, Comparator<?>> comparatorFunction) {
+      Collection<? extends SortOrder> fields,
+      Function<SortOrder, Comparator<?>> comparatorFunction) {
 
     Optional.ofNullable(fields)
         .ifPresent(comparatorFields -> comparatorFields.stream()
@@ -214,7 +214,7 @@ public interface ComparatorBuilder {
    *     be                         added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(ComparatorFields comparatorFields) {
+  default ComparatorBuilder addAll(SortOrders comparatorFields) {
     return Optional.ofNullable(comparatorFields)
         .map(fields -> addAll(fields.getFields()))
         .orElse(this);
@@ -230,7 +230,7 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      ComparatorFields comparatorFields,
+      SortOrders comparatorFields,
       ValueExtractor valueExtractor) {
     return Optional.ofNullable(comparatorFields)
         .map(fields -> addAll(fields.getFields(), valueExtractor))
@@ -240,13 +240,13 @@ public interface ComparatorBuilder {
   /**
    * Add all comparator builder.
    *
-   * @param comparatorFields the comparator fields
+   * @param comparatorFields the sort orders
    * @param comparatorFunction the comparator function
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      ComparatorFields comparatorFields,
-      Function<ComparatorField, Comparator<?>> comparatorFunction) {
+      SortOrders comparatorFields,
+      Function<SortOrder, Comparator<?>> comparatorFunction) {
     return Optional.ofNullable(comparatorFields)
         .map(fields -> addAll(fields.getFields(), comparatorFunction))
         .orElse(this);

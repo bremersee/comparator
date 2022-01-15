@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 import org.springframework.data.domain.Sort;
 
 /**
- * This mapper provides methods to transform a {@link ComparatorField} into a {@code Sort} object
+ * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object
  * from the Spring framework (spring-data-common) and vice versa.
  *
  * @author Christian Bremer
@@ -36,12 +36,12 @@ public abstract class SortMapper {
   }
 
   /**
-   * Transforms the comparator field into a {@code Sort} object.
+   * Transforms the sort order into a {@code Sort} object.
    *
-   * @param comparatorFields the comparator fields
+   * @param comparatorFields the sort orders
    * @return the sort object
    */
-  public static Sort toSort(Collection<? extends ComparatorField> comparatorFields) {
+  public static Sort toSort(Collection<? extends SortOrder> comparatorFields) {
     List<Sort.Order> orderList = comparatorFields.stream()
         .map(SortMapper::toSortOrder)
         .filter(Objects::nonNull)
@@ -53,12 +53,12 @@ public abstract class SortMapper {
   }
 
   /**
-   * Transforms a {@code Sort} object into a comparator field list.
+   * Transforms a {@code Sort} object into a sort order list.
    *
    * @param sort the {@code Sort} object
-   * @return the comparator field list
+   * @return the sort order list
    */
-  public static List<ComparatorField> fromSort(Sort sort) {
+  public static List<SortOrder> fromSort(Sort sort) {
     if (sort == null) {
       return Collections.emptyList();
     }
@@ -69,12 +69,12 @@ public abstract class SortMapper {
   }
 
   /**
-   * Transforms the comparator field into a {@code Sort.Order} object.
+   * Transforms the sort order into a {@code Sort.Order} object.
    *
-   * @param comparatorField the comparator field
+   * @param comparatorField the sort order
    * @return the sort object
    */
-  public static Sort.Order toSortOrder(ComparatorField comparatorField) {
+  public static Sort.Order toSortOrder(SortOrder comparatorField) {
     if (comparatorField == null || comparatorField.getField() == null
         || comparatorField.getField().trim().length() == 0) {
       return null;
@@ -91,18 +91,18 @@ public abstract class SortMapper {
   }
 
   /**
-   * Transforms a {@code Sort.Order} object into a comparator field.
+   * Transforms a {@code Sort.Order} object into a sort order.
    *
    * @param sortOrder the {@code Sort.Order} object
-   * @return the comparator field
+   * @return the sort order
    */
-  public static ComparatorField fromSortOrder(Sort.Order sortOrder) {
+  public static SortOrder fromSortOrder(Sort.Order sortOrder) {
     //noinspection
     if (sortOrder == null) {
       return null;
     }
     boolean nullIsFirst = Sort.NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling());
-    return new ComparatorField(sortOrder.getProperty(), sortOrder.isAscending(),
+    return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),
         sortOrder.isIgnoreCase(),
         nullIsFirst);
   }

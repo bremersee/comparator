@@ -18,12 +18,17 @@ package org.bremersee.comparator.spring.converter.components;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,9 +58,37 @@ public class TestRestController {
   @SuppressWarnings("unused")
   public ResponseEntity<String> getSomethingSorted(
       @Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
-      @RequestParam(name = "sort", required = false) List<ComparatorField> sort) {
+      @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     log.info("Received sort orders {}", sort);
-    return ResponseEntity.ok(new ComparatorFields(sort).toWkt());
+    return ResponseEntity.ok(new SortOrders(sort).toWkt());
+  }
+
+  @Operation(
+      summary = "Get something else that can be sorted.",
+      operationId = "getSomethingElseSorted",
+      tags = {"test-controller"},
+      parameters = {
+          @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
+          @Parameter(name = "size", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
+          @Parameter(name = "sort", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")))
+      }
+  )
+  @GetMapping(path = "/with-spring-sort")
+  //@PageableAsQueryParam
+  @SuppressWarnings("unused")
+  public ResponseEntity<Page<String>> getSomethingElseSorted(
+      //@Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
+      // @ParameterObject
+      @Parameter(hidden = true)
+
+      @PageableDefault(page = 1, size = 20, sort = "somethingElse,desc") Pageable pageRequest) {
+      log.info("Pageable = {}", pageRequest);
+      List<String> content = List.of("entry0", "entry1");
+      Page<String> page = new PageImpl<>(
+          content,
+          pageRequest,
+          (long)pageRequest.getPageNumber() * pageRequest.getPageSize() + content.size());
+    return ResponseEntity.ok(page);
   }
 }

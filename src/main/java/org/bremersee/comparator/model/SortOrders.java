@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 
 /**
- * The list of comparator fields.
+ * The list of sort orders.
  *
  * @author Christian Bremer
  */
@@ -44,39 +44,39 @@ import lombok.EqualsAndHashCode;
 @XmlRootElement(name = "comparatorFields")
 @XmlType(name = "comparatorFieldsType")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Schema(description = "A list of comparator fields.")
+@Schema(description = "A list of sort orders.")
 @EqualsAndHashCode
 @Valid
-public class ComparatorFields {
+public class SortOrders {
 
   @SuppressWarnings("FieldMayBeFinal")
-  @Schema(description = "The list of comparator fields.")
-  private List<ComparatorField> fields = new ArrayList<>();
+  @Schema(description = "The list of sort orders.")
+  private List<SortOrder> fields = new ArrayList<>();
 
   /**
-   * Instantiates a new list of comparator fields.
+   * Instantiates a new list of sort orders.
    */
-  public ComparatorFields() {
+  public SortOrders() {
   }
 
   /**
-   * Instantiates a new list of comparator fields.
+   * Instantiates a new list of sort orders.
    *
-   * @param fields the comparator fields
+   * @param fields the sort orders
    */
   @JsonCreator
-  public ComparatorFields(@JsonProperty("fields") Collection<? extends ComparatorField> fields) {
+  public SortOrders(@JsonProperty("fields") Collection<? extends SortOrder> fields) {
     if (fields != null) {
       this.fields.addAll(fields);
     }
   }
 
   /**
-   * Gets the list of comparator fields.
+   * Gets the list of sort orders.
    *
-   * @return the list of comparator fields
+   * @return the list of sort orders
    */
-  public List<ComparatorField> getFields() {
+  public List<SortOrder> getFields() {
     return fields;
   }
 
@@ -134,9 +134,9 @@ public class ComparatorFields {
    * From well known text.
    *
    * @param source the well known text
-   * @return the comparator fields
+   * @return the sort orders
    */
-  public static ComparatorFields fromWkt(String source) {
+  public static SortOrders fromWkt(String source) {
     return fromWkt(source, WellKnownTextProperties.defaults());
   }
 
@@ -145,21 +145,21 @@ public class ComparatorFields {
    *
    * @param source the well known text
    * @param properties the properties
-   * @return the comparator fields
+   * @return the sort orders
    */
-  public static ComparatorFields fromWkt(String source, WellKnownTextProperties properties) {
+  public static SortOrders fromWkt(String source, WellKnownTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
           WellKnownTextProperties props = Objects
               .requireNonNullElse(properties, WellKnownTextProperties.defaults());
-          List<ComparatorField> fields = new ArrayList<>();
+          List<SortOrder> fields = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(wkt, props.getFieldSeparator());
           while (tokenizer.hasMoreTokens()) {
-            fields.add(ComparatorField.fromWkt(tokenizer.nextToken(), props));
+            fields.add(SortOrder.fromWkt(tokenizer.nextToken(), props));
           }
-          return new ComparatorFields(fields);
+          return new SortOrders(fields);
         })
-        .orElseGet(ComparatorFields::new);
+        .orElseGet(SortOrders::new);
   }
 
 }

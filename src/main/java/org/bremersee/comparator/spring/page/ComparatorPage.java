@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,15 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.model;
+package org.bremersee.comparator.spring.page;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import org.springframework.data.domain.Page;
 
 /**
- * The xml object factory.
- *
  * @author Christian Bremer
  */
-@XmlRegistry
-public class ObjectFactory {
+public interface ComparatorPage<T> extends Page<T> {
 
-  /**
-   * Create sort order.
-   *
-   * @return the sort order
-   */
-  public SortOrder createSortOrder() {
-    return new SortOrder();
-  }
 
-  /**
-   * Create sort orders.
-   *
-   * @return the sort orders
-   */
-  public SortOrders createSortOrders() {
-    return new SortOrders();
-  }
 
 }

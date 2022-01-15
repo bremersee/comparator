@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,25 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator.model;
+package org.bremersee.comparator.spring.page;
 
-import javax.xml.bind.annotation.XmlRegistry;
+import java.util.List;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 /**
- * The xml object factory.
- *
  * @author Christian Bremer
  */
-@XmlRegistry
-public class ObjectFactory {
+public class ComparatorPageImpl<T> extends PageImpl<T> implements ComparatorPage<T> {
 
-  /**
-   * Create sort order.
-   *
-   * @return the sort order
-   */
-  public SortOrder createSortOrder() {
-    return new SortOrder();
+  public ComparatorPageImpl(List<T> content,
+      Pageable pageable,
+      long total) {
+    super(content, pageable, total);
   }
 
-  /**
-   * Create sort orders.
-   *
-   * @return the sort orders
-   */
-  public SortOrders createSortOrders() {
-    return new SortOrders();
+  public ComparatorPageImpl(List<T> content) {
+    super(content);
   }
 
 }

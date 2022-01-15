@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.Sort;
@@ -44,9 +44,9 @@ class SortMapperTest {
    */
   @Test
   void toSort(SoftAssertions softly) {
-    ComparatorField field0 = new ComparatorField("f0", true, true, true);
-    ComparatorField field1 = new ComparatorField("f1", false, false, false);
-    List<ComparatorField> fields = List.of(field0, field1);
+    SortOrder field0 = new SortOrder("f0", true, true, true);
+    SortOrder field1 = new SortOrder("f1", false, false, false);
+    List<SortOrder> fields = List.of(field0, field1);
 
     Sort sort = SortMapper.toSort(fields);
 
@@ -96,10 +96,10 @@ class SortMapperTest {
    */
   @Test
   void fromSort() {
-    ComparatorField field0 = new ComparatorField("f0", true, true, true);
-    ComparatorField field1 = new ComparatorField("f1", false, false, false);
-    List<ComparatorField> fields = List.of(field0, field1);
-    List<ComparatorField> actualFields = SortMapper
+    SortOrder field0 = new SortOrder("f0", true, true, true);
+    SortOrder field1 = new SortOrder("f1", false, false, false);
+    List<SortOrder> fields = List.of(field0, field1);
+    List<SortOrder> actualFields = SortMapper
         .fromSort(SortMapper.toSort(fields));
     assertThat(actualFields)
         .isEqualTo(fields);
@@ -110,7 +110,7 @@ class SortMapperTest {
    */
   @Test
   void fromSortWithNull() {
-    List<ComparatorField> fields = SortMapper.fromSort(null);
+    List<SortOrder> fields = SortMapper.fromSort(null);
     assertThat(fields).isEmpty();
   }
 
@@ -121,9 +121,9 @@ class SortMapperTest {
   void toSortOrder() {
     assertThat(SortMapper.toSortOrder(null))
         .isNull();
-    assertThat(SortMapper.toSortOrder(new ComparatorField()))
+    assertThat(SortMapper.toSortOrder(new SortOrder()))
         .isNull();
-    assertThat(SortMapper.toSortOrder(new ComparatorField("", true, true, true)))
+    assertThat(SortMapper.toSortOrder(new SortOrder("", true, true, true)))
         .isNull();
   }
 

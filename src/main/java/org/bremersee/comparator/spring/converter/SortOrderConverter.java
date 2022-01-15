@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +17,37 @@
 package org.bremersee.comparator.spring.converter;
 
 import java.util.Objects;
-import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.springframework.core.convert.converter.Converter;
 
 /**
- * The comparator fields converter.
+ * The sort order converter.
  *
  * @author Christian Bremer
  */
-public class ComparatorFieldsConverter implements Converter<String, ComparatorFields> {
+public class SortOrderConverter implements Converter<String, SortOrder> {
 
   private final WellKnownTextProperties properties;
 
   /**
-   * Instantiates a new Comparator fields converter.
+   * Instantiates a new sort order converter.
    */
-  public ComparatorFieldsConverter() {
+  public SortOrderConverter() {
     this(WellKnownTextProperties.defaults());
   }
 
   /**
-   * Instantiates a new Comparator fields converter.
+   * Instantiates a new sort order converter.
    *
    * @param properties the properties
    */
-  public ComparatorFieldsConverter(WellKnownTextProperties properties) {
-    this.properties = Objects
-        .requireNonNullElse(properties, WellKnownTextProperties.defaults());
+  public SortOrderConverter(WellKnownTextProperties properties) {
+    this.properties = Objects.requireNonNullElse(properties, WellKnownTextProperties.defaults());
   }
 
   @Override
-  public ComparatorFields convert(String source) {
-    return ComparatorFields.fromWkt(source, properties);
+  public SortOrder convert(String source) {
+    return SortOrder.fromWkt(source, properties);
   }
 }

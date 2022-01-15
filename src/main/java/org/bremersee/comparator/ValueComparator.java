@@ -18,7 +18,7 @@ package org.bremersee.comparator;
 
 import java.util.Comparator;
 import lombok.ToString;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 
 /**
  * The value comparator extracts field value of the specified field name or path and uses the
@@ -43,9 +43,9 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param comparatorField the sort order (cannot be {@code null})
    */
-  public ValueComparator(ComparatorField comparatorField) {
+  public ValueComparator(SortOrder comparatorField) {
     this(comparatorField.getField(),
         comparatorField.isAsc(),
         comparatorField.isIgnoreCase(),
@@ -56,10 +56,10 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param comparatorField the sort order (cannot be {@code null})
    * @param valueExtractor the value extractor (if it is {@code null}, a default will be used)
    */
-  public ValueComparator(ComparatorField comparatorField, ValueExtractor valueExtractor) {
+  public ValueComparator(SortOrder comparatorField, ValueExtractor valueExtractor) {
     this(comparatorField.getField(),
         comparatorField.isAsc(),
         comparatorField.isIgnoreCase(),

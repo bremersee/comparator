@@ -89,11 +89,11 @@ import lombok.EqualsAndHashCode;
     "ignoreCase",
     "nullIsFirst"
 })
-@Schema(description = "A comparator field defines how a field of an object is sorted.")
+@Schema(description = "A sort order defines how a field of an object is sorted.")
 @SuppressWarnings({"FieldMayBeFinal"})
 @EqualsAndHashCode
 @Valid
-public class ComparatorField {
+public class SortOrder {
 
   @Schema(description = "The field name or path.")
   @XmlElement(name = "field")
@@ -112,14 +112,14 @@ public class ComparatorField {
   private boolean nullIsFirst;
 
   /**
-   * Instantiates a new comparator field.
+   * Instantiates a new sort order.
    */
-  public ComparatorField() {
+  public SortOrder() {
     this(null, true, true, false);
   }
 
   /**
-   * Instantiates a new comparator field.
+   * Instantiates a new sort order.
    *
    * @param field the field name or path (can be {@code null})
    * @param asc {@code true} for an ascending order, {@code false} for a descending order
@@ -128,7 +128,7 @@ public class ComparatorField {
    * @param nullIsFirst specifies the order of {@code null} values
    */
   @JsonCreator
-  public ComparatorField(
+  public SortOrder(
       @JsonProperty("field") String field,
       @JsonProperty(value = "asc", required = true) boolean asc,
       @JsonProperty(value = "ignoreCase", required = true) boolean ignoreCase,
@@ -230,9 +230,9 @@ public class ComparatorField {
    * From well known text.
    *
    * @param source the well known text
-   * @return the comparator field
+   * @return the sort order
    */
-  public static ComparatorField fromWkt(String source) {
+  public static SortOrder fromWkt(String source) {
     return fromWkt(source, WellKnownTextProperties.defaults());
   }
 
@@ -241,9 +241,9 @@ public class ComparatorField {
    *
    * @param source the well known text
    * @param properties the properties
-   * @return the comparator field
+   * @return the sort order
    */
-  public static ComparatorField fromWkt(String source, WellKnownTextProperties properties) {
+  public static SortOrder fromWkt(String source, WellKnownTextProperties properties) {
     return Optional.ofNullable(source)
         .map(wkt -> {
           WellKnownTextProperties props = Objects
@@ -276,9 +276,9 @@ public class ComparatorField {
             }
           }
           field = field.length() == 0 ? null : field;
-          return new ComparatorField(field, asc, ignoreCase, nullIsFirst);
+          return new SortOrder(field, asc, ignoreCase, nullIsFirst);
         })
-        .orElseGet(() -> new ComparatorField(null, true, true, false));
+        .orElseGet(() -> new SortOrder(null, true, true, false));
   }
 
 }

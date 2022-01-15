@@ -25,8 +25,8 @@ import java.util.Comparator;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
 import org.bremersee.comparator.testmodel.ComplexObject;
 import org.bremersee.comparator.testmodel.ComplexObjectExtension;
 import org.bremersee.comparator.testmodel.ComplexObjectExtensionComparator;
@@ -90,15 +90,15 @@ class ComparatorBuilderTest {
   }
 
   /**
-   * Test simple get object with comparator fields.
+   * Test simple get object with sort orders.
    *
    * @param softly the soft assertions
    */
   @Test
-  void testSimpleGetObjectWithComparatorFields(SoftAssertions softly) {
-    List<ComparatorField> fields = List.of(
-        new ComparatorField("number", true, false, false),
-        new ComparatorField("anotherNumber", true, false, false));
+  void testSimpleGetObjectWithSortOrders(SoftAssertions softly) {
+    List<SortOrder> fields = List.of(
+        new SortOrder("number", true, false, false),
+        new SortOrder("anotherNumber", true, false, false));
     SimpleGetObject one = new SimpleGetObject(1, 1);
     SimpleGetObject two = new SimpleGetObject(1, 3);
     int result = ComparatorBuilder.builder()
@@ -117,7 +117,7 @@ class ComparatorBuilderTest {
         .as("Compare with given value extractor %s with %s", two, one)
         .isGreaterThan(0);
 
-    ComparatorFields comparatorFields = new ComparatorFields(fields);
+    SortOrders comparatorFields = new SortOrders(fields);
     result = ComparatorBuilder.builder()
         .addAll(comparatorFields)
         .build()
@@ -193,7 +193,7 @@ class ComparatorBuilderTest {
     list = new ArrayList<>(List.of(b, a));
     // natural order
     list.sort(ComparatorBuilder.builder()
-        .add((ComparatorField) null)
+        .add((SortOrder) null)
         .build());
     softly.assertThat(list)
         .containsExactly(a, b);
@@ -201,7 +201,7 @@ class ComparatorBuilderTest {
     list = new ArrayList<>(List.of(a, b));
     // natural order
     list.sort(ComparatorBuilder.builder()
-        .add(new ComparatorField("value", false, true, false))
+        .add(new SortOrder("value", false, true, false))
         .build());
     softly.assertThat(list)
         .containsExactly(b, a);
@@ -211,9 +211,9 @@ class ComparatorBuilderTest {
     ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "c");
     list = new ArrayList<>(List.of(b, c, a));
 
-    List<ComparatorField> comparatorFields = List.of(
-        new ComparatorField("not_exists", true, true, false),
-        new ComparatorField("simple.number", false, true, false)
+    List<SortOrder> comparatorFields = List.of(
+        new SortOrder("not_exists", true, true, false),
+        new SortOrder("simple.number", false, true, false)
     );
     list.sort(ComparatorBuilder.builder()
         .addAll(comparatorFields, comparatorField -> {
@@ -228,7 +228,7 @@ class ComparatorBuilderTest {
 
     Collections.shuffle(list);
     list.sort(ComparatorBuilder.builder()
-        .addAll(new ComparatorFields(comparatorFields), comparatorField -> {
+        .addAll(new SortOrders(comparatorFields), comparatorField -> {
           if ("not_exists".equals(comparatorField.getField())) {
             return new ComplexObjectExtensionComparator();
           }

@@ -33,12 +33,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * The comparator fields tests.
+ * The sort orders tests.
  *
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorFieldsTest {
+class SortOrdersTest {
 
   private static JAXBContext jaxbContext;
 
@@ -53,17 +53,17 @@ class ComparatorFieldsTest {
   }
 
   /**
-   * Test xml comparator fields.
+   * Test xml sort orders.
    *
    * @throws Exception the exception
    */
   @Test
-  void testXmlComparatorFields() throws Exception {
-    ComparatorField field0 = new ComparatorField("i0", true, true, false);
-    ComparatorField field1 = new ComparatorField("i1", false, true, false);
-    ComparatorField field2 = new ComparatorField("i2", true, true, false);
+  void testXmlSortOrders() throws Exception {
+    SortOrder field0 = new SortOrder("i0", true, true, false);
+    SortOrder field1 = new SortOrder("i1", false, true, false);
+    SortOrder field2 = new SortOrder("i2", true, true, false);
 
-    ComparatorFields fields = new ComparatorFields(List.of(field0, field1, field2));
+    SortOrders fields = new SortOrders(List.of(field0, field1, field2));
 
     Marshaller marshaller = jaxbContext.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -74,7 +74,7 @@ class ComparatorFieldsTest {
 
     String xmlStr = sw.toString();
 
-    ComparatorFields readFields = (ComparatorFields) jaxbContext.createUnmarshaller()
+    SortOrders readFields = (SortOrders) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));
 
     assertThat(readFields)
@@ -88,17 +88,17 @@ class ComparatorFieldsTest {
    * @throws Exception the exception
    */
   @Test
-  void testJsonComparatorFields() throws Exception {
-    ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = new ComparatorField("i1", false, true, false);
+  void testJsonSortOrders() throws Exception {
+    SortOrder field0 = new SortOrder("i0", true, false, true);
+    SortOrder field1 = new SortOrder("i1", false, true, false);
 
-    ComparatorFields fields = new ComparatorFields(List.of(field0, field1));
+    SortOrders fields = new SortOrders(List.of(field0, field1));
 
     ObjectMapper om = new ObjectMapper();
 
     String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(fields);
 
-    ComparatorFields readFields = om.readValue(jsonStr, ComparatorFields.class);
+    SortOrders readFields = om.readValue(jsonStr, SortOrders.class);
 
     assertThat(readFields)
         .as("Write and read json of %s", fields)
@@ -112,27 +112,27 @@ class ComparatorFieldsTest {
    */
   @Test
   void testEqualsAndHashCode(SoftAssertions softly) {
-    ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = new ComparatorField("i1", true, false, true);
-    ComparatorField field2 = new ComparatorField("i0", true, false, true);
-    ComparatorField field3 = new ComparatorField("i1", true, false, true);
-    ComparatorFields fields0 = new ComparatorFields(List.of(field0, field1));
-    ComparatorFields fields2 = new ComparatorFields(List.of(field2, field3));
+    SortOrder field0 = new SortOrder("i0", true, false, true);
+    SortOrder field1 = new SortOrder("i1", true, false, true);
+    SortOrder field2 = new SortOrder("i0", true, false, true);
+    SortOrder field3 = new SortOrder("i1", true, false, true);
+    SortOrders fields0 = new SortOrders(List.of(field0, field1));
+    SortOrders fields2 = new SortOrders(List.of(field2, field3));
 
     softly.assertThat(fields0.hashCode()).isEqualTo(fields2.hashCode());
 
     //noinspection UnnecessaryLocalVariable
-    ComparatorFields fields1 = fields0;
+    SortOrders fields1 = fields0;
     //noinspection ConstantConditions
     softly.assertThat(fields0.equals(fields1)).isTrue();
     softly.assertThat(fields0.equals(fields2)).isTrue();
 
-    ComparatorFields fields3 = new ComparatorFields(List.of(field1, field3));
+    SortOrders fields3 = new SortOrders(List.of(field1, field3));
     softly.assertThat(fields3.equals(fields0)).isFalse();
     //noinspection EqualsBetweenInconvertibleTypes
     softly.assertThat(fields0.equals(field0)).isFalse();
 
-    softly.assertThat(new ComparatorFields(null).equals(new ComparatorFields())).isTrue();
+    softly.assertThat(new SortOrders(null).equals(new SortOrders())).isTrue();
   }
 
   /**
@@ -142,9 +142,9 @@ class ComparatorFieldsTest {
    */
   @Test
   void testToWkt(SoftAssertions softly) {
-    ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = new ComparatorField("i1", false, true, false);
-    ComparatorFields fields0 = new ComparatorFields(List.of(field0, field1));
+    SortOrder field0 = new SortOrder("i0", true, false, true);
+    SortOrder field1 = new SortOrder("i1", false, true, false);
+    SortOrders fields0 = new SortOrders(List.of(field0, field1));
     String actual = fields0.toWkt();
     softly.assertThat(actual)
         .as("Create wkt of %s", fields0)
@@ -167,34 +167,34 @@ class ComparatorFieldsTest {
    */
   @Test
   void testFromWkt(SoftAssertions softly) {
-    ComparatorFields actual = ComparatorFields.fromWkt(null);
+    SortOrders actual = SortOrders.fromWkt(null);
     softly.assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .isEmpty();
 
-    actual = ComparatorFields.fromWkt(
+    actual = SortOrders.fromWkt(
         "field0,asc,true,true");
-    ComparatorField field0 = new ComparatorField("field0", true, true, true);
-    List<ComparatorField> expected = List.of(field0);
+    SortOrder field0 = new SortOrder("field0", true, true, true);
+    List<SortOrder> expected = List.of(field0);
     softly.assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
 
-    actual = ComparatorFields.fromWkt(
+    actual = SortOrders.fromWkt(
         "field0,asc,true,true"
             + ";field1,asc,false,true"
             + ";field2,asc,true,false"
             + ";field3,asc,false,false"
             + ";field4,desc,false,true"
             + ";field5,desc,false,false");
-    ComparatorField field1 = new ComparatorField("field1", true, false, true);
-    ComparatorField field2 = new ComparatorField("field2", true, true, false);
-    ComparatorField field3 = new ComparatorField("field3", true, false, false);
-    ComparatorField field4 = new ComparatorField("field4", false, false, true);
-    ComparatorField field5 = new ComparatorField("field5", false, false, false);
+    SortOrder field1 = new SortOrder("field1", true, false, true);
+    SortOrder field2 = new SortOrder("field2", true, true, false);
+    SortOrder field3 = new SortOrder("field3", true, false, false);
+    SortOrder field4 = new SortOrder("field4", false, false, true);
+    SortOrder field5 = new SortOrder("field5", false, false, false);
     expected = List.of(field0, field1, field2, field3, field4, field5);
     softly.assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -212,7 +212,7 @@ class ComparatorFieldsTest {
         .nullIsLastValue("nil")
         .build();
 
-    ComparatorFields actual = ComparatorFields.fromWkt(
+    SortOrders actual = SortOrders.fromWkt(
         "-:-asc-:-cis-:-nif"
             + "&&field1"
             + "&&field2-:-desc"
@@ -222,16 +222,16 @@ class ComparatorFieldsTest {
         properties
     );
 
-    ComparatorField field0 = new ComparatorField(null, true, true, true);
-    ComparatorField field1 = new ComparatorField("field1", true, true, false);
-    ComparatorField field2 = new ComparatorField("field2", false, true, false);
-    ComparatorField field3 = new ComparatorField("field3", false, false, false);
-    ComparatorField field4 = new ComparatorField("field4", false, false, true);
-    ComparatorField field5 = new ComparatorField(null, false, true, false);
-    List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder field0 = new SortOrder(null, true, true, true);
+    SortOrder field1 = new SortOrder("field1", true, true, false);
+    SortOrder field2 = new SortOrder("field2", false, true, false);
+    SortOrder field3 = new SortOrder("field3", false, false, false);
+    SortOrder field4 = new SortOrder("field4", false, false, true);
+    SortOrder field5 = new SortOrder(null, false, true, false);
+    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 

@@ -23,23 +23,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * The comparator field converter integration test configuration.
+ * The sort order converter integration test configuration.
  *
  * @author Christian Bremer
  */
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackageClasses = {TestRestController.class})
-public class ComparatorFieldConverterIntegrationTestConfiguration {
+//@EnableSpringDataWebSupport
+public class SortOrderConverterIntegrationTestConfiguration {
 
   /**
-   * Registers the comparator field converter.
+   * Registers the sort order converter.
    *
-   * @return the comparator field converter
+   * @return the sort order converter
    */
   @Bean
-  public ComparatorFieldConverter comparatorFieldConverter() {
-    return new ComparatorFieldConverter();
+  public SortOrderConverter comparatorFieldConverter() {
+    return new SortOrderConverter();
   }
 
 }

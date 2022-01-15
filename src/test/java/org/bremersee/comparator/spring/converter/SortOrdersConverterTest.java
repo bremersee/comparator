@@ -20,26 +20,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 import java.util.List;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.ComparatorFields;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
 import org.bremersee.comparator.model.WellKnownTextProperties;
 import org.junit.jupiter.api.Test;
 
 /**
- * The comparator fields converter test.
+ * The sort orders converter test.
  *
  * @author Christian Bremer
  */
-class ComparatorFieldsConverterTest {
+class SortOrdersConverterTest {
 
   /**
    * Convert.
    */
   @Test
   void convert() {
-    ComparatorFieldsConverter converter = new ComparatorFieldsConverter();
+    SortOrdersConverter converter = new SortOrdersConverter();
 
-    ComparatorFields actual = converter.convert(
+    SortOrders actual = converter.convert(
         "field0,asc,true,true"
             + ";field1,asc,false,true"
             + ";field2,asc,true,false"
@@ -47,16 +47,16 @@ class ComparatorFieldsConverterTest {
             + ";field4,desc,false,true"
             + ";field5,desc,false,false");
 
-    ComparatorField field0 = new ComparatorField("field0", true, true, true);
-    ComparatorField field1 = new ComparatorField("field1", true, false, true);
-    ComparatorField field2 = new ComparatorField("field2", true, true, false);
-    ComparatorField field3 = new ComparatorField("field3", true, false, false);
-    ComparatorField field4 = new ComparatorField("field4", false, false, true);
-    ComparatorField field5 = new ComparatorField("field5", false, false, false);
-    List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder field0 = new SortOrder("field0", true, true, true);
+    SortOrder field1 = new SortOrder("field1", true, false, true);
+    SortOrder field2 = new SortOrder("field2", true, true, false);
+    SortOrder field3 = new SortOrder("field3", true, false, false);
+    SortOrder field4 = new SortOrder("field4", false, false, true);
+    SortOrder field5 = new SortOrder("field5", false, false, false);
+    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 
@@ -65,7 +65,7 @@ class ComparatorFieldsConverterTest {
    */
   @Test
   void convertWithProperties() {
-    ComparatorFieldsConverter converter = new ComparatorFieldsConverter(
+    SortOrdersConverter converter = new SortOrdersConverter(
         WellKnownTextProperties.builder()
             .fieldArgsSeparator("-:-")
             .fieldSeparator("&&")
@@ -75,7 +75,7 @@ class ComparatorFieldsConverterTest {
             .nullIsLastValue("nil")
             .build());
 
-    ComparatorFields actual = converter.convert(
+    SortOrders actual = converter.convert(
         "-:-asc-:-cis-:-nif"
             + "&&field1"
             + "&&field2-:-desc"
@@ -84,16 +84,16 @@ class ComparatorFieldsConverterTest {
             + "&&-:-desc"
     );
 
-    ComparatorField field0 = new ComparatorField(null, true, true, true);
-    ComparatorField field1 = new ComparatorField("field1", true, true, false);
-    ComparatorField field2 = new ComparatorField("field2", false, true, false);
-    ComparatorField field3 = new ComparatorField("field3", false, false, false);
-    ComparatorField field4 = new ComparatorField("field4", false, false, true);
-    ComparatorField field5 = new ComparatorField(null, false, true, false);
-    List<ComparatorField> expected = List.of(field0, field1, field2, field3, field4, field5);
+    SortOrder field0 = new SortOrder(null, true, true, true);
+    SortOrder field1 = new SortOrder("field1", true, true, false);
+    SortOrder field2 = new SortOrder("field2", false, true, false);
+    SortOrder field3 = new SortOrder("field3", false, false, false);
+    SortOrder field4 = new SortOrder("field4", false, false, true);
+    SortOrder field5 = new SortOrder(null, false, true, false);
+    List<SortOrder> expected = List.of(field0, field1, field2, field3, field4, field5);
 
     assertThat(actual)
-        .extracting(ComparatorFields::getFields, list(ComparatorField.class))
+        .extracting(SortOrders::getFields, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
   }
 

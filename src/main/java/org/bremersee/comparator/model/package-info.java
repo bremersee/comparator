@@ -21,6 +21,6 @@
  */
 @javax.xml.bind.annotation.XmlSchema(
     namespace = "http://bremersee.org/xmlschemas/comparator/v2",
-    location = "http://bremersee.github.io/xmlschemas/comparator-v2.xsd",
+    // TODO location = "http://bremersee.github.io/xmlschemas/comparator-v2.xsd",
     elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.comparator.model;

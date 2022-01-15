@@ -88,7 +88,7 @@ class Example {
 
 Now you have a list, that contains the branches first, sorted by name and date, and then the leafs.
 
-#### Comparator arguments (class `ComparatorField`)
+#### Comparator arguments (class `SortOrder`)
 
 There are four attributes which define the comparison.
 
@@ -133,7 +133,6 @@ The sorting of employees:
 ```java
 import org.bremersee.comparator.*;
 import org.bremersee.comparator.model.*;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -144,9 +143,9 @@ class Example {
     // add employees
     list.sort(ComparatorBuilder.builder()
         .addAll(List.of(
-            new ComparatorField("room.number", true, true, false),
-            new ComparatorField("person.lastName", true, true, false),
-            new ComparatorField("person.firstName", true, true, false)
+            new SortOrder("room.number", true, true, false),
+            new SortOrder("person.lastName", true, true, false),
+            new SortOrder("person.firstName", true, true, false)
         ))
         .build());
   }
@@ -157,7 +156,7 @@ class Example {
 
 #### REST support
 
-The `CompratorField` has a string representation, that can be used to pass the sort order as a
+The `SortOrder` has a string representation, that can be used to pass the sort order as a
 query parameter into a `RestController`.
 
 The syntax is:
@@ -183,7 +182,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -200,13 +199,13 @@ public class TestRestController {
   @GetMapping(path = "/")
   public ResponseEntity<List<Employee>> getSomethingSorted(
       @Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
-      @RequestParam(name = "sort", required = false) List<ComparatorField> sort) {
+      @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     List<Empployy> list = service.findEmployees();
     list.sort(ComparatorBuilder.builder()
         .addAll(sort)
         .build());
-    
+
     return ResponseEntity.ok(list);
   }
 }
@@ -217,19 +216,19 @@ The url may look like this:
 http://localhost:8080?sort=room.number,asc&sort=person.lastName,asc,true
 ```
 
-The parsing of the string is done by providing the `CompratorFieldConverter` as a Spring bean:
+The parsing of the string is done by providing the `SortOrderConverter` as a Spring bean:
 
 ```java
-import org.bremersee.comparator.spring.converter.ComparatorFieldConverter;
+import org.bremersee.comparator.spring.converter.SortOrderConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ComparatorFieldConverterConfiguration {
+public class SortOrderConverterConfiguration {
 
   @Bean
-  public ComparatorFieldConverter comparatorFieldConverter() {
-    return new ComparatorFieldConverter();
+  public SortOrderConverter comparatorFieldConverter() {
+    return new SortOrderConverter();
   }
 
 }
@@ -239,7 +238,7 @@ public class ComparatorFieldConverterConfiguration {
 
 The Spring Common Data project contains a class for sorting, too.
 The class `SortMapper` contains methods to transform the
-comparator fields of this library into the objects of the spring framework.
+sort orders of this library into the objects of the spring framework.
 
 To use the Spring Framework Support you have to add the following
 dependency to your project:

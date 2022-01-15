@@ -15,7 +15,7 @@
  */
 
 /**
- * This package contains a mapper for converting {@link org.bremersee.comparator.model.ComparatorField}
+ * This package contains a mapper for converting {@link org.bremersee.comparator.model.SortOrder}
  * into Spring's {@code Sort} and vice versa.
  *
  * @author Christian Bremer

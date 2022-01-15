@@ -6,11 +6,55 @@
   },
   "servers": [
     {
-      "url": "http://localhost:60902",
+      "url": "http://localhost:51991",
       "description": "Generated server url"
     }
   ],
   "paths": {
+    "/with-spring-sort": {
+      "get": {
+        "tags": [
+          "test-controller"
+        ],
+        "summary": "Get something else that can be sorted.",
+        "operationId": "getSomethingElseSorted",
+        "parameters": [
+          {
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "tags": [

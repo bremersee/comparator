@@ -31,12 +31,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * The comparator field tests.
+ * The sort order tests.
  *
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorFieldTest {
+class SortOrderTest {
 
   private static JAXBContext jaxbContext;
 
@@ -51,13 +51,13 @@ class ComparatorFieldTest {
   }
 
   /**
-   * Test xml comparator field.
+   * Test xml sort order.
    *
    * @throws Exception the exception
    */
   @Test
-  void testXmlComparatorField() throws Exception {
-    ComparatorField field = new ComparatorField("i0", true, false, true);
+  void testXmlSortOrder() throws Exception {
+    SortOrder field = new SortOrder("i0", true, false, true);
 
     Marshaller marshaller = jaxbContext.createMarshaller();
     marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
@@ -68,7 +68,7 @@ class ComparatorFieldTest {
 
     String xmlStr = sw.toString();
 
-    ComparatorField readField = (ComparatorField) jaxbContext.createUnmarshaller()
+    SortOrder readField = (SortOrder) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));
 
     assertThat(readField)
@@ -77,19 +77,19 @@ class ComparatorFieldTest {
   }
 
   /**
-   * Test json comparator field.
+   * Test json sort order.
    *
    * @throws Exception the exception
    */
   @Test
   void testJsonComparatorItem() throws Exception {
-    ComparatorField field = new ComparatorField("i0", true, false, true);
+    SortOrder field = new SortOrder("i0", true, false, true);
 
     ObjectMapper om = new ObjectMapper();
 
     String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(field);
 
-    ComparatorField readField = om.readValue(jsonStr, ComparatorField.class);
+    SortOrder readField = om.readValue(jsonStr, SortOrder.class);
 
     assertThat(readField)
         .as("Write and read json of %s", field)
@@ -104,9 +104,9 @@ class ComparatorFieldTest {
   @SuppressWarnings({"UnnecessaryLocalVariable"})
   @Test
   void testEqualsAndHashCode(SoftAssertions softly) {
-    ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = field0;
-    ComparatorField field2 = new ComparatorField("i0", true, false, true);
+    SortOrder field0 = new SortOrder("i0", true, false, true);
+    SortOrder field1 = field0;
+    SortOrder field2 = new SortOrder("i0", true, false, true);
 
     softly.assertThat(field0.hashCode()).isEqualTo(field2.hashCode());
     //noinspection EqualsWithItself
@@ -115,11 +115,11 @@ class ComparatorFieldTest {
     softly.assertThat(field0.equals(field1)).isTrue();
     softly.assertThat(field0.equals(field2)).isTrue();
 
-    ComparatorField field3 = new ComparatorField("i1", true, false, true);
+    SortOrder field3 = new SortOrder("i1", true, false, true);
     softly.assertThat(field0.equals(field3)).isFalse();
 
     //noinspection EqualsBetweenInconvertibleTypes
-    softly.assertThat(field0.equals(new ComparatorFields())).isFalse();
+    softly.assertThat(field0.equals(new SortOrders())).isFalse();
   }
 
   /**
@@ -129,8 +129,8 @@ class ComparatorFieldTest {
    */
   @Test
   void testToWkt(SoftAssertions softly) {
-    ComparatorField field0 = new ComparatorField("i0", true, false, true);
-    ComparatorField field1 = new ComparatorField(null, false, true, false);
+    SortOrder field0 = new SortOrder("i0", true, false, true);
+    SortOrder field1 = new SortOrder(null, false, true, false);
     softly.assertThat(field0.toWkt())
         .as("Create wkt of %s", field0)
         .isEqualTo("i0,asc,false,true");
@@ -154,14 +154,14 @@ class ComparatorFieldTest {
    */
   @Test
   void testFromWkt(SoftAssertions softly) {
-    ComparatorField actual = ComparatorField.fromWkt("field0,desc,false,true");
-    ComparatorField expected = new ComparatorField("field0", false, false, true);
+    SortOrder actual = SortOrder.fromWkt("field0,desc,false,true");
+    SortOrder expected = new SortOrder("field0", false, false, true);
 
     softly.assertThat(actual)
         .isEqualTo(expected);
 
-    softly.assertThat(ComparatorField.fromWkt(null))
-        .isEqualTo(new ComparatorField(null, true, true, false));
+    softly.assertThat(SortOrder.fromWkt(null))
+        .isEqualTo(new SortOrder(null, true, true, false));
   }
 
   /**
@@ -179,28 +179,28 @@ class ComparatorFieldTest {
         .nullIsLastValue("nil")
         .build();
 
-    ComparatorField actual = ComparatorField.fromWkt("::asc::cis::nif", properties);
-    ComparatorField expected = new ComparatorField(null, true, true, true);
+    SortOrder actual = SortOrder.fromWkt("::asc::cis::nif", properties);
+    SortOrder expected = new SortOrder(null, true, true, true);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = ComparatorField.fromWkt("field1", properties);
-    expected = new ComparatorField("field1", true, true, false);
+    actual = SortOrder.fromWkt("field1", properties);
+    expected = new SortOrder("field1", true, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = ComparatorField.fromWkt("field2::desc", properties);
-    expected = new ComparatorField("field2", false, true, false);
+    actual = SortOrder.fromWkt("field2::desc", properties);
+    expected = new SortOrder("field2", false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = ComparatorField.fromWkt("field3::desc::cs", properties);
-    expected = new ComparatorField("field3", false, false, false);
+    actual = SortOrder.fromWkt("field3::desc::cs", properties);
+    expected = new SortOrder("field3", false, false, false);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = ComparatorField.fromWkt("field4::desc::cs::nif", properties);
-    expected = new ComparatorField("field4", false, false, true);
+    actual = SortOrder.fromWkt("field4::desc::cs::nif", properties);
+    expected = new SortOrder("field4", false, false, true);
     softly.assertThat(actual).isEqualTo(expected);
 
-    actual = ComparatorField.fromWkt("::desc", properties);
-    expected = new ComparatorField(null, false, true, false);
+    actual = SortOrder.fromWkt("::desc", properties);
+    expected = new SortOrder(null, false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
   }
 

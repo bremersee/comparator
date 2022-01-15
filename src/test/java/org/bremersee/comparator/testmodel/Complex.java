@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,28 @@
 
 package org.bremersee.comparator.testmodel;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
- * The simple test object.
- *
  * @author Christian Bremer
  */
+/*
+@JsonTypeInfo(
+    use = Id.CLASS,
+    property = "_type"
+)
+@JsonSubTypes({
+    @Type(value = ComplexObject.class, name = "plain"),
+    @Type(value = ComplexObjectExtension.class, name = "extended")
+})
+*/
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
-public class SimpleObject {
-
-  @JsonProperty
-  private final int number;
+public abstract class Complex {
 
 }

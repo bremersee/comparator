@@ -15,7 +15,7 @@
  */
 
 /**
- * This package contains converters to parse the string representation of comparator field(s).
+ * This package contains converters to parse the string representation of sort order(s).
  *
  * @author Christian Bremer
  */

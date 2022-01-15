@@ -139,7 +139,7 @@ class SortOrderTest {
         .isEqualTo(sortOrder0.toWkt());
 
     softly.assertThat(sortOrder1.toWkt(WellKnownTextProperties.builder()
-            .fieldArgsSeparator("-")
+            .sortOrderArgsSeparator("-")
             .ascValue("true")
             .descValue("false")
             .build()))
@@ -172,7 +172,7 @@ class SortOrderTest {
   @Test
   void testFromWktWithProperties(SoftAssertions softly) {
     WellKnownTextProperties properties = WellKnownTextProperties.builder()
-        .fieldArgsSeparator("::")
+        .sortOrderArgsSeparator("::")
         .caseSensitiveValue("cs")
         .caseInsensitiveValue("cis")
         .nullIsFirstValue("nif")

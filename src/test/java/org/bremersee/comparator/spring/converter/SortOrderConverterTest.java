@@ -55,7 +55,7 @@ class SortOrderConverterTest {
   void convertWithProperties(SoftAssertions softly) {
     SortOrderConverter converter = new SortOrderConverter(
         WellKnownTextProperties.builder()
-            .fieldArgsSeparator("::")
+            .sortOrderArgsSeparator("::")
             .caseSensitiveValue("cs")
             .caseInsensitiveValue("cis")
             .nullIsFirstValue("nif")

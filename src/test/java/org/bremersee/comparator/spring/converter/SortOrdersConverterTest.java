@@ -67,8 +67,8 @@ class SortOrdersConverterTest {
   void convertWithProperties() {
     SortOrdersConverter converter = new SortOrdersConverter(
         WellKnownTextProperties.builder()
-            .fieldArgsSeparator("-:-")
-            .fieldSeparator("&&")
+            .sortOrderArgsSeparator("-:-")
+            .sortOrderSeparator("&&")
             .caseSensitiveValue("cs")
             .caseInsensitiveValue("cis")
             .nullIsFirstValue("nif")

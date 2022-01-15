@@ -49,24 +49,24 @@ public interface WellKnownTextProperties {
   }
 
   /**
-   * Gets field separator.
+   * Gets sort order separator.
    *
-   * @return the field separator
+   * @return the sort order separator
    */
   @Value.Default
   @NotEmpty
-  default String getFieldSeparator() {
+  default String getSortOrderSeparator() {
     return ";";
   }
 
   /**
-   * Gets field args separator.
+   * Gets sort order args separator.
    *
-   * @return the field args separator
+   * @return the sort order args separator
    */
   @Value.Default
   @NotEmpty
-  default String getFieldArgsSeparator() {
+  default String getSortOrderArgsSeparator() {
     return ",";
   }
 

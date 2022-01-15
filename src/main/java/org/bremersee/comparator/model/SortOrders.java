@@ -122,7 +122,7 @@ public class SortOrders {
         WellKnownTextProperties.defaults());
     return sortOrders.stream()
         .map(sortOrder -> sortOrder.toWkt(props))
-        .collect(Collectors.joining(props.getFieldSeparator()));
+        .collect(Collectors.joining(props.getSortOrderSeparator()));
   }
 
   @Override
@@ -153,7 +153,7 @@ public class SortOrders {
           WellKnownTextProperties props = Objects
               .requireNonNullElse(properties, WellKnownTextProperties.defaults());
           List<SortOrder> sortOrders = new ArrayList<>();
-          StringTokenizer tokenizer = new StringTokenizer(wkt, props.getFieldSeparator());
+          StringTokenizer tokenizer = new StringTokenizer(wkt, props.getSortOrderSeparator());
           while (tokenizer.hasMoreTokens()) {
             sortOrders.add(SortOrder.fromWkt(tokenizer.nextToken(), props));
           }

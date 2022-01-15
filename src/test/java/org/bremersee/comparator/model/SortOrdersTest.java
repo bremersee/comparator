@@ -154,8 +154,8 @@ class SortOrdersTest {
         .isEqualTo(actual);
 
     actual = sortOrders0.toWkt(WellKnownTextProperties.builder()
-        .fieldSeparator("&")
-        .fieldArgsSeparator(":")
+        .sortOrderSeparator("&")
+        .sortOrderArgsSeparator(":")
         .build());
     softly.assertThat(actual)
         .as("Create wkt with custom properties of %s", sortOrders0)
@@ -204,8 +204,8 @@ class SortOrdersTest {
   @Test
   void testFromWktWithProperties() {
     WellKnownTextProperties properties = WellKnownTextProperties.builder()
-        .fieldArgsSeparator("-:-")
-        .fieldSeparator("&&")
+        .sortOrderArgsSeparator("-:-")
+        .sortOrderSeparator("&&")
         .caseSensitiveValue("cs")
         .caseInsensitiveValue("cis")
         .nullIsFirstValue("nif")

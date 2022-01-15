@@ -215,9 +215,9 @@ public class SortOrder {
   public String toWkt(WellKnownTextProperties properties) {
     WellKnownTextProperties props = Objects.requireNonNullElse(properties,
         WellKnownTextProperties.defaults());
-    return (field != null ? field : "") + props.getFieldArgsSeparator()
-        + props.getDirectionValue(asc) + props.getFieldArgsSeparator()
-        + props.getIgnoreCaseValue(ignoreCase) + props.getFieldArgsSeparator()
+    return (field != null ? field : "") + props.getSortOrderArgsSeparator()
+        + props.getDirectionValue(asc) + props.getSortOrderArgsSeparator()
+        + props.getIgnoreCaseValue(ignoreCase) + props.getSortOrderArgsSeparator()
         + props.getNullIsFirstValue(nullIsFirst);
   }
 
@@ -252,7 +252,7 @@ public class SortOrder {
           boolean asc = props.isAsc(null);
           boolean ignoreCase = props.isCaseIgnored(null);
           boolean nullIsFirst = props.isNullFirst(null);
-          String separator = props.getFieldArgsSeparator();
+          String separator = props.getSortOrderArgsSeparator();
           int index = wkt.indexOf(separator);
           if (index < 0) {
             field = wkt.trim();

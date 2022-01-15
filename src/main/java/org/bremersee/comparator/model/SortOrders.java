@@ -32,6 +32,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
@@ -51,6 +52,7 @@ import lombok.EqualsAndHashCode;
 public class SortOrders {
 
   @Schema(description = "The list of sort orders.")
+  @XmlElementRef
   private final List<SortOrder> sortOrders = new ArrayList<>();
 
   /**

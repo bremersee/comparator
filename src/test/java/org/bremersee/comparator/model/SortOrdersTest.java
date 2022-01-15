@@ -73,6 +73,7 @@ class SortOrdersTest {
     marshaller.marshal(sortOrders, sw);
 
     String xmlStr = sw.toString();
+    System.out.println(xmlStr);
 
     SortOrders readFields = (SortOrders) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));

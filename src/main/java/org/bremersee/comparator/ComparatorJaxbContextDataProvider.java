@@ -23,20 +23,19 @@ import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
 
 /**
+ * The comparator jaxb context data provider.
+ *
  * @author Christian Bremer
  */
 public class ComparatorJaxbContextDataProvider implements JaxbContextDataProvider {
 
   /**
-   * The GPX XML name space.
+   * The comparator name space.
    */
-  // TODO text with package-info
   public static final String NAMESPACE = "http://bremersee.org/xmlschemas/comparator/v3";
 
   @Override
   public Collection<JaxbContextData> getJaxbContextData() {
-    return List.of(new JaxbContextData(
-        ObjectFactory.class.getPackage(),
-        "http://bremersee.github.io/xmlschemas/comparator-v3.xsd"));
+    return List.of(new JaxbContextData(ObjectFactory.class.getPackage()));
   }
 }

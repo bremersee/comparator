@@ -78,7 +78,7 @@ public abstract class SortMapper {
         .flatMap(Sort::stream)
         .map(SortMapper::fromSortOrder)
         .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+        .collect(Collectors.toUnmodifiableList());
   }
 
   /**
@@ -149,34 +149,36 @@ public abstract class SortMapper {
     return Sort.by(source.stream()
         .map(sortOrder -> {
           if (names.contains(sortOrder.getProperty())) {
-            Sort.Order order = Sort.Order.by(sortOrder.getProperty());
-            boolean isAsc = Objects.requireNonNullElse(
-                asc,
-                sortOrder.getDirection().equals(Direction.ASC));
-            if (isAsc) {
-              order = order.with(Direction.ASC);
-            } else {
-              order = order.with(Direction.DESC);
-            }
-            boolean isCaseSensitive = Objects.requireNonNullElse(
-                ignoreCase,
-                sortOrder.isIgnoreCase());
-            if (isCaseSensitive) {
-              order = order.ignoreCase();
-            }
-            boolean nullsFirst = Objects.requireNonNullElse(
-                nullIsFirst,
-                NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling()));
-            if (nullsFirst) {
-              order = order.with(NullHandling.NULLS_FIRST);
-            } else {
-              order = order.with(NullHandling.NULLS_LAST);
-            }
-            return order;
+            Sort.Order order = Sort.Order.by(sortOrder.getProperty())
+                .with(newDirection(sortOrder.getDirection(), asc))
+                .with(newNullHandling(sortOrder.getNullHandling(), nullIsFirst));
+            return withNewCaseHandling(order, sortOrder.isIgnoreCase(), ignoreCase);
           }
           return sortOrder;
         })
         .collect(Collectors.toList()));
+  }
+
+  private static Direction newDirection(Direction oldDirection, Boolean asc) {
+    return Optional.ofNullable(asc)
+        .map(isAsc -> isAsc ? Direction.ASC : Direction.DESC)
+        .orElse(oldDirection);
+  }
+
+  private static NullHandling newNullHandling(NullHandling oldNullHandling, Boolean nullIsFirst) {
+    return Optional.ofNullable(nullIsFirst)
+        .map(isNullIsFirst -> isNullIsFirst ? NullHandling.NULLS_FIRST : NullHandling.NULLS_LAST)
+        .orElse(oldNullHandling);
+  }
+
+  private static Sort.Order withNewCaseHandling(
+      Sort.Order order,
+      boolean oldIgnoresCase,
+      Boolean newIgnoresCase) {
+    //noinspection ConstantConditions
+    return Optional.ofNullable(newIgnoresCase)
+        .map(ignoreCase -> ignoreCase ? order.ignoreCase() : order)
+        .orElseGet(() -> oldIgnoresCase ? order.ignoreCase() : order);
   }
 
 }

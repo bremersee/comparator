@@ -20,6 +20,7 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlSchema;
 import org.bremersee.comparator.model.ObjectFactory;
 import org.bremersee.xml.JaxbContextData;
@@ -38,11 +39,11 @@ public class ComparatorJaxbContextDataProvider implements JaxbContextDataProvide
    * @return the namespace
    */
   public static String getNamespace() {
-    XmlSchema xmlSchema = findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class);
-    if (xmlSchema != null && xmlSchema.namespace().trim().length() > 0) {
-      return xmlSchema.namespace().trim();
-    }
-    throw new IllegalStateException("Comparator model is missing xml namespace.");
+    return Optional.ofNullable(findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class))
+        .filter(xmlSchema -> xmlSchema.namespace().trim().length() > 0)
+        .map(xmlSchema -> xmlSchema.namespace().trim())
+        .orElseThrow(() -> new IllegalStateException(
+            "Comparator model is missing xml namespace."));
   }
 
   @Override

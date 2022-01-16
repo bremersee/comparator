@@ -15,12 +15,9 @@
  */
 
 /**
- * This package contains the model of the comparator.
+ * This package contains a mapper for converting {@link org.bremersee.comparator.model.SortOrder}
+ * into Spring's {@code Sort} and vice versa.
  *
  * @author Christian Bremer
  */
-@javax.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/comparator/v3",
-    location = "http://bremersee.github.io/xmlschemas/comparator-v3.xsd",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.bremersee.comparator.model;
+package org.bremersee.comparator.spring.mapper;

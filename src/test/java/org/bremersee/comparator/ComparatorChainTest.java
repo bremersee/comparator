@@ -126,4 +126,18 @@ class ComparatorChainTest {
     verify(comparatorB, times(0)).compare(any(), any());
   }
 
+  /**
+   * Test to string.
+   */
+  @Test
+  void testToString() {
+    Comparator<?> c0 = mock(Comparator.class);
+    when(c0.toString()).thenReturn("c0");
+    Comparator<?> c1 = mock(Comparator.class);
+    when(c1.toString()).thenReturn("c1");
+    String actual = new ComparatorChain(List.of(c0, c1)).toString();
+    assertThat(actual)
+        .contains("c0", "c1");
+  }
+
 }

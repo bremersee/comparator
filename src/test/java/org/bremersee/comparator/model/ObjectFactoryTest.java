@@ -30,20 +30,20 @@ class ObjectFactoryTest {
   private static final ObjectFactory factory = new ObjectFactory();
 
   /**
-   * Create comparator field.
+   * Create sort order.
    */
   @Test
-  void createComparatorField() {
-    assertThat(factory.createComparatorField())
-        .isEqualTo(new ComparatorField());
+  void createSortOrder() {
+    assertThat(factory.createSortOrder())
+        .isEqualTo(new SortOrder());
   }
 
   /**
-   * Create comparator fields.
+   * Create sort orders.
    */
   @Test
-  public void createComparatorFields() {
-    assertThat(factory.createComparatorFields())
-        .isEqualTo(new ComparatorFields());
+  public void createSortOrders() {
+    assertThat(factory.createSortOrders())
+        .isEqualTo(new SortOrders());
   }
 }

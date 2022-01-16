@@ -17,9 +17,8 @@
 package org.bremersee.comparator;
 
 import java.util.Comparator;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 
 /**
  * The value comparator extracts field value of the specified field name or path and uses the
@@ -29,7 +28,6 @@ import org.bremersee.comparator.model.ComparatorField;
  * @author Christian Bremer
  */
 @ToString
-@EqualsAndHashCode
 public class ValueComparator implements Comparator<Object> {
 
   private final ValueExtractor valueExtractor;
@@ -45,27 +43,27 @@ public class ValueComparator implements Comparator<Object> {
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    */
-  public ValueComparator(ComparatorField comparatorField) {
-    this(comparatorField.getField(),
-        comparatorField.isAsc(),
-        comparatorField.isIgnoreCase(),
-        comparatorField.isNullIsFirst(),
+  public ValueComparator(SortOrder sortOrder) {
+    this(sortOrder.getField(),
+        sortOrder.isAsc(),
+        sortOrder.isIgnoreCase(),
+        sortOrder.isNullIsFirst(),
         null);
   }
 
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    * @param valueExtractor the value extractor (if it is {@code null}, a default will be used)
    */
-  public ValueComparator(ComparatorField comparatorField, ValueExtractor valueExtractor) {
-    this(comparatorField.getField(),
-        comparatorField.isAsc(),
-        comparatorField.isIgnoreCase(),
-        comparatorField.isNullIsFirst(),
+  public ValueComparator(SortOrder sortOrder, ValueExtractor valueExtractor) {
+    this(sortOrder.getField(),
+        sortOrder.isAsc(),
+        sortOrder.isIgnoreCase(),
+        sortOrder.isNullIsFirst(),
         valueExtractor);
   }
 

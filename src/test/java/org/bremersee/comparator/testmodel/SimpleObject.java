@@ -16,6 +16,7 @@
 
 package org.bremersee.comparator.testmodel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -30,6 +31,7 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public class SimpleObject {
 
+  @JsonProperty
   private final int number;
 
 }

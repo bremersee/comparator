@@ -16,6 +16,7 @@
 
 package org.bremersee.comparator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import org.assertj.core.api.SoftAssertions;
@@ -87,6 +88,30 @@ class DefaultValueExtractorTest {
             new ComplexObjectExtension(new SimpleObject(5), ""),
             "simple.number"))
         .isEqualTo(5);
+  }
+
+  /**
+   * Test to string.
+   */
+  @Test
+  void testToString() {
+    assertThat(new DefaultValueExtractor(false).toString())
+        .contains("false");
+  }
+
+  /**
+   * Test equals and hash code.
+   *
+   * @param softly the softly
+   */
+  @Test
+  void testEqualsAndHashCode(SoftAssertions softly) {
+    softly.assertThat(new DefaultValueExtractor(false))
+        .isEqualTo(new DefaultValueExtractor(false));
+    softly.assertThat(new DefaultValueExtractor(false))
+        .isNotEqualTo(new DefaultValueExtractor(true));
+    softly.assertThat(new DefaultValueExtractor().hashCode())
+        .isEqualTo(new DefaultValueExtractor().hashCode());
   }
 
 }

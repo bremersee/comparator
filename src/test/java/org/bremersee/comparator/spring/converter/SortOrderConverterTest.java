@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.spring.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.WellKnownTextProperties;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * The comparator field converter test.
+ * The sort order converter test.
  *
  * @author Christian Bremer
  */
 @ExtendWith(SoftAssertionsExtension.class)
-class ComparatorFieldConverterTest {
+class SortOrderConverterTest {
 
   /**
    * Convert.
    */
   @Test
   void convert() {
-    ComparatorFieldConverter converter = new ComparatorFieldConverter();
-    ComparatorField actual = converter.convert("field0,desc,false,true");
-    ComparatorField expected = new ComparatorField("field0", false, false, true);
+    SortOrderConverter converter = new SortOrderConverter();
+    SortOrder actual = converter.convert("field0,desc,false,true");
+    SortOrder expected = new SortOrder("field0", false, false, true);
 
     assertThat(actual)
         .isEqualTo(expected);
@@ -53,50 +53,38 @@ class ComparatorFieldConverterTest {
    */
   @Test
   void convertWithProperties(SoftAssertions softly) {
-    ComparatorFieldConverter converter = new ComparatorFieldConverter(
-        WellKnownTextProperties.builder()
-            .fieldArgsSeparator("::")
+    SortOrderConverter converter = new SortOrderConverter(
+        SortOrdersTextProperties.builder()
+            .sortOrderArgsSeparator("::")
             .caseSensitiveValue("cs")
             .caseInsensitiveValue("cis")
             .nullIsFirstValue("nif")
             .nullIsLastValue("nil")
             .build());
 
-    ComparatorField actual = converter.convert("::asc::cis::nif");
-    ComparatorField expected = new ComparatorField(null, true, true, true);
+    SortOrder actual = converter.convert("::asc::cis::nif");
+    SortOrder expected = new SortOrder(null, true, true, true);
     softly.assertThat(actual).isEqualTo(expected);
 
     actual = converter.convert("field1");
-    expected = new ComparatorField("field1", true, true, false);
+    expected = new SortOrder("field1", true, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
     actual = converter.convert("field2::desc");
-    expected = new ComparatorField("field2", false, true, false);
+    expected = new SortOrder("field2", false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
 
     actual = converter.convert("field3::desc::cs");
-    expected = new ComparatorField("field3", false, false, false);
+    expected = new SortOrder("field3", false, false, false);
     softly.assertThat(actual).isEqualTo(expected);
 
     actual = converter.convert("field4::desc::cs::nif");
-    expected = new ComparatorField("field4", false, false, true);
+    expected = new SortOrder("field4", false, false, true);
     softly.assertThat(actual).isEqualTo(expected);
 
     actual = converter.convert("::desc");
-    expected = new ComparatorField(null, false, true, false);
+    expected = new SortOrder(null, false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
-  }
-
-  /**
-   * Convert and expect empty.
-   */
-  @Test
-  void convertAndExpectEmpty() {
-    ComparatorFieldConverter converter = new ComparatorFieldConverter(ValueComparator::new);
-    //noinspection ConstantConditions
-    ComparatorField actual = converter.convert(null);
-    assertThat(actual)
-        .isEqualTo(new ComparatorField());
   }
 
 }

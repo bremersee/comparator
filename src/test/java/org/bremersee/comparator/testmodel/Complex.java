@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
+package org.bremersee.comparator.testmodel;
+
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 /**
- * This package contains the model of the comparator.
+ * The complex base.
  *
  * @author Christian Bremer
  */
-@javax.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/comparator/v3",
-    location = "http://bremersee.github.io/xmlschemas/comparator-v3.xsd",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.bremersee.comparator.model;
+@ToString
+@EqualsAndHashCode
+public abstract class Complex {
+
+}

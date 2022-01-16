@@ -14,32 +14,33 @@
  * limitations under the License.
  */
 
-package org.bremersee.comparator;
+package org.bremersee.comparator.spring.converter;
 
-import org.bremersee.comparator.testbeans.converter.TestRestController;
+import org.bremersee.comparator.spring.converter.components.TestRestController;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * The comparator field converter integration test configuration.
+ * The sort order converter integration test configuration.
  *
  * @author Christian Bremer
  */
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackageClasses = {TestRestController.class})
-public class ComparatorFieldConverterIntegrationTestConfiguration {
+//@EnableSpringDataWebSupport
+public class SortOrderConverterIntegrationTestConfiguration {
 
   /**
-   * Registers the comparator field converter.
+   * Registers the sort order converter.
    *
-   * @return the comparator field converter
+   * @return the sort order converter
    */
   @Bean
-  public ComparatorFieldConverter comparatorFieldConverter() {
-    return new ComparatorFieldConverter();
+  public SortOrderConverter sortOrderConverter() {
+    return new SortOrderConverter();
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,8 @@
  */
 
 /**
- * This package contains the model of the comparator.
+ * This package contains converters to parse the string representation of sort order(s).
  *
  * @author Christian Bremer
  */
-@javax.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/comparator/v3",
-    location = "http://bremersee.github.io/xmlschemas/comparator-v3.xsd",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.bremersee.comparator.model;
+package org.bremersee.comparator.spring.converter;

@@ -27,21 +27,21 @@ import javax.xml.bind.annotation.XmlRegistry;
 public class ObjectFactory {
 
   /**
-   * Create comparator field.
+   * Create sort order.
    *
-   * @return the comparator field
+   * @return the sort order
    */
-  public ComparatorField createComparatorField() {
-    return new ComparatorField();
+  public SortOrder createSortOrder() {
+    return new SortOrder();
   }
 
   /**
-   * Create comparator fields.
+   * Create sort orders.
    *
-   * @return the comparator fields
+   * @return the sort orders
    */
-  public ComparatorFields createComparatorFields() {
-    return new ComparatorFields();
+  public SortOrders createSortOrders() {
+    return new SortOrders();
   }
 
 }

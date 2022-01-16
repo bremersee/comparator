@@ -16,6 +16,7 @@
 
 package org.bremersee.comparator.testmodel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -26,10 +27,11 @@ import lombok.ToString;
  * @author Christian Bremer
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
-public class ComplexObject {
+public class ComplexObject extends Complex {
 
+  @JsonProperty
   private final SimpleObject simple;
 
 }

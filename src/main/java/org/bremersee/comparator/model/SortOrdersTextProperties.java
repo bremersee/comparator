@@ -18,55 +18,54 @@ package org.bremersee.comparator.model;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import org.bremersee.comparator.model.ImmutableWellKnownTextProperties.Builder;
 import org.immutables.value.Value;
 
 /**
- * The well known text properties.
+ * The sort order(s) text properties.
  *
  * @author Christian Bremer
  */
 @Value.Immutable
 @Valid
-public interface WellKnownTextProperties {
+public interface SortOrdersTextProperties {
 
   /**
    * Properties builder.
    *
    * @return the builder
    */
-  static Builder builder() {
-    return ImmutableWellKnownTextProperties.builder();
+  static ImmutableSortOrdersTextProperties.Builder builder() {
+    return ImmutableSortOrdersTextProperties.builder();
   }
 
   /**
-   * Defaults well known text properties.
+   * Defaults sort order(s) text properties.
    *
-   * @return the well known text properties
+   * @return the sort order(s) text properties
    */
-  static WellKnownTextProperties defaults() {
+  static SortOrdersTextProperties defaults() {
     return builder().build();
   }
 
   /**
-   * Gets field separator.
+   * Gets sort order separator.
    *
-   * @return the field separator
+   * @return the sort order separator
    */
   @Value.Default
   @NotEmpty
-  default String getFieldSeparator() {
+  default String getSortOrderSeparator() {
     return ";";
   }
 
   /**
-   * Gets field args separator.
+   * Gets sort order args separator.
    *
-   * @return the field args separator
+   * @return the sort order args separator
    */
   @Value.Default
   @NotEmpty
-  default String getFieldArgsSeparator() {
+  default String getSortOrderArgsSeparator() {
     return ",";
   }
 

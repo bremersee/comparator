@@ -16,14 +16,18 @@
 
 package org.bremersee.comparator.spring.mapper;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.NullHandling;
+import org.springframework.util.ObjectUtils;
 
 /**
  * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object from the
@@ -52,10 +56,10 @@ public abstract class SortMapper {
    * @param sortOrders the sort orders
    * @return the sort object
    */
-  public static Sort toSort(Collection<? extends SortOrder> sortOrders) {
+  public static Sort toSort(List<? extends SortOrder> sortOrders) {
     List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
         .stream()
-        .flatMap(Collection::stream)
+        .flatMap(List::stream)
         .map(SortMapper::toSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
@@ -111,6 +115,68 @@ public abstract class SortMapper {
     return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),
         sortOrder.isIgnoreCase(),
         nullIsFirst);
+  }
+
+  /**
+   * Apply defaults to sort.
+   *
+   * @param source the source
+   * @param asc the asc
+   * @param ignoreCase the ignore-case flag
+   * @param nullIsFirst the null is first flag
+   * @param properties the properties
+   * @return the sort
+   */
+  public static Sort applyDefaults(
+      Sort source,
+      Boolean asc,
+      Boolean ignoreCase,
+      Boolean nullIsFirst,
+      String... properties) {
+
+    if (Objects.isNull(source)) {
+      return Sort.unsorted();
+    }
+    if (Objects.isNull(ignoreCase) && Objects.isNull(nullIsFirst)) {
+      return source;
+    }
+    Set<String> names;
+    if (ObjectUtils.isEmpty(properties)) {
+      names = source.stream().map(Sort.Order::getProperty).collect(Collectors.toSet());
+    } else {
+      names = Arrays.stream(properties).collect(Collectors.toSet());
+    }
+    return Sort.by(source.stream()
+        .map(sortOrder -> {
+          if (names.contains(sortOrder.getProperty())) {
+            Sort.Order order = Sort.Order.by(sortOrder.getProperty());
+            boolean isAsc = Objects.requireNonNullElse(
+                asc,
+                sortOrder.getDirection().equals(Direction.ASC));
+            if (isAsc) {
+              order = order.with(Direction.ASC);
+            } else {
+              order = order.with(Direction.DESC);
+            }
+            boolean isCaseSensitive = Objects.requireNonNullElse(
+                ignoreCase,
+                sortOrder.isIgnoreCase());
+            if (isCaseSensitive) {
+              order = order.ignoreCase();
+            }
+            boolean nullsFirst = Objects.requireNonNullElse(
+                nullIsFirst,
+                NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling()));
+            if (nullsFirst) {
+              order = order.with(NullHandling.NULLS_FIRST);
+            } else {
+              order = order.with(NullHandling.NULLS_LAST);
+            }
+            return order;
+          }
+          return sortOrder;
+        })
+        .collect(Collectors.toList()));
   }
 
 }

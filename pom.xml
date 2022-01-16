@@ -139,18 +139,6 @@
       <artifactId>springdoc-openapi-webmvc-core</artifactId>
       <scope>test</scope>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-rest</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-data-rest</artifactId>
-      <scope>test</scope>
-    </dependency>
-    -->
   </dependencies>
 
 </project>

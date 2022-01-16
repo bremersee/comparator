@@ -16,26 +16,14 @@
 
 package org.bremersee.comparator.testmodel;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
+ * The complex base.
+ *
  * @author Christian Bremer
  */
-/*
-@JsonTypeInfo(
-    use = Id.CLASS,
-    property = "_type"
-)
-@JsonSubTypes({
-    @Type(value = ComplexObject.class, name = "plain"),
-    @Type(value = ComplexObjectExtension.class, name = "extended")
-})
-*/
 @ToString
 @EqualsAndHashCode
 public abstract class Complex {

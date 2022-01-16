@@ -25,9 +25,10 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.bremersee.comparator.spring.mapper.SortMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,21 +75,19 @@ public class TestRestController {
           @Parameter(name = "sort", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")))
       }
   )
-  @GetMapping(path = "/with-spring-sort")
-  //@PageableAsQueryParam
+  @GetMapping(path = "/with-spring-pageable")
   @SuppressWarnings("unused")
-  public ResponseEntity<Page<String>> getSomethingElseSorted(
-      //@Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
-      // @ParameterObject
+  public ResponseEntity<String> getSomethingElseSorted(
       @Parameter(hidden = true)
-
       @PageableDefault(page = 1, size = 20, sort = "somethingElse,desc") Pageable pageRequest) {
-      log.info("Pageable = {}", pageRequest);
-      List<String> content = List.of("entry0", "entry1");
-      Page<String> page = new PageImpl<>(
-          content,
-          pageRequest,
-          (long)pageRequest.getPageNumber() * pageRequest.getPageSize() + content.size());
-    return ResponseEntity.ok(page);
+
+    log.info("Pageable = {}", pageRequest);
+    // We can't pass ignore case as url parameter value, so we set it here
+    Sort sort = SortMapper
+        .applyDefaults(pageRequest.getSort(), null, true, false);
+    Pageable pageable = PageRequest
+        .of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
+    SortOrders sortOrders = new SortOrders(SortMapper.fromSort(pageable.getSort()));
+    return ResponseEntity.ok(sortOrders.toSortOrdersText());
   }
 }

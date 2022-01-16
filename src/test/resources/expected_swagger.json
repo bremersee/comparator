@@ -6,12 +6,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:51991",
+      "url": "http://localhost:49846",
       "description": "Generated server url"
     }
   ],
   "paths": {
-    "/with-spring-sort": {
+    "/with-spring-pageable": {
       "get": {
         "tags": [
           "test-controller"
@@ -21,18 +21,21 @@
         "parameters": [
           {
             "name": "page",
+            "in": "query",
             "schema": {
               "type": "integer"
             }
           },
           {
             "name": "size",
+            "in": "query",
             "schema": {
               "type": "integer"
             }
           },
           {
             "name": "sort",
+            "in": "query",
             "schema": {
               "type": "array",
               "items": {

@@ -3,9 +3,8 @@
 This project contains a builder for comparing and sorting objects.
 
 The comparator can compare any kind of objects which have the same attributes or the same 'getters'.
-It uses reflection to get the values of these attributes or 'getters'.
-The values may be a simple type like java.lang.String or a complex type which implements
-java.lang.Comparable.
+It uses reflection to get the values of these attributes or 'getters'. The values may be a simple
+type like java.lang.String or a complex type which implements java.lang.Comparable.
 
 ### Usage
 
@@ -17,6 +16,7 @@ The common Node class:
 import java.util.Date;
 
 abstract class Node {
+
   private Date createdAt;
   private String name;
   // getter and setter
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Branch extends Node {
+
   private List<Node> children = new ArrayList<>();
   // getter
 }
@@ -39,6 +40,7 @@ The Leaf class:
 
 ```java
 class Leaf extends Node {
+
   private String value;
   // getter and setter
 }
@@ -52,6 +54,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Example {
+
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
@@ -73,6 +76,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Example {
+
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
@@ -104,8 +108,10 @@ There are four attributes which define the comparison.
 
 The field name can also be a path to a value, if you have complex objects, for example
 `room.numer`, `person.lastName` or `person.firstName`, if your classes look like this:
+
 ```java
 class Employee {
+
   private Person person;
   private Room room;
   // getter and setter
@@ -113,8 +119,10 @@ class Employee {
 ```
 
 with Person
+
 ```java
 class Person {
+
   private String lastName;
   private String firstName;
   // getter and setter
@@ -122,8 +130,10 @@ class Person {
 ```
 
 and Room
+
 ```java
 class Room {
+
   private int number;
   // getter and setter
 }
@@ -157,20 +167,23 @@ class Example {
 
 #### REST support
 
-The `SortOrder` has a string representation, that can be used to pass the sort order as a
-query parameter into a `RestController`.
+The `SortOrder` has a string representation, that can be used to pass the sort order as a query
+parameter into a `RestController`.
 
 The syntax is:
+
 ```text
 fieldName,asc,ignoreCase,nullIsFirst
 ```
 
 Example:
+
 ```text
 room.number,asc,true,false
 ```
 
 Or:
+
 ```text
 createdAt,desc,true,false
 ```
@@ -213,6 +226,7 @@ public class TestRestController {
 ```
 
 The url may look like this:
+
 ```text
 http://localhost:8080?sort=room.number,asc&sort=person.lastName,asc,true
 ```
@@ -237,18 +251,16 @@ public class SortOrderConverterConfiguration {
 
 #### Spring `Sort` Mapper
 
-The Spring Common Data project contains a class for sorting, too.
-The class `SortMapper` contains methods to transform the
-sort orders of this library into the objects of the spring framework.
+The Spring Common Data project contains a class for sorting, too. The class `SortMapper` contains
+methods to transform the sort orders of this library into the objects of the spring framework.
 
-To use the Spring Framework Support you have to add the following
-dependency to your project:
+To use the Spring Framework Support you have to add the following dependency to your project:
 
 ```xml
 <dependency>
-    <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-commons</artifactId>
-    <version>{your-spring-data-commons-version}</version>
+  <groupId>org.springframework.data</groupId>
+  <artifactId>spring-data-commons</artifactId>
+  <version>{your-spring-data-commons-version}</version>
 </dependency>
 ```
 

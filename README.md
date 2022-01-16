@@ -1,13 +1,12 @@
 # Bremersee Comparator
 
-[![codecov](https://codecov.io/gh/bremersee/comparator/branch/master/graph/badge.svg)](https://codecov.io/gh/bremersee/comparator)
+[![codecov](https://codecov.io/gh/bremersee/comparator/branch/develop/graph/badge.svg)](https://codecov.io/gh/bremersee/comparator)
 
 This project contains a builder for comparing and sorting objects.
 
 The comparator can compare any kind of objects which have the same attributes or the same 'getters'.
-It uses reflection to get the values of these attributes or 'getters'. 
-The values may be a simple type like java.lang.String or a complex type which implements 
-java.lang.Comparable.
+It uses reflection to get the values of these attributes or 'getters'. The values may be a simple
+type like java.lang.String or a complex type which implements java.lang.Comparable.
 
 #### Maven Site
 
@@ -25,12 +24,13 @@ The common Node class:
 import java.util.Date;
 
 abstract class Node {
+
   private Date createdAt;
   private String name;
   // getter and setter
 }
 ```
-  
+
 The Branch class:
 
 ```java
@@ -38,15 +38,17 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Branch extends Node {
+
   private List<Node> children = new ArrayList<>();
   // getter
 }
 ```
 
 The Leaf class:
-  
+
 ```java
 class Leaf extends Node {
+
   private String value;
   // getter and setter
 }
@@ -60,6 +62,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Example {
+
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
@@ -72,7 +75,7 @@ class Example {
 ```
 
 That's all. All nodes in the list are sorted by name and date. But what happens, if you want to sort
-them by type (first the branches and then the leafs) and then by name and date? There is no field 
+them by type (first the branches and then the leafs) and then by name and date? There is no field
 that stores the type. Then you can do this:
 
 ```java
@@ -81,12 +84,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 class Example {
+
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
     list.sort(ComparatorBuilder.builder()
         .add((o1, o2) ->
-            (o1 instanceof Branch && o2 instanceof Branch) 
+            (o1 instanceof Branch && o2 instanceof Branch)
                 || (o1 instanceof Leaf && o2 instanceof Leaf) ? 0 : o1 instanceof Branch ? -1 : 1)
         .add("name", true, true, false)        // fieldName, asc, ignoreCase, nullIsFirst
         .add("createdAt", false, true, false)  // fieldName, asc, ignoreCase, nullIsFirst
@@ -99,7 +103,7 @@ Now you have a list, that contains the branches first, sorted by name and date, 
 
 #### Comparator arguments (class `SortOrder`)
 
-There are four attributes which define the comparison. 
+There are four attributes which define the comparison.
 
 | Attribute    | Description                                                       | Default  |
 |--------------|-------------------------------------------------------------------|----------|
@@ -112,8 +116,10 @@ There are four attributes which define the comparison.
 
 The field name can also be a path to a value, if you have complex objects, for example
 `room.numer`, `person.lastName` or `person.firstName`, if your classes look like this:
+
 ```java
 class Employee {
+
   private Person person;
   private Room room;
   // getter and setter
@@ -121,8 +127,10 @@ class Employee {
 ```
 
 with Person
+
 ```java
 class Person {
+
   private String lastName;
   private String firstName;
   // getter and setter
@@ -130,8 +138,10 @@ class Person {
 ```
 
 and Room
+
 ```java
 class Room {
+
   private int number;
   // getter and setter
 }
@@ -165,20 +175,23 @@ class Example {
 
 #### REST support
 
-The `SortOrder` has a string representation, that can be used to pass the sort order as a 
-query parameter into a `RestController`.
+The `SortOrder` has a string representation, that can be used to pass the sort order as a query
+parameter into a `RestController`.
 
 The syntax is:
+
 ```text
 fieldName,asc,ignoreCase,nullIsFirst
 ```
 
 Example:
+
 ```text
 room.number,asc,true,false
 ```
 
 Or:
+
 ```text
 createdAt,desc,true,false
 ```
@@ -221,6 +234,7 @@ public class TestRestController {
 ```
 
 The url may look like this:
+
 ```text
 http://localhost:8080?sort=room.number,asc&sort=person.lastName,asc,true
 ```
@@ -245,18 +259,16 @@ public class SortOrderConverterConfiguration {
 
 #### Spring `Sort` Mapper
 
-The Spring Common Data project contains a class for sorting, too.
-The class `SortMapper` contains methods to transform the 
-sort orders of this library into the objects of the spring framework. 
+The Spring Common Data project contains a class for sorting, too. The class `SortMapper` contains
+methods to transform the sort orders of this library into the objects of the spring framework.
 
-To use the Spring Framework Support you have to add the following 
-dependency to your project:
+To use the Spring Framework Support you have to add the following dependency to your project:
 
 ```xml
 <dependency>
-    <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-commons</artifactId>
-    <version>{your-spring-data-commons-version}</version>
+  <groupId>org.springframework.data</groupId>
+  <artifactId>spring-data-commons</artifactId>
+  <version>{your-spring-data-commons-version}</version>
 </dependency>
 ```
 

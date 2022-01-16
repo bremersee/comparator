@@ -26,6 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.bremersee.comparator.model.SortOrder;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -75,7 +76,7 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", true, true, true, valueExtractor)
+    int result = new ValueComparator(new SortOrder("someField", true, true, true), valueExtractor)
         .compare("null", 1);
 
     assertThat(result)
@@ -386,6 +387,15 @@ class ValueComparatorTest {
         .isLessThan(0);
     verify(valueExtractor, times(1)).findValue(anyString(), anyString());
     verify(valueExtractor, times(1)).findValue(anyInt(), anyString());
+  }
+
+  /**
+   * Test to string.
+   */
+  @Test
+  void testToString() {
+    assertThat(new ValueComparator("qwertz", true, false, true).toString())
+        .contains("qwertz", "true", "false");
   }
 
 }

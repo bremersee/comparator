@@ -26,6 +26,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
+import org.bremersee.comparator.model.SortOrder.CaseHandling;
+import org.bremersee.comparator.model.SortOrder.Direction;
+import org.bremersee.comparator.model.SortOrder.NullHandling;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,7 +85,7 @@ class SortOrderTest {
    * @throws Exception the exception
    */
   @Test
-  void testJsonComparatorItem() throws Exception {
+  void testJsonSortOrder() throws Exception {
     SortOrder sortOrder = new SortOrder("i0", true, false, true);
 
     ObjectMapper om = new ObjectMapper();
@@ -123,12 +126,12 @@ class SortOrderTest {
   }
 
   /**
-   * Test to wkt.
+   * Test to sort order.
    *
    * @param softly the soft assertions
    */
   @Test
-  void testToWkt(SoftAssertions softly) {
+  void testToSortOrderText(SoftAssertions softly) {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder(null, false, true, false);
     softly.assertThat(sortOrder0.toSortOrderText())
@@ -148,12 +151,12 @@ class SortOrderTest {
   }
 
   /**
-   * Test from wkt.
+   * Test from sort order text.
    *
    * @param softly the softly
    */
   @Test
-  void testFromWkt(SoftAssertions softly) {
+  void testFromSortOrderText(SoftAssertions softly) {
     SortOrder actual = SortOrder.fromSortOrderText("field0,desc,false,true");
     SortOrder expected = new SortOrder("field0", false, false, true);
 
@@ -165,12 +168,12 @@ class SortOrderTest {
   }
 
   /**
-   * Test from wkt with properties.
+   * Test from sort order text with properties.
    *
-   * @param softly the softly
+   * @param softly the soft assertions
    */
   @Test
-  void testFromWktWithProperties(SoftAssertions softly) {
+  void testFromSortOrderTextWithProperties(SoftAssertions softly) {
     SortOrdersTextProperties properties = SortOrdersTextProperties.builder()
         .sortOrderArgsSeparator("::")
         .caseSensitiveValue("cs")
@@ -202,6 +205,39 @@ class SortOrderTest {
     actual = SortOrder.fromSortOrderText("::desc", properties);
     expected = new SortOrder(null, false, true, false);
     softly.assertThat(actual).isEqualTo(expected);
+  }
+
+  /**
+   * Test builder.
+   *
+   * @param softly the soft assertions
+   */
+  @Test
+  void testBuilder(SoftAssertions softly) {
+    SortOrder actual = SortOrder.by("home");
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", true, true, false));
+
+    actual = actual.with((Direction) null);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", true, true, false));
+    actual = actual.with(Direction.DESC);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", false, true, false));
+
+    actual = actual.with((CaseHandling) null);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", false, true, false));
+    actual = actual.with(CaseHandling.SENSITIVE);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", false, false, false));
+
+    actual = actual.with((NullHandling) null);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", false, false, false));
+    actual = actual.with(NullHandling.NULLS_FIRST);
+    softly.assertThat(actual)
+        .isEqualTo(new SortOrder("home", false, false, true));
   }
 
 }

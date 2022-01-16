@@ -74,4 +74,24 @@ class DelegatingComparatorTest {
     });
   }
 
+  /**
+   * Test to string.
+   */
+  @Test
+  void testToString() {
+    ValueExtractor valueExtractor = mock(ValueExtractor.class);
+    when(valueExtractor.toString()).thenReturn("_ValueExtractor_");
+
+    Comparator<?> comparator = mock(Comparator.class);
+    when(comparator.toString()).thenReturn("_Comparator_");
+
+    DelegatingComparator delegatingComparator = new DelegatingComparator(
+        "_test_field_",
+        valueExtractor,
+        comparator);
+
+    assertThat(delegatingComparator.toString())
+        .contains("_ValueExtractor_", "_Comparator_", "_test_field_");
+  }
+
 }

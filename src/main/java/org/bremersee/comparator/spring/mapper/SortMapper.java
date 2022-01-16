@@ -137,7 +137,7 @@ public abstract class SortMapper {
     if (Objects.isNull(source)) {
       return Sort.unsorted();
     }
-    if (Objects.isNull(ignoreCase) && Objects.isNull(nullIsFirst)) {
+    if (Objects.isNull(asc) && Objects.isNull(ignoreCase) && Objects.isNull(nullIsFirst)) {
       return source;
     }
     Set<String> names;

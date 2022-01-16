@@ -67,9 +67,9 @@ import lombok.EqualsAndHashCode;
  * properties.customSettings.priority
  * </pre>
  *
- * <p>The building of a chain is done by concatenate the fields with a pipe (|):
+ * <p>The building of a chain is done by concatenate the fields with a semicolon (;):
  * <pre>
- * field0,asc,ignoreCase,nullIsFirst|field1,asc,ignoreCase,nullIsFirst
+ * field0,asc,ignoreCase,nullIsFirst;field1,asc,ignoreCase,nullIsFirst
  * </pre>
  *
  * @author Christian Bremer
@@ -157,7 +157,7 @@ public class SortOrder {
   }
 
   /**
-   * Is case insensitive or sensitive order.
+   * Is case-insensitive or case-sensitive order.
    *
    * @return {@code true} if case insensitive order, {@code false} if case sensitive order
    */
@@ -175,9 +175,45 @@ public class SortOrder {
   }
 
   /**
-   * Creates the well known text of this field ordering description.
+   * With given direction.
    *
-   * <p>The syntax of the field ordering description is
+   * @param direction the direction
+   * @return the sort order
+   */
+  public SortOrder with(Direction direction) {
+    return Optional.ofNullable(direction)
+        .map(dir -> new SortOrder(getField(), dir.isAsc(), isIgnoreCase(), isNullIsFirst()))
+        .orElse(this);
+  }
+
+  /**
+   * With given case handling.
+   *
+   * @param caseHandling the case handling
+   * @return the sort order
+   */
+  public SortOrder with(CaseHandling caseHandling) {
+    return Optional.ofNullable(caseHandling)
+        .map(ch -> new SortOrder(getField(), isAsc(), ch.isIgnoreCase(), isNullIsFirst()))
+        .orElse(this);
+  }
+
+  /**
+   * With given null handling.
+   *
+   * @param nullHandling the null handling
+   * @return the sort order
+   */
+  public SortOrder with(NullHandling nullHandling) {
+    return Optional.ofNullable(nullHandling)
+        .map(nh -> new SortOrder(getField(), isAsc(), isIgnoreCase(), nh.isNullIsFirst()))
+        .orElse(this);
+  }
+
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * <p>The syntax of the ordering description is
    * <pre>
    * fieldNameOrPath,asc,ignoreCase,nullIsFirst
    * </pre>
@@ -195,14 +231,17 @@ public class SortOrder {
   }
 
   /**
-   * Creates the well known text of this field ordering description.
+   * Creates the sort order text of this ordering description.
    *
-   * <p>The syntax of the field ordering description is
+   * <p>The syntax of the ordering description is
    * <pre>
    * fieldNameOrPath,asc,ignoreCase,nullIsFirst
    * </pre>
    *
-   * <p>For example
+   * <p>The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
+   * null-handling} depend on the given {@link SortOrdersTextProperties}.
+   *
+   * <p>For example with default properties:
    * <pre>
    * person.lastName,asc,true,false
    * </pre>
@@ -226,9 +265,19 @@ public class SortOrder {
   }
 
   /**
-   * From well known text.
+   * Creates a new sort order for the given field.
    *
-   * @param source the well known text
+   * @param field the field
+   * @return the sort order
+   */
+  public static SortOrder by(String field) {
+    return new SortOrder(field, true, true, false);
+  }
+
+  /**
+   * From sort order text.
+   *
+   * @param source the sort order text
    * @return the sort order
    */
   public static SortOrder fromSortOrderText(String source) {
@@ -236,9 +285,9 @@ public class SortOrder {
   }
 
   /**
-   * From well known text.
+   * From sort order text.
    *
-   * @param source the well known text
+   * @param source the sort order text
    * @param properties the properties
    * @return the sort order
    */
@@ -278,6 +327,75 @@ public class SortOrder {
           return new SortOrder(field, asc, ignoreCase, nullIsFirst);
         })
         .orElseGet(() -> new SortOrder(null, true, true, false));
+  }
+
+  /**
+   * The direction.
+   */
+  public enum Direction {
+    /**
+     * Asc direction.
+     */
+    ASC,
+    /**
+     * Desc direction.
+     */
+    DESC;
+
+    /**
+     * Is asc.
+     *
+     * @return the boolean
+     */
+    public boolean isAsc() {
+      return ASC.equals(this);
+    }
+  }
+
+  /**
+   * The case handling.
+   */
+  public enum CaseHandling {
+    /**
+     * Insensitive case handling.
+     */
+    INSENSITIVE,
+    /**
+     * Sensitive case handling.
+     */
+    SENSITIVE;
+
+    /**
+     * Is ignore case.
+     *
+     * @return the boolean
+     */
+    public boolean isIgnoreCase() {
+      return INSENSITIVE.equals(this);
+    }
+  }
+
+  /**
+   * The null handling.
+   */
+  public enum NullHandling {
+    /**
+     * Nulls first handling.
+     */
+    NULLS_FIRST,
+    /**
+     * Nulls last handling.
+     */
+    NULLS_LAST;
+
+    /**
+     * Is null is first.
+     *
+     * @return the boolean
+     */
+    public boolean isNullIsFirst() {
+      return NULLS_FIRST.equals(this);
+    }
   }
 
 }

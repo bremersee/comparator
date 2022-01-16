@@ -17,10 +17,12 @@
 package org.bremersee.comparator.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +36,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 
@@ -83,9 +86,46 @@ public class SortOrders {
   }
 
   /**
-   * Creates the well known text of this list of field ordering descriptions.
+   * Checks whether the list of sort orders is empty or not.
    *
-   * <p>The syntax of the field ordering description is
+   * @return {@code true} if the list of sort orders is empty, otherwise {@code false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isEmpty() {
+    return sortOrders.isEmpty();
+  }
+
+  /**
+   * Checks whether this sort orders contains any entries. If there are entries, this is sorted,
+   * otherwise it is unsorted.
+   *
+   * @return {@code true} if the list of sort orders is not empty (aka sorted), otherwise {@code
+   *     false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isSorted() {
+    return !isEmpty();
+  }
+
+  /**
+   * Checks whether this sort orders contains any entries. If there are no entries, this is
+   * unsorted, otherwise it is sorted.
+   *
+   * @return {@code true} if the list of sort orders is empty (aka unsorted), otherwise {@code
+   *     false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isUnsorted() {
+    return !isSorted();
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * <p>The syntax of the ordering description is
    * <pre>
    * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
    * </pre>
@@ -95,7 +135,7 @@ public class SortOrders {
    * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
    * </pre>
    *
-   * @return the well known text
+   * @return the sort orders text
    */
   @NotEmpty
   public String toSortOrdersText() {
@@ -103,20 +143,23 @@ public class SortOrders {
   }
 
   /**
-   * Creates the well known text of this list of field ordering descriptions.
+   * Creates the sort orders text of this ordering descriptions.
    *
-   * <p>The syntax of the field ordering description is
+   * <p>The syntax of the ordering description is
    * <pre>
    * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
    * </pre>
    *
-   * <p>For example
+   * <p>The separators (',') and (';') and the values of {@code direction}, {@code case-handling}
+   * and {@code null-handling} depend on the given {@link SortOrdersTextProperties}.
+   *
+   * <p>For example with default properties:
    * <pre>
    * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
    * </pre>
    *
    * @param properties the properties
-   * @return the well known text
+   * @return the sort orders text
    */
   @NotEmpty
   public String toSortOrdersText(SortOrdersTextProperties properties) {
@@ -133,9 +176,9 @@ public class SortOrders {
   }
 
   /**
-   * From well known text.
+   * From sort orders text.
    *
-   * @param source the well known text
+   * @param source the sort orders text
    * @return the sort orders
    */
   public static SortOrders fromSortOrdersText(String source) {
@@ -143,9 +186,9 @@ public class SortOrders {
   }
 
   /**
-   * From well known text.
+   * From sort orders text.
    *
-   * @param source the well known text
+   * @param source the sort orders text
    * @param properties the properties
    * @return the sort orders
    */
@@ -161,6 +204,18 @@ public class SortOrders {
           }
           return new SortOrders(sortOrders);
         })
+        .orElseGet(SortOrders::new);
+  }
+
+  /**
+   * Creates new sort orders with the given orders.
+   *
+   * @param sortOrders the sort orders
+   * @return the sort orders
+   */
+  public static SortOrders by(SortOrder... sortOrders) {
+    return Optional.ofNullable(sortOrders)
+        .map(so -> new SortOrders(Arrays.asList(so)))
         .orElseGet(SortOrders::new);
   }
 

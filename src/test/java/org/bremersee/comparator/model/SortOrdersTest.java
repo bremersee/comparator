@@ -26,6 +26,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,7 +85,7 @@ class SortOrdersTest {
   }
 
   /**
-   * Test json comparator item.
+   * Test json sort orders.
    *
    * @throws Exception the exception
    */
@@ -137,12 +138,12 @@ class SortOrdersTest {
   }
 
   /**
-   * Test to wkt.
+   * Test to sort orders text.
    *
    * @param softly the soft assertions
    */
   @Test
-  void testToWkt(SoftAssertions softly) {
+  void testToSortOrdersText(SoftAssertions softly) {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder("i1", false, true, false);
     SortOrders sortOrders0 = new SortOrders(List.of(sortOrder0, sortOrder1));
@@ -164,10 +165,12 @@ class SortOrdersTest {
   }
 
   /**
-   * Test from wkt.
+   * Test from sort orders text.
+   *
+   * @param softly the softly
    */
   @Test
-  void testFromWkt(SoftAssertions softly) {
+  void testFromSortOrdersText(SoftAssertions softly) {
     SortOrders actual = SortOrders.fromSortOrdersText(null);
     softly.assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
@@ -200,10 +203,10 @@ class SortOrdersTest {
   }
 
   /**
-   * Test from wkt with properties.
+   * Test from sort orders text with properties.
    */
   @Test
-  void testFromWktWithProperties() {
+  void testFromSortOrdersTextWithProperties() {
     SortOrdersTextProperties properties = SortOrdersTextProperties.builder()
         .sortOrderArgsSeparator("-:-")
         .sortOrderSeparator("&&")
@@ -229,11 +232,42 @@ class SortOrdersTest {
     SortOrder sortOrder3 = new SortOrder("field3", false, false, false);
     SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
     SortOrder sortOrder5 = new SortOrder(null, false, true, false);
-    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
+    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4,
+        sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
         .containsExactlyElementsOf(expected);
+  }
+
+  /**
+   * Test is empty.
+   */
+  @Test
+  public void testIsEmpty() {
+    assertThat(SortOrders.by())
+        .extracting(SortOrders::isEmpty, InstanceOfAssertFactories.BOOLEAN)
+        .isTrue();
+  }
+
+  /**
+   * Test is unsorted.
+   */
+  @Test
+  public void testIsUnsorted() {
+    assertThat(SortOrders.by())
+        .extracting(SortOrders::isUnsorted, InstanceOfAssertFactories.BOOLEAN)
+        .isTrue();
+  }
+
+  /**
+   * Test is sorted.
+   */
+  @Test
+  public void testIsSorted() {
+    assertThat(SortOrders.by(SortOrder.by("home")))
+        .extracting(SortOrders::isSorted, InstanceOfAssertFactories.BOOLEAN)
+        .isTrue();
   }
 
 }

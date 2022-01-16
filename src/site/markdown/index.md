@@ -78,7 +78,8 @@ class Example {
     // add nodes
     list.sort(ComparatorBuilder.builder()
         .add((o1, o2) ->
-            (o1 instanceof Branch && o2 instanceof Branch) ? 0 : o1 instanceof Branch ? -1 : 1)
+            (o1 instanceof Branch && o2 instanceof Branch)
+                || (o1 instanceof Leaf && o2 instanceof Leaf) ? 0 : o1 instanceof Branch ? -1 : 1)
         .add("name", true, true, false)        // fieldName, asc, ignoreCase, nullIsFirst
         .add("createdAt", false, true, false)  // fieldName, asc, ignoreCase, nullIsFirst
         .build());

@@ -21,7 +21,7 @@ import javax.validation.constraints.NotEmpty;
 import org.immutables.value.Value;
 
 /**
- * The well known text properties.
+ * The sort order(s) text properties.
  *
  * @author Christian Bremer
  */

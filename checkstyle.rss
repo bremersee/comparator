@@ -25,9 +25,9 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2019 - 2022 bremersee.org</copyright>
     <item>
-      <title>File: 44,
+      <title>File: 48,
              Errors: 0,
-             Warnings: 0,
+             Warnings: 1,
              Infos: 0
       </title>
             <link>https://github.com/bremersee/comparator/checkstyle.html</link>
@@ -88,7 +88,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.WellKnownTextProperties.java">org/bremersee/comparator/model/WellKnownTextProperties.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorJaxbContextDataProvider.java">org/bremersee/comparator/ComparatorJaxbContextDataProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.SortOrders.java">org/bremersee/comparator/model/SortOrders.java</a>
                 </td>
                 <td>
                   0
@@ -130,7 +144,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldsConverter.java">org/bremersee/comparator/ComparatorFieldsConverter.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrderConverter.java">org/bremersee/comparator/spring/converter/SortOrderConverter.java</a>
                 </td>
                 <td>
                   0
@@ -158,7 +172,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testbeans.converter.TestRestController.java">org/bremersee/comparator/testbeans/converter/TestRestController.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrderConverterIntegrationTestConfiguration.java">org/bremersee/comparator/spring/converter/SortOrderConverterIntegrationTestConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -172,7 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldsConverterTest.java">org/bremersee/comparator/ComparatorFieldsConverterTest.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorJaxbContextDataProviderTest.java">org/bremersee/comparator/ComparatorJaxbContextDataProviderTest.java</a>
                 </td>
                 <td>
                   0
@@ -186,7 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorFields.java">org/bremersee/comparator/model/ComparatorFields.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.mapper.package-info.java">org/bremersee/comparator/spring/mapper/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -214,7 +228,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldConverter.java">org/bremersee/comparator/ComparatorFieldConverter.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.Complex.java">org/bremersee/comparator/testmodel/Complex.java</a>
                 </td>
                 <td>
                   0
@@ -229,6 +243,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.XmlSchemaTest.java">org/bremersee/comparator/model/XmlSchemaTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.SortOrdersTextProperties.java">org/bremersee/comparator/model/SortOrdersTextProperties.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrdersConverter.java">org/bremersee/comparator/spring/converter/SortOrdersConverter.java</a>
                 </td>
                 <td>
                   0
@@ -312,21 +354,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.WellKnownTextParser.java">org/bremersee/comparator/WellKnownTextParser.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorFieldTest.java">org/bremersee/comparator/model/ComparatorFieldTest.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrderConverterIntegrationTest.java">org/bremersee/comparator/spring/converter/SortOrderConverterIntegrationTest.java</a>
                 </td>
                 <td>
                   0
@@ -354,6 +382,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.package-info.java">org/bremersee/comparator/spring/converter/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.package-info.java">org/bremersee/comparator/package-info.java</a>
                 </td>
                 <td>
@@ -368,7 +410,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.ComparatorSpringUtils.java">org/bremersee/comparator/spring/ComparatorSpringUtils.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.mapper.SortMapperTest.java">org/bremersee/comparator/spring/mapper/SortMapperTest.java</a>
                 </td>
                 <td>
                   0
@@ -382,7 +424,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.ComparatorSpringUtilsTest.java">org/bremersee/comparator/spring/ComparatorSpringUtilsTest.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.SortOrder.java">org/bremersee/comparator/model/SortOrder.java</a>
                 </td>
                 <td>
                   0
@@ -397,6 +439,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.package-info.java">org/bremersee/comparator/spring/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.SortOrdersTest.java">org/bremersee/comparator/model/SortOrdersTest.java</a>
                 </td>
                 <td>
                   0
@@ -452,7 +508,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorFieldsTest.java">org/bremersee/comparator/model/ComparatorFieldsTest.java</a>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.SortOrderTest.java">org/bremersee/comparator/model/SortOrderTest.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrderConverterTest.java">org/bremersee/comparator/spring/converter/SortOrderConverterTest.java</a>
                 </td>
                 <td>
                   0
@@ -522,63 +592,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldConverterIntegrationTestConfiguration.java">org/bremersee/comparator/ComparatorFieldConverterIntegrationTestConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldConverterIntegrationTest.java">org/bremersee/comparator/ComparatorFieldConverterIntegrationTest.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.model.ComparatorField.java">org/bremersee/comparator/model/ComparatorField.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.ComplexObjectExtensionComparator.java">org/bremersee/comparator/testmodel/ComplexObjectExtensionComparator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.ComparatorFieldConverterTest.java">org/bremersee/comparator/ComparatorFieldConverterTest.java</a>
                 </td>
                 <td>
                   0
@@ -648,7 +662,49 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.mapper.SortMapper.java">org/bremersee/comparator/spring/mapper/SortMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.components.TestRestController.java">org/bremersee/comparator/spring/converter/components/TestRestController.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.testmodel.ComplexObjectExtension.java">org/bremersee/comparator/testmodel/ComplexObjectExtension.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/bremersee/comparator/checkstyle.html#org.bremersee.comparator.spring.converter.SortOrdersConverterTest.java">org/bremersee/comparator/spring/converter/SortOrdersConverterTest.java</a>
                 </td>
                 <td>
                   0

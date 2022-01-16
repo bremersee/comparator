@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SortOrdersTextProperties.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Comparator</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.comparator.model</a> &gt; <span class="el_source">SortOrdersTextProperties.java</span></div><h1>SortOrdersTextProperties.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.comparator.model;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import org.immutables.value.Value;
+
+/**
+ * The sort order(s) text properties.
+ *
+ * @author Christian Bremer
+ */
+@Value.Immutable
+@Valid
+public interface SortOrdersTextProperties {
+
+  /**
+   * Properties builder.
+   *
+   * @return the builder
+   */
+  static ImmutableSortOrdersTextProperties.Builder builder() {
+<span class="fc" id="L38">    return ImmutableSortOrdersTextProperties.builder();</span>
+  }
+
+  /**
+   * Defaults sort order(s) text properties.
+   *
+   * @return the sort order(s) text properties
+   */
+  static SortOrdersTextProperties defaults() {
+<span class="fc" id="L47">    return builder().build();</span>
+  }
+
+  /**
+   * Gets sort order separator.
+   *
+   * @return the sort order separator
+   */
+  @Value.Default
+  @NotEmpty
+  default String getSortOrderSeparator() {
+<span class="fc" id="L58">    return &quot;;&quot;;</span>
+  }
+
+  /**
+   * Gets sort order args separator.
+   *
+   * @return the sort order args separator
+   */
+  @Value.Default
+  @NotEmpty
+  default String getSortOrderArgsSeparator() {
+<span class="fc" id="L69">    return &quot;,&quot;;</span>
+  }
+
+  /**
+   * Gets asc value.
+   *
+   * @return the asc value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getAscValue() {
+<span class="fc" id="L80">    return &quot;asc&quot;;</span>
+  }
+
+  /**
+   * Gets desc value.
+   *
+   * @return the desc value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getDescValue() {
+<span class="fc" id="L91">    return &quot;desc&quot;;</span>
+  }
+
+  /**
+   * Gets direction value.
+   *
+   * @param asc the asc
+   * @return the direction value
+   */
+  @Value.Derived
+  @NotEmpty
+  default String getDirectionValue(boolean asc) {
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    return asc ? getAscValue() : getDescValue();</span>
+  }
+
+  /**
+   * Is asc boolean.
+   *
+   * @param value the value
+   * @return the boolean
+   */
+  @Value.Derived
+  default boolean isAsc(String value) {
+<span class="pc bpc" id="L114" title="1 of 6 branches missed.">    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(getAscValue());</span>
+  }
+
+  /**
+   * Gets case insensitive value.
+   *
+   * @return the case insensitive value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getCaseInsensitiveValue() {
+<span class="fc" id="L125">    return &quot;true&quot;;</span>
+  }
+
+  /**
+   * Gets case sensitive value.
+   *
+   * @return the case sensitive value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getCaseSensitiveValue() {
+<span class="fc" id="L136">    return &quot;false&quot;;</span>
+  }
+
+  /**
+   * Gets ignore case value.
+   *
+   * @param ignoreCase the ignore case
+   * @return the ignore case value
+   */
+  @Value.Derived
+  @NotEmpty
+  default String getIgnoreCaseValue(boolean ignoreCase) {
+<span class="fc bfc" id="L148" title="All 2 branches covered.">    return ignoreCase ? getCaseInsensitiveValue() : getCaseSensitiveValue();</span>
+  }
+
+  /**
+   * Is case ignored boolean.
+   *
+   * @param value the value
+   * @return the boolean
+   */
+  @Value.Derived
+  default boolean isCaseIgnored(String value) {
+<span class="pc bpc" id="L159" title="1 of 6 branches missed.">    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(</span>
+<span class="fc" id="L160">        getCaseInsensitiveValue());</span>
+  }
+
+  /**
+   * Gets null is last value.
+   *
+   * @return the null is last value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getNullIsLastValue() {
+<span class="fc" id="L171">    return &quot;false&quot;;</span>
+  }
+
+  /**
+   * Gets null is first value.
+   *
+   * @return the null is first value
+   */
+  @Value.Default
+  @NotEmpty
+  default String getNullIsFirstValue() {
+<span class="fc" id="L182">    return &quot;true&quot;;</span>
+  }
+
+  /**
+   * Gets null is first value.
+   *
+   * @param nullIsFirst the null is first
+   * @return the null is first value
+   */
+  @Value.Derived
+  @NotEmpty
+  default String getNullIsFirstValue(boolean nullIsFirst) {
+<span class="fc bfc" id="L194" title="All 2 branches covered.">    return nullIsFirst ? getNullIsFirstValue() : getNullIsLastValue();</span>
+  }
+
+  /**
+   * Is null first boolean.
+   *
+   * @param value the value
+   * @return the boolean
+   */
+  @Value.Derived
+  default boolean isNullFirst(String value) {
+<span class="fc" id="L205">    return getNullIsFirstValue().equalsIgnoreCase(value);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

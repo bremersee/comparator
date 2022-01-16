@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SortOrders.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Comparator</a> &gt; <a href="index.source.html" class="el_package">org.bremersee.comparator.model</a> &gt; <span class="el_source">SortOrders.java</span></div><h1>SortOrders.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2019-2022 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.bremersee.comparator.model;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import lombok.EqualsAndHashCode;
+
+/**
+ * The list of sort orders.
+ *
+ * @author Christian Bremer
+ */
+@SuppressWarnings(&quot;SameNameButDifferent&quot;)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = &quot;sortOrders&quot;)
+@XmlType(name = &quot;sortOrdersType&quot;)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Schema(description = &quot;A list of sort orders.&quot;)
+@EqualsAndHashCode
+@Valid
+public class SortOrders {
+
+<span class="fc" id="L58">  @Schema(description = &quot;The list of sort orders.&quot;)</span>
+  @XmlElementRef
+  private final List&lt;SortOrder&gt; sortOrders = new ArrayList&lt;&gt;();
+
+  /**
+   * Instantiates an empty list of sort orders.
+   */
+<span class="fc" id="L65">  protected SortOrders() {</span>
+<span class="fc" id="L66">  }</span>
+
+  /**
+   * Instantiates a new unmodifiable list of sort orders.
+   *
+   * @param sortOrders the sort orders
+   */
+  @JsonCreator
+<span class="fc" id="L74">  public SortOrders(@JsonProperty(&quot;sortOrders&quot;) Collection&lt;? extends SortOrder&gt; sortOrders) {</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (sortOrders != null) {</span>
+<span class="fc" id="L76">      this.sortOrders.addAll(sortOrders);</span>
+    }
+<span class="fc" id="L78">  }</span>
+
+  /**
+   * Gets the unmodifiable list of sort orders.
+   *
+   * @return the list of sort orders
+   */
+  public List&lt;SortOrder&gt; getSortOrders() {
+<span class="fc" id="L86">    return Collections.unmodifiableList(sortOrders);</span>
+  }
+
+  /**
+   * Checks whether the list of sort orders is empty or not.
+   *
+   * @return {@code true} if the list of sort orders is empty, otherwise {@code false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isEmpty() {
+<span class="fc" id="L97">    return sortOrders.isEmpty();</span>
+  }
+
+  /**
+   * Checks whether this sort orders contains any entries. If there are entries, this is sorted,
+   * otherwise it is unsorted.
+   *
+   * @return {@code true} if the list of sort orders is not empty (aka sorted), otherwise {@code
+   *     false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isSorted() {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    return !isEmpty();</span>
+  }
+
+  /**
+   * Checks whether this sort orders contains any entries. If there are no entries, this is
+   * unsorted, otherwise it is sorted.
+   *
+   * @return {@code true} if the list of sort orders is empty (aka unsorted), otherwise {@code
+   *     false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isUnsorted() {
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">    return !isSorted();</span>
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;For example
+   * &lt;pre&gt;
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @return the sort orders text
+   */
+  @NotEmpty
+  public String toSortOrdersText() {
+<span class="fc" id="L143">    return toSortOrdersText(null);</span>
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;The separators (',') and (';') and the values of {@code direction}, {@code case-handling}
+   * and {@code null-handling} depend on the given {@link SortOrdersTextProperties}.
+   *
+   * &lt;p&gt;For example with default properties:
+   * &lt;pre&gt;
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @param properties the properties
+   * @return the sort orders text
+   */
+  @NotEmpty
+  public String toSortOrdersText(SortOrdersTextProperties properties) {
+<span class="fc" id="L167">    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,</span>
+<span class="fc" id="L168">        SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L169">    return sortOrders.stream()</span>
+<span class="fc" id="L170">        .map(sortOrder -&gt; sortOrder.toSortOrderText(props))</span>
+<span class="fc" id="L171">        .collect(Collectors.joining(props.getSortOrderSeparator()));</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="fc" id="L176">    return toSortOrdersText();</span>
+  }
+
+  /**
+   * From sort orders text.
+   *
+   * @param source the sort orders text
+   * @return the sort orders
+   */
+  public static SortOrders fromSortOrdersText(String source) {
+<span class="fc" id="L186">    return fromSortOrdersText(source, SortOrdersTextProperties.defaults());</span>
+  }
+
+  /**
+   * From sort orders text.
+   *
+   * @param source the sort orders text
+   * @param properties the properties
+   * @return the sort orders
+   */
+  public static SortOrders fromSortOrdersText(String source, SortOrdersTextProperties properties) {
+<span class="fc" id="L197">    return Optional.ofNullable(source)</span>
+<span class="fc" id="L198">        .map(text -&gt; {</span>
+<span class="fc" id="L199">          SortOrdersTextProperties props = Objects</span>
+<span class="fc" id="L200">              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L201">          List&lt;SortOrder&gt; sortOrders = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L202">          StringTokenizer tokenizer = new StringTokenizer(text, props.getSortOrderSeparator());</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">          while (tokenizer.hasMoreTokens()) {</span>
+<span class="fc" id="L204">            sortOrders.add(SortOrder.fromSortOrderText(tokenizer.nextToken(), props));</span>
+          }
+<span class="fc" id="L206">          return new SortOrders(sortOrders);</span>
+        })
+<span class="fc" id="L208">        .orElseGet(SortOrders::new);</span>
+  }
+
+  /**
+   * Creates new sort orders with the given orders.
+   *
+   * @param sortOrders the sort orders
+   * @return the sort orders
+   */
+  public static SortOrders by(SortOrder... sortOrders) {
+<span class="fc" id="L218">    return Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L219">        .map(so -&gt; new SortOrders(Arrays.asList(so)))</span>
+<span class="fc" id="L220">        .orElseGet(SortOrders::new);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

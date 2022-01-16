@@ -17,9 +17,8 @@
 package org.bremersee.comparator;
 
 import java.util.Comparator;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.bremersee.comparator.model.ComparatorField;
+import org.bremersee.comparator.model.SortOrder;
 
 /**
  * The value comparator extracts field value of the specified field name or path and uses the
@@ -29,7 +28,6 @@ import org.bremersee.comparator.model.ComparatorField;
  * @author Christian Bremer
  */
 @ToString
-@EqualsAndHashCode
 public class ValueComparator implements Comparator&lt;Object&gt; {
 
   private final ValueExtractor valueExtractor;
@@ -45,29 +43,29 @@ public class ValueComparator implements Comparator&lt;Object&gt; {
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    */
-  public ValueComparator(ComparatorField comparatorField) {
-<span class="fc" id="L51">    this(comparatorField.getField(),</span>
-<span class="fc" id="L52">        comparatorField.isAsc(),</span>
-<span class="fc" id="L53">        comparatorField.isIgnoreCase(),</span>
-<span class="fc" id="L54">        comparatorField.isNullIsFirst(),</span>
+  public ValueComparator(SortOrder sortOrder) {
+<span class="fc" id="L49">    this(sortOrder.getField(),</span>
+<span class="fc" id="L50">        sortOrder.isAsc(),</span>
+<span class="fc" id="L51">        sortOrder.isIgnoreCase(),</span>
+<span class="fc" id="L52">        sortOrder.isNullIsFirst(),</span>
         null);
-<span class="fc" id="L56">  }</span>
+<span class="fc" id="L54">  }</span>
 
   /**
    * Instantiates a new value comparator.
    *
-   * @param comparatorField the comparator field (cannot be {@code null})
+   * @param sortOrder the sort order (cannot be {@code null})
    * @param valueExtractor the value extractor (if it is {@code null}, a default will be used)
    */
-  public ValueComparator(ComparatorField comparatorField, ValueExtractor valueExtractor) {
-<span class="fc" id="L65">    this(comparatorField.getField(),</span>
-<span class="fc" id="L66">        comparatorField.isAsc(),</span>
-<span class="fc" id="L67">        comparatorField.isIgnoreCase(),</span>
-<span class="fc" id="L68">        comparatorField.isNullIsFirst(),</span>
+  public ValueComparator(SortOrder sortOrder, ValueExtractor valueExtractor) {
+<span class="fc" id="L63">    this(sortOrder.getField(),</span>
+<span class="fc" id="L64">        sortOrder.isAsc(),</span>
+<span class="fc" id="L65">        sortOrder.isIgnoreCase(),</span>
+<span class="fc" id="L66">        sortOrder.isNullIsFirst(),</span>
         valueExtractor);
-<span class="fc" id="L70">  }</span>
+<span class="fc" id="L68">  }</span>
 
   /**
    * Instantiates a new value comparator.
@@ -82,8 +80,8 @@ public class ValueComparator implements Comparator&lt;Object&gt; {
       boolean asc,
       boolean ignoreCase,
       boolean nullIsFirst) {
-<span class="nc" id="L85">    this(field, asc, ignoreCase, nullIsFirst, null);</span>
-<span class="nc" id="L86">  }</span>
+<span class="fc" id="L83">    this(field, asc, ignoreCase, nullIsFirst, null);</span>
+<span class="fc" id="L84">  }</span>
 
   /**
    * Instantiates a new value comparator.
@@ -100,56 +98,56 @@ public class ValueComparator implements Comparator&lt;Object&gt; {
       boolean asc,
       boolean ignoreCase,
       boolean nullIsFirst,
-<span class="fc" id="L103">      ValueExtractor valueExtractor) {</span>
-<span class="fc" id="L104">    this.field = field;</span>
-<span class="fc" id="L105">    this.asc = asc;</span>
-<span class="fc" id="L106">    this.ignoreCase = ignoreCase;</span>
-<span class="fc" id="L107">    this.nullIsFirst = nullIsFirst;</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">    this.valueExtractor = valueExtractor != null ? valueExtractor : new DefaultValueExtractor();</span>
-<span class="fc" id="L109">  }</span>
+<span class="fc" id="L101">      ValueExtractor valueExtractor) {</span>
+<span class="fc" id="L102">    this.field = field;</span>
+<span class="fc" id="L103">    this.asc = asc;</span>
+<span class="fc" id="L104">    this.ignoreCase = ignoreCase;</span>
+<span class="fc" id="L105">    this.nullIsFirst = nullIsFirst;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    this.valueExtractor = valueExtractor != null ? valueExtractor : new DefaultValueExtractor();</span>
+<span class="fc" id="L107">  }</span>
 
   @Override
   public int compare(Object o1, Object o2) {
-<span class="fc" id="L113">    final Object v1 = valueExtractor.findValue(o1, field);</span>
-<span class="fc" id="L114">    final Object v2 = valueExtractor.findValue(o2, field);</span>
+<span class="fc" id="L111">    final Object v1 = valueExtractor.findValue(o1, field);</span>
+<span class="fc" id="L112">    final Object v2 = valueExtractor.findValue(o2, field);</span>
 
-<span class="fc bfc" id="L116" title="All 4 branches covered.">    if (v1 == null &amp;&amp; v2 == null) {</span>
-<span class="fc" id="L117">      return 0;</span>
+<span class="fc bfc" id="L114" title="All 4 branches covered.">    if (v1 == null &amp;&amp; v2 == null) {</span>
+<span class="fc" id="L115">      return 0;</span>
     }
-<span class="fc bfc" id="L119" title="All 2 branches covered.">    if (v1 == null) {</span>
-<span class="fc bfc" id="L120" title="All 2 branches covered.">      if (asc) {</span>
-<span class="fc bfc" id="L121" title="All 2 branches covered.">        return nullIsFirst ? -1 : 1;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">    if (v1 == null) {</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">      if (asc) {</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        return nullIsFirst ? -1 : 1;</span>
       } else {
-<span class="fc bfc" id="L123" title="All 2 branches covered.">        return nullIsFirst ? 1 : -1;</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">        return nullIsFirst ? 1 : -1;</span>
       }
     }
-<span class="fc bfc" id="L126" title="All 2 branches covered.">    if (v2 == null) {</span>
-<span class="fc bfc" id="L127" title="All 2 branches covered.">      if (asc) {</span>
-<span class="fc bfc" id="L128" title="All 2 branches covered.">        return nullIsFirst ? 1 : -1;</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">    if (v2 == null) {</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">      if (asc) {</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        return nullIsFirst ? 1 : -1;</span>
       } else {
-<span class="fc bfc" id="L130" title="All 2 branches covered.">        return nullIsFirst ? -1 : 1;</span>
+<span class="fc bfc" id="L128" title="All 2 branches covered.">        return nullIsFirst ? -1 : 1;</span>
       }
     }
 
-<span class="fc bfc" id="L134" title="All 4 branches covered.">    if (asc &amp;&amp; v1 instanceof Comparable) {</span>
-<span class="pc bpc" id="L135" title="1 of 6 branches missed.">      if (ignoreCase &amp;&amp; v1 instanceof String &amp;&amp; v2 instanceof String) {</span>
-<span class="fc" id="L136">        return ((String) v1).compareToIgnoreCase((String) v2);</span>
-      } else {
-        //noinspection unchecked,rawtypes
-<span class="fc" id="L139">        return ((Comparable) v1).compareTo(v2);</span>
-      }
-
-<span class="pc bpc" id="L142" title="1 of 4 branches missed.">    } else if (!asc &amp;&amp; v2 instanceof Comparable) {</span>
-
-<span class="pc bpc" id="L144" title="1 of 6 branches missed.">      if (ignoreCase &amp;&amp; v1 instanceof String &amp;&amp; v2 instanceof String) {</span>
-<span class="fc" id="L145">        return ((String) v2).compareToIgnoreCase((String) v1);</span>
+<span class="fc bfc" id="L132" title="All 4 branches covered.">    if (asc &amp;&amp; v1 instanceof Comparable) {</span>
+<span class="pc bpc" id="L133" title="1 of 6 branches missed.">      if (ignoreCase &amp;&amp; v1 instanceof String &amp;&amp; v2 instanceof String) {</span>
+<span class="fc" id="L134">        return ((String) v1).compareToIgnoreCase((String) v2);</span>
       } else {
         //noinspection unchecked,rawtypes
-<span class="fc" id="L148">        return ((Comparable) v2).compareTo(v1);</span>
+<span class="fc" id="L137">        return ((Comparable) v1).compareTo(v2);</span>
+      }
+
+<span class="pc bpc" id="L140" title="1 of 4 branches missed.">    } else if (!asc &amp;&amp; v2 instanceof Comparable) {</span>
+
+<span class="pc bpc" id="L142" title="1 of 6 branches missed.">      if (ignoreCase &amp;&amp; v1 instanceof String &amp;&amp; v2 instanceof String) {</span>
+<span class="fc" id="L143">        return ((String) v2).compareToIgnoreCase((String) v1);</span>
+      } else {
+        //noinspection unchecked,rawtypes
+<span class="fc" id="L146">        return ((Comparable) v2).compareTo(v1);</span>
       }
     }
 
-<span class="fc" id="L152">    throw new ComparatorException(&quot;Comparison of field '&quot; + field + &quot;' is not possible.&quot;);</span>
+<span class="fc" id="L150">    throw new ComparatorException(&quot;Comparison of field '&quot; + field + &quot;' is not possible.&quot;);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

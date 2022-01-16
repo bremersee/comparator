@@ -20,8 +20,11 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import org.bremersee.comparator.model.ComparatorField;
-import org.bremersee.comparator.model.ComparatorFields;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrders;
 
 /**
  * The comparator builder.
@@ -36,7 +39,7 @@ public interface ComparatorBuilder {
    * @return the new comparator builder
    */
   static ComparatorBuilder builder() {
-<span class="fc" id="L39">    return new DefaultComparatorBuilder();</span>
+<span class="fc" id="L42">    return new DefaultComparatorBuilder();</span>
   }
 
   /**
@@ -45,8 +48,16 @@ public interface ComparatorBuilder {
    * @param comparator the comparator (can be {@code null} - then no comparator is added)
    * @return the comparator builder
    */
-  default ComparatorBuilder add(Comparator&lt;?&gt; comparator) {
-<span class="fc" id="L49">    return add(null, null, comparator);</span>
+  ComparatorBuilder add(Comparator&lt;?&gt; comparator);
+
+  /**
+   * Adds a default comparator for the given field (the value of the field must be comparable).
+   *
+   * @param field the field
+   * @return the comparator builder
+   */
+  default ComparatorBuilder add(String field) {
+<span class="fc" id="L60">    return add(field, true, true, false);</span>
   }
 
   /**
@@ -57,7 +68,7 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder add(String field, Comparator&lt;?&gt; comparator) {
-<span class="fc" id="L60">    return add(field, null, comparator);</span>
+<span class="fc" id="L71">    return add(field, null, comparator);</span>
   }
 
   /**
@@ -69,18 +80,23 @@ public interface ComparatorBuilder {
    * @param comparator the comparator (can be {@code null} - then no comparator is added)
    * @return the comparator builder
    */
-  ComparatorBuilder add(
+  default ComparatorBuilder add(
       String field,
       ValueExtractor valueExtractor,
-      Comparator&lt;?&gt; comparator);
+      Comparator&lt;?&gt; comparator) {
+
+<span class="fc" id="L88">    return Optional.ofNullable(comparator)</span>
+<span class="fc" id="L89">        .map(c -&gt; add(new DelegatingComparator(field, valueExtractor, c)))</span>
+<span class="fc" id="L90">        .orElse(this);</span>
+  }
 
   /**
    * Creates and adds a value comparator for the given field name or path to this builder.
    *
    * @param field the field name or path (can be {@code null})
    * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
-   *     sensitive order
+   * @param ignoreCase {@code true} for a case-insensitive order, {@code false} for a
+   *     case-sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
    * @return the comparator builder
    */
@@ -89,7 +105,7 @@ public interface ComparatorBuilder {
       boolean asc,
       boolean ignoreCase,
       boolean nullIsFirst) {
-<span class="fc" id="L92">    return add(field, asc, ignoreCase, nullIsFirst, null);</span>
+<span class="fc" id="L108">    return add(field, asc, ignoreCase, nullIsFirst, null);</span>
   }
 
   /**
@@ -101,15 +117,17 @@ public interface ComparatorBuilder {
    * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
    *     sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
-   * @param valueExtractor the value extractor
+   * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
-  ComparatorBuilder add(
+  default ComparatorBuilder add(
       String field,
       boolean asc,
       boolean ignoreCase,
       boolean nullIsFirst,
-      ValueExtractor valueExtractor);
+      ValueExtractor valueExtractor) {
+<span class="fc" id="L129">    return add(new ValueComparator(field, asc, ignoreCase, nullIsFirst, valueExtractor));</span>
+  }
 
   /**
    * Creates and adds a value comparator for the given field ordering description.
@@ -117,8 +135,8 @@ public interface ComparatorBuilder {
    * @param field the field ordering description (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(ComparatorField field) {
-<span class="fc" id="L121">    return add(field, null);</span>
+  default ComparatorBuilder add(SortOrder field) {
+<span class="fc" id="L139">    return add(field, null);</span>
   }
 
   /**
@@ -126,171 +144,141 @@ public interface ComparatorBuilder {
    * extractor can be specified.
    *
    * @param field the field ordering description (can be {@code null})
-   * @param valueExtractor the value extractor
+   * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(ComparatorField field, ValueExtractor valueExtractor) {
-<span class="fc bfc" id="L133" title="All 2 branches covered.">    if (field == null) {</span>
-<span class="fc" id="L134">      throw new IllegalArgumentException(&quot;Field must not be null.&quot;);</span>
-    }
-<span class="fc" id="L136">    return add(field.getField(), field.isAsc(), field.isIgnoreCase(), field.isNullIsFirst(),</span>
-        valueExtractor);
+  default ComparatorBuilder add(SortOrder field, ValueExtractor valueExtractor) {
+<span class="fc" id="L151">    return Optional.ofNullable(field)</span>
+<span class="fc" id="L152">        .map(sortOrder -&gt; add(</span>
+<span class="fc" id="L153">            sortOrder.getField(),</span>
+<span class="fc" id="L154">            sortOrder.isAsc(),</span>
+<span class="fc" id="L155">            sortOrder.isIgnoreCase(),</span>
+<span class="fc" id="L156">            sortOrder.isNullIsFirst(),</span>
+            valueExtractor))
+<span class="fc" id="L158">        .orElse(this);</span>
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
    *     added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(Collection&lt;? extends ComparatorField&gt; fields) {
-<span class="fc" id="L148">    return addAll(fields, null);</span>
+  default ComparatorBuilder addAll(Collection&lt;? extends SortOrder&gt; sortOrders) {
+<span class="fc" id="L169">    return addAll(sortOrders, (ValueExtractor) null);</span>
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param fields the ordering descriptions (can be {@code null} - no comparator will be
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
    *     added)
-   * @param valueExtractor the value extractor
+   * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection&lt;? extends ComparatorField&gt; fields,
+      Collection&lt;? extends SortOrder&gt; sortOrders,
       ValueExtractor valueExtractor) {
-<span class="pc bpc" id="L163" title="1 of 2 branches missed.">    if (fields != null) {</span>
-<span class="fc bfc" id="L164" title="All 2 branches covered.">      for (ComparatorField field : fields) {</span>
-<span class="fc" id="L165">        add(field, valueExtractor);</span>
-<span class="fc" id="L166">      }</span>
-    }
-<span class="fc" id="L168">    return this;</span>
+<span class="fc" id="L184">    Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L185">        .ifPresent(orders -&gt; orders.stream()</span>
+<span class="fc" id="L186">            .filter(Objects::nonNull)</span>
+<span class="fc" id="L187">            .forEach(sortOrder -&gt; add(sortOrder, valueExtractor)));</span>
+<span class="fc" id="L188">    return this;</span>
+  }
+
+  /**
+   * Adds comparators for the given sortOrders ordering descriptions.
+   *
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
+   * @param comparatorFunction the comparator function
+   * @return the comparator builder
+   */
+  default ComparatorBuilder addAll(
+      Collection&lt;? extends SortOrder&gt; sortOrders,
+      Function&lt;SortOrder, Comparator&lt;?&gt;&gt; comparatorFunction) {
+
+<span class="fc" id="L203">    Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L204">        .ifPresent(orders -&gt; orders.stream()</span>
+<span class="fc" id="L205">            .filter(Objects::nonNull)</span>
+<span class="fc" id="L206">            .forEach(sortOrder -&gt; add(comparatorFunction.apply(sortOrder))));</span>
+<span class="fc" id="L207">    return this;</span>
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will
-   *     be                         added)
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will
+   *     be added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(ComparatorFields comparatorFields) {
-<span class="pc bpc" id="L179" title="1 of 2 branches missed.">    return comparatorFields != null ? addAll(comparatorFields.getFields()) : this;</span>
+  default ComparatorBuilder addAll(SortOrders sortOrders) {
+<span class="fc" id="L218">    return Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L219">        .map(orders -&gt; addAll(orders.getSortOrders()))</span>
+<span class="fc" id="L220">        .orElse(this);</span>
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param comparatorFields the ordering descriptions (can be {@code null} - no comparator will
-   *     be                         added)
-   * @param valueExtractor the value extractor
+   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will
+   *     be added)
+   * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      ComparatorFields comparatorFields,
+      SortOrders sortOrders,
       ValueExtractor valueExtractor) {
-<span class="pc bpc" id="L194" title="1 of 2 branches missed.">    return comparatorFields != null ? addAll(comparatorFields.getFields(), valueExtractor) : this;</span>
+<span class="fc" id="L235">    return Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L236">        .map(orders -&gt; addAll(orders.getSortOrders(), valueExtractor))</span>
+<span class="fc" id="L237">        .orElse(this);</span>
   }
 
   /**
-   * Creates and adds value comparators for the given well known text description (see {@link
-   * ComparatorField#toWkt()}*, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
+   * Add all comparator builder.
    *
-   * &lt;p&gt;The syntax of the field ordering description is
-   * &lt;pre&gt;
-   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst|fieldNameOrPath1,asc,ignoreCase,nullIsFirst
-   * &lt;/pre&gt;
-   *
-   * &lt;p&gt;For example
-   * &lt;pre&gt;
-   * person.lastName,asc,true,false|person.firstName,asc,true,false
-   * &lt;/pre&gt;
-   *
-   * @param wkt the well known text (field ordering description)
+   * @param sortOrders the sort orders
+   * @param comparatorFunction the comparator function
    * @return the comparator builder
    */
-  default ComparatorBuilder fromWellKnownText(String wkt) {
-<span class="fc" id="L215">    return fromWellKnownText(wkt, null);</span>
+  default ComparatorBuilder addAll(
+      SortOrders sortOrders,
+      Function&lt;SortOrder, Comparator&lt;?&gt;&gt; comparatorFunction) {
+<span class="fc" id="L250">    return Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L251">        .map(orders -&gt; addAll(orders.getSortOrders(), comparatorFunction))</span>
+<span class="fc" id="L252">        .orElse(this);</span>
   }
-
-  /**
-   * Creates and adds value comparators for the given well known text description (see {@link
-   * ComparatorField#toWkt()}*, {@link ComparatorFields#toWkt()} and {@link WellKnownTextParser}).
-   *
-   * &lt;p&gt;The syntax of the field ordering depends on the {@link WellKnownTextParser}. The default is
-   * &lt;pre&gt;
-   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst|fieldNameOrPath1,asc,ignoreCase,nullIsFirst
-   * &lt;/pre&gt;
-   *
-   * &lt;p&gt;For example
-   * &lt;pre&gt;
-   * person.lastName,asc,true,false|person.firstName,asc,true,false
-   * &lt;/pre&gt;
-   *
-   * @param wkt the well known text (field ordering description)
-   * @param wktParser the well known text parser (can be {@code null})
-   * @return the comparator builder
-   */
-  ComparatorBuilder fromWellKnownText(String wkt, WellKnownTextParser wktParser);
 
   /**
    * Build comparator.
    *
+   * @param &lt;T&gt; the type parameter
    * @return the comparator
    */
-  Comparator&lt;Object&gt; build();
+  &lt;T&gt; Comparator&lt;T&gt; build();
 
   /**
    * The default comparator builder.
    */
-<span class="fc" id="L248">  class DefaultComparatorBuilder implements ComparatorBuilder {</span>
+<span class="fc" id="L266">  class DefaultComparatorBuilder implements ComparatorBuilder {</span>
 
-<span class="fc" id="L250">    @SuppressWarnings(&quot;rawtypes&quot;)</span>
+<span class="fc" id="L268">    @SuppressWarnings(&quot;rawtypes&quot;)</span>
     private final List&lt;Comparator&gt; comparatorChain = new LinkedList&lt;&gt;();
 
     @Override
-    public ComparatorBuilder add(
-        String field,
-        ValueExtractor valueExtractor,
-        Comparator&lt;?&gt; comparator) {
-
-<span class="pc bpc" id="L259" title="1 of 2 branches missed.">      if (comparator != null) {</span>
-<span class="fc" id="L260">        comparatorChain.add(new DelegatingComparator(field, valueExtractor, comparator));</span>
-      }
-<span class="fc" id="L262">      return this;</span>
+    public ComparatorBuilder add(Comparator&lt;?&gt; comparator) {
+<span class="fc" id="L273">      Optional.ofNullable(comparator)</span>
+<span class="fc" id="L274">          .ifPresent(comparatorChain::add);</span>
+<span class="fc" id="L275">      return this;</span>
     }
 
     @Override
-    public ComparatorBuilder add(
-        String field,
-        boolean asc,
-        boolean ignoreCase,
-        boolean nullIsFirst,
-        ValueExtractor valueExtractor) {
-
-<span class="fc" id="L273">      comparatorChain.add(new ValueComparator(field, asc, ignoreCase, nullIsFirst, valueExtractor));</span>
-<span class="fc" id="L274">      return this;</span>
-    }
-
-    @Override
-    public ComparatorBuilder fromWellKnownText(
-        String wkt,
-        WellKnownTextParser wktParser) {
-
-<span class="fc bfc" id="L282" title="All 2 branches covered.">      if (wktParser != null) {</span>
-<span class="fc" id="L283">        comparatorChain.add(wktParser.parse(wkt));</span>
-      } else {
-<span class="fc" id="L285">        WellKnownTextParser parser = ValueComparator::new;</span>
-<span class="fc" id="L286">        comparatorChain.add(parser.parse(wkt));</span>
-      }
-<span class="fc" id="L288">      return this;</span>
-    }
-
-    @Override
-    public Comparator&lt;Object&gt; build() {
-<span class="fc" id="L293">      return new ComparatorChain(comparatorChain);</span>
+    public &lt;T&gt; Comparator&lt;T&gt; build() {
+      //noinspection unchecked
+<span class="fc" id="L281">      return (Comparator&lt;T&gt;) new ComparatorChain(comparatorChain);</span>
     }
   }
 

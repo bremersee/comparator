@@ -1,5 +1,6 @@
 org.bremersee.comparator
 org.bremersee.comparator.model
-org.bremersee.comparator.spring
-org.bremersee.comparator.testbeans.converter
+org.bremersee.comparator.spring.converter
+org.bremersee.comparator.spring.converter.components
+org.bremersee.comparator.spring.mapper
 org.bremersee.comparator.testmodel

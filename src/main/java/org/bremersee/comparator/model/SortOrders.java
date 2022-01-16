@@ -45,6 +45,7 @@ import lombok.EqualsAndHashCode;
  *
  * @author Christian Bremer
  */
+@SuppressWarnings("SameNameButDifferent")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "sortOrders")
 @XmlType(name = "sortOrdersType")

@@ -53,7 +53,8 @@ class SortOrdersConverterTest {
     SortOrder sortOrder3 = new SortOrder("field3", true, false, false);
     SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
     SortOrder sortOrder5 = new SortOrder("field5", false, false, false);
-    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
+    List<SortOrder> expected = List.of(
+        sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))
@@ -90,7 +91,8 @@ class SortOrdersConverterTest {
     SortOrder sortOrder3 = new SortOrder("field3", false, false, false);
     SortOrder sortOrder4 = new SortOrder("field4", false, false, true);
     SortOrder sortOrder5 = new SortOrder(null, false, true, false);
-    List<SortOrder> expected = List.of(sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
+    List<SortOrder> expected = List.of(
+        sortOrder0, sortOrder1, sortOrder2, sortOrder3, sortOrder4, sortOrder5);
 
     assertThat(actual)
         .extracting(SortOrders::getSortOrders, list(SortOrder.class))

@@ -65,6 +65,12 @@ public class TestRestController {
     return ResponseEntity.ok(new SortOrders(sort).toSortOrdersText());
   }
 
+  /**
+   * Gets something else sorted.
+   *
+   * @param pageRequest the page request
+   * @return the something else sorted
+   */
   @Operation(
       summary = "Get something else that can be sorted.",
       operationId = "getSomethingElseSorted",

@@ -51,7 +51,7 @@ import lombok.EqualsAndHashCode;
  *  ---------------------------------------------------------------------------------------------
  * </pre>
  *
- * <p>These values have a 'well known text' representation. The values are concatenated with comma
+ * <p>These values have a 'sort oder text' representation. The values are concatenated with comma
  * (,):
  * <pre>
  * fieldNameOrPath,asc,ignoreCase,nullIsFirst
@@ -223,7 +223,7 @@ public class SortOrder {
    * person.lastName,asc,true,false
    * </pre>
    *
-   * @return the well known text
+   * @return the sort order text
    */
   @NotEmpty
   public String toSortOrderText() {
@@ -247,7 +247,7 @@ public class SortOrder {
    * </pre>
    *
    * @param properties the properties (can be {@code null}
-   * @return the well known text
+   * @return the sort order text
    */
   @NotEmpty
   public String toSortOrderText(SortOrdersTextProperties properties) {
@@ -293,7 +293,7 @@ public class SortOrder {
    */
   public static SortOrder fromSortOrderText(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
-        .map(wkt -> {
+        .map(text -> {
           SortOrdersTextProperties props = Objects
               .requireNonNullElse(properties, SortOrdersTextProperties.defaults());
           String field;
@@ -301,25 +301,25 @@ public class SortOrder {
           boolean ignoreCase = props.isCaseIgnored(null);
           boolean nullIsFirst = props.isNullFirst(null);
           String separator = props.getSortOrderArgsSeparator();
-          int index = wkt.indexOf(separator);
+          int index = text.indexOf(separator);
           if (index < 0) {
-            field = wkt.trim();
+            field = text.trim();
           } else {
-            field = wkt.substring(0, index).trim();
+            field = text.substring(0, index).trim();
             int from = index + separator.length();
-            index = wkt.indexOf(separator, from);
+            index = text.indexOf(separator, from);
             if (index < 0) {
-              asc = props.isAsc(wkt.substring(from).trim());
+              asc = props.isAsc(text.substring(from).trim());
             } else {
-              asc = props.isAsc(wkt.substring(from, index).trim());
+              asc = props.isAsc(text.substring(from, index).trim());
               from = index + separator.length();
-              index = wkt.indexOf(separator, from);
+              index = text.indexOf(separator, from);
               if (index < 0) {
-                ignoreCase = props.isCaseIgnored(wkt.substring(from).trim());
+                ignoreCase = props.isCaseIgnored(text.substring(from).trim());
               } else {
-                ignoreCase = props.isCaseIgnored(wkt.substring(from, index).trim());
+                ignoreCase = props.isCaseIgnored(text.substring(from, index).trim());
                 from = index + separator.length();
-                nullIsFirst = props.isNullFirst(wkt.substring(from).trim());
+                nullIsFirst = props.isNullFirst(text.substring(from).trim());
               }
             }
           }

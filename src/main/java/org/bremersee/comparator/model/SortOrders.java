@@ -194,11 +194,11 @@ public class SortOrders {
    */
   public static SortOrders fromSortOrdersText(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
-        .map(wkt -> {
+        .map(text -> {
           SortOrdersTextProperties props = Objects
               .requireNonNullElse(properties, SortOrdersTextProperties.defaults());
           List<SortOrder> sortOrders = new ArrayList<>();
-          StringTokenizer tokenizer = new StringTokenizer(wkt, props.getSortOrderSeparator());
+          StringTokenizer tokenizer = new StringTokenizer(text, props.getSortOrderSeparator());
           while (tokenizer.hasMoreTokens()) {
             sortOrders.add(SortOrder.fromSortOrderText(tokenizer.nextToken(), props));
           }

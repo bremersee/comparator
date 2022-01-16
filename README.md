@@ -263,5 +263,5 @@ dependency to your project:
 ### XML Schema
 
 The XML schema of the model is available
-[here](http://bremersee.github.io/xmlschemas/comparator-v2.xsd).
+[here](http://bremersee.github.io/xmlschemas/comparator-v3.xsd).
 

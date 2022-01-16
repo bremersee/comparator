@@ -135,10 +135,10 @@ class SortOrderTest {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder(null, false, true, false);
     softly.assertThat(sortOrder0.toSortOrderText())
-        .as("Create wkt of %s", sortOrder0)
+        .as("Create sort order text of %s", sortOrder0)
         .isEqualTo("i0,asc,false,true");
     softly.assertThat(sortOrder0.toString())
-        .as("toString is equal to WKT")
+        .as("toString is equal to sort order text")
         .isEqualTo(sortOrder0.toSortOrderText());
 
     softly.assertThat(sortOrder1.toSortOrderText(SortOrdersTextProperties.builder()
@@ -146,7 +146,7 @@ class SortOrderTest {
             .ascValue("true")
             .descValue("false")
             .build()))
-        .as("Create wkt with custom properties of %s", sortOrder0)
+        .as("Create sort order text with custom properties of %s", sortOrder0)
         .isEqualTo("-false-true-false");
   }
 

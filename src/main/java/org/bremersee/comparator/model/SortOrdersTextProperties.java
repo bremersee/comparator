@@ -39,9 +39,9 @@ public interface SortOrdersTextProperties {
   }
 
   /**
-   * Defaults well known text properties.
+   * Defaults sort order(s) text properties.
    *
-   * @return the well known text properties
+   * @return the sort order(s) text properties
    */
   static SortOrdersTextProperties defaults() {
     return builder().build();

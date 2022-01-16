@@ -74,7 +74,7 @@ class SortOrdersTest {
     marshaller.marshal(sortOrders, sw);
 
     String xmlStr = sw.toString();
-    System.out.println(xmlStr);
+    // System.out.println(xmlStr);
 
     SortOrders readFields = (SortOrders) jaxbContext.createUnmarshaller()
         .unmarshal(new StringReader(xmlStr));
@@ -99,6 +99,7 @@ class SortOrdersTest {
     ObjectMapper om = new ObjectMapper();
 
     String jsonStr = om.writerWithDefaultPrettyPrinter().writeValueAsString(sortOrders);
+    // System.out.println(jsonStr);
 
     SortOrders readFields = om.readValue(jsonStr, SortOrders.class);
 
@@ -149,10 +150,10 @@ class SortOrdersTest {
     SortOrders sortOrders0 = new SortOrders(List.of(sortOrder0, sortOrder1));
     String actual = sortOrders0.toSortOrdersText();
     softly.assertThat(actual)
-        .as("Create wkt of %s", sortOrders0)
+        .as("Create sort orders text of %s", sortOrders0)
         .isEqualTo("i0,asc,false,true;i1,desc,true,false");
     softly.assertThat(sortOrders0.toString())
-        .as("toString is equal to WKT")
+        .as("toString is equal to sort orders text")
         .isEqualTo(actual);
 
     actual = sortOrders0.toSortOrdersText(SortOrdersTextProperties.builder()
@@ -160,7 +161,7 @@ class SortOrdersTest {
         .sortOrderArgsSeparator(":")
         .build());
     softly.assertThat(actual)
-        .as("Create wkt with custom properties of %s", sortOrders0)
+        .as("Create sort orders text with custom properties of %s", sortOrders0)
         .isEqualTo("i0:asc:false:true&i1:desc:true:false");
   }
 

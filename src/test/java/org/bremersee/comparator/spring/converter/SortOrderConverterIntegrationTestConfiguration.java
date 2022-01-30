@@ -30,7 +30,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(basePackageClasses = {TestRestController.class})
-//@EnableSpringDataWebSupport
 public class SortOrderConverterIntegrationTestConfiguration {
 
   /**

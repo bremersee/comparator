@@ -78,7 +78,8 @@ public class TestRestController {
       parameters = {
           @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
           @Parameter(name = "size", in = ParameterIn.QUERY, schema = @Schema(type = "integer")),
-          @Parameter(name = "sort", in = ParameterIn.QUERY, array = @ArraySchema(schema = @Schema(type = "string")))
+          @Parameter(name = "sort", in = ParameterIn.QUERY,
+              array = @ArraySchema(schema = @Schema(type = "string")))
       }
   )
   @GetMapping(path = "/with-spring-pageable")

@@ -38,7 +38,7 @@ public interface ComparatorBuilder {
    *
    * @return the new comparator builder
    */
-  static ComparatorBuilder builder() {
+  static ComparatorBuilder newInstance() {
     return new DefaultComparatorBuilder();
   }
 

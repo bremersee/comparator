@@ -66,7 +66,7 @@ class Example {
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add("name", true, true, false)        // fieldName, asc, ignoreCase, nullIsFirst
         .add("createdAt", false, true, false)  // fieldName, asc, ignoreCase, nullIsFirst
         .build());
@@ -88,7 +88,7 @@ class Example {
   public static void main(String[] args) {
     List<Node> list = new ArrayList<>();
     // add nodes
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add((o1, o2) ->
             (o1 instanceof Branch && o2 instanceof Branch)
                 || (o1 instanceof Leaf && o2 instanceof Leaf) ? 0 : o1 instanceof Branch ? -1 : 1)
@@ -160,7 +160,7 @@ class Example {
   public static void main(String[] args) {
     List<Employee> list = new ArrayList<>();
     // add employees
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .addAll(List.of(
             new SortOrder("room.number", true, true, false),
             new SortOrder("person.lastName", true, true, false),
@@ -224,7 +224,7 @@ public class TestRestController {
       @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     List<Empployy> list = service.findEmployees();
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .addAll(sort)
         .build());
 

@@ -20,6 +20,7 @@ import java.util.Objects;
 import org.bremersee.comparator.model.SortOrders;
 import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 /**
  * The sort orders converter.
@@ -34,22 +35,22 @@ public class SortOrdersConverter implements Converter&lt;String, SortOrders&gt; 
    * Instantiates a new sort orders converter.
    */
   public SortOrdersConverter() {
-<span class="fc" id="L37">    this(SortOrdersTextProperties.defaults());</span>
-<span class="fc" id="L38">  }</span>
+<span class="fc" id="L38">    this(SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L39">  }</span>
 
   /**
    * Instantiates a new sort orders converter.
    *
    * @param properties the properties
    */
-<span class="fc" id="L45">  public SortOrdersConverter(SortOrdersTextProperties properties) {</span>
-<span class="fc" id="L46">    this.properties = Objects</span>
-<span class="fc" id="L47">        .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
-<span class="fc" id="L48">  }</span>
+<span class="fc" id="L46">  public SortOrdersConverter(SortOrdersTextProperties properties) {</span>
+<span class="fc" id="L47">    this.properties = Objects</span>
+<span class="fc" id="L48">        .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L49">  }</span>
 
   @Override
-  public SortOrders convert(String source) {
-<span class="fc" id="L52">    return SortOrders.fromSortOrdersText(source, properties);</span>
+  public SortOrders convert(@NonNull String source) {
+<span class="fc" id="L53">    return SortOrders.fromSortOrdersText(source, properties);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

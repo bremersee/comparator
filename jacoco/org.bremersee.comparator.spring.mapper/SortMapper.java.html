@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
@@ -47,7 +49,7 @@ public abstract class SortMapper {
    * @return the sort
    */
   public static Sort toSort(SortOrders sortOrders) {
-<span class="fc bfc" id="L50" title="All 2 branches covered.">    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);</span>
   }
 
   /**
@@ -57,13 +59,13 @@ public abstract class SortMapper {
    * @return the sort object
    */
   public static Sort toSort(List&lt;? extends SortOrder&gt; sortOrders) {
-<span class="fc" id="L60">    List&lt;Sort.Order&gt; orderList = Optional.ofNullable(sortOrders)</span>
-<span class="fc" id="L61">        .stream()</span>
-<span class="fc" id="L62">        .flatMap(List::stream)</span>
-<span class="fc" id="L63">        .map(SortMapper::toSortOrder)</span>
-<span class="fc" id="L64">        .filter(Objects::nonNull)</span>
-<span class="fc" id="L65">        .collect(Collectors.toList());</span>
-<span class="fc bfc" id="L66" title="All 2 branches covered.">    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);</span>
+<span class="fc" id="L62">    List&lt;Sort.Order&gt; orderList = Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L63">        .stream()</span>
+<span class="fc" id="L64">        .flatMap(List::stream)</span>
+<span class="fc" id="L65">        .map(SortMapper::toSortOrder)</span>
+<span class="fc" id="L66">        .filter(Objects::nonNull)</span>
+<span class="fc" id="L67">        .collect(Collectors.toList());</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);</span>
   }
 
   /**
@@ -73,12 +75,12 @@ public abstract class SortMapper {
    * @return the sort order list
    */
   public static List&lt;SortOrder&gt; fromSort(Sort sort) {
-<span class="fc" id="L76">    return Optional.ofNullable(sort)</span>
-<span class="fc" id="L77">        .stream()</span>
-<span class="fc" id="L78">        .flatMap(Sort::stream)</span>
-<span class="fc" id="L79">        .map(SortMapper::fromSortOrder)</span>
-<span class="fc" id="L80">        .filter(Objects::nonNull)</span>
-<span class="fc" id="L81">        .collect(Collectors.toUnmodifiableList());</span>
+<span class="fc" id="L78">    return Optional.ofNullable(sort)</span>
+<span class="fc" id="L79">        .stream()</span>
+<span class="fc" id="L80">        .flatMap(Sort::stream)</span>
+<span class="fc" id="L81">        .map(SortMapper::fromSortOrder)</span>
+<span class="fc" id="L82">        .filter(Objects::nonNull)</span>
+<span class="fc" id="L83">        .collect(Collectors.toUnmodifiableList());</span>
   }
 
   /**
@@ -88,16 +90,16 @@ public abstract class SortMapper {
    * @return the sort object
    */
   public static Sort.Order toSortOrder(SortOrder sortOrder) {
-<span class="fc bfc" id="L91" title="All 4 branches covered.">    if (sortOrder == null || sortOrder.getField() == null</span>
-<span class="fc bfc" id="L92" title="All 2 branches covered.">        || sortOrder.getField().trim().length() == 0) {</span>
-<span class="fc" id="L93">      return null;</span>
+<span class="fc bfc" id="L93" title="All 4 branches covered.">    if (sortOrder == null || sortOrder.getField() == null</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        || sortOrder.getField().trim().length() == 0) {</span>
+<span class="fc" id="L95">      return null;</span>
     }
-<span class="fc bfc" id="L95" title="All 2 branches covered.">    Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">    Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;</span>
     Sort.NullHandling nullHandlingHint =
-<span class="fc bfc" id="L97" title="All 2 branches covered.">        sortOrder.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST</span>
-<span class="fc" id="L98">            : Sort.NullHandling.NULLS_LAST;</span>
-<span class="fc" id="L99">    Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">    return sortOrder.isIgnoreCase() ? order.ignoreCase() : order;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        sortOrder.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST</span>
+<span class="fc" id="L100">            : Sort.NullHandling.NULLS_LAST;</span>
+<span class="fc" id="L101">    Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">    return sortOrder.isIgnoreCase() ? order.ignoreCase() : order;</span>
   }
 
   /**
@@ -108,13 +110,36 @@ public abstract class SortMapper {
    */
   public static SortOrder fromSortOrder(Sort.Order sortOrder) {
     //noinspection
-<span class="fc bfc" id="L111" title="All 2 branches covered.">    if (sortOrder == null) {</span>
-<span class="fc" id="L112">      return null;</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (sortOrder == null) {</span>
+<span class="fc" id="L114">      return null;</span>
     }
-<span class="fc" id="L114">    boolean nullIsFirst = Sort.NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling());</span>
-<span class="fc" id="L115">    return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),</span>
-<span class="fc" id="L116">        sortOrder.isIgnoreCase(),</span>
+<span class="fc" id="L116">    boolean nullIsFirst = Sort.NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling());</span>
+<span class="fc" id="L117">    return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),</span>
+<span class="fc" id="L118">        sortOrder.isIgnoreCase(),</span>
         nullIsFirst);
+  }
+
+  /**
+   * Apply defaults to page request.
+   *
+   * @param source the source
+   * @param asc the asc
+   * @param ignoreCase the ignore case
+   * @param nullIsFirst the null is first
+   * @param properties the properties
+   * @return the pageable
+   */
+  public static Pageable applyDefaults(
+      Pageable source,
+      Boolean asc,
+      Boolean ignoreCase,
+      Boolean nullIsFirst,
+      String... properties) {
+
+<span class="fc bfc" id="L139" title="All 2 branches covered.">    return Objects.isNull(source) ? null : PageRequest.of(</span>
+<span class="fc" id="L140">        source.getPageNumber(),</span>
+<span class="fc" id="L141">        source.getPageSize(),</span>
+<span class="fc" id="L142">        applyDefaults(source.getSort(), asc, ignoreCase, nullIsFirst, properties));</span>
   }
 
   /**
@@ -134,41 +159,41 @@ public abstract class SortMapper {
       Boolean nullIsFirst,
       String... properties) {
 
-<span class="fc bfc" id="L137" title="All 2 branches covered.">    if (Objects.isNull(source)) {</span>
-<span class="fc" id="L138">      return Sort.unsorted();</span>
+<span class="fc bfc" id="L162" title="All 2 branches covered.">    if (Objects.isNull(source)) {</span>
+<span class="fc" id="L163">      return Sort.unsorted();</span>
     }
-<span class="fc bfc" id="L140" title="All 6 branches covered.">    if (Objects.isNull(asc) &amp;&amp; Objects.isNull(ignoreCase) &amp;&amp; Objects.isNull(nullIsFirst)) {</span>
-<span class="fc" id="L141">      return source;</span>
+<span class="fc bfc" id="L165" title="All 6 branches covered.">    if (Objects.isNull(asc) &amp;&amp; Objects.isNull(ignoreCase) &amp;&amp; Objects.isNull(nullIsFirst)) {</span>
+<span class="fc" id="L166">      return source;</span>
     }
     Set&lt;String&gt; names;
-<span class="fc bfc" id="L144" title="All 2 branches covered.">    if (ObjectUtils.isEmpty(properties)) {</span>
-<span class="fc" id="L145">      names = source.stream().map(Sort.Order::getProperty).collect(Collectors.toSet());</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">    if (ObjectUtils.isEmpty(properties)) {</span>
+<span class="fc" id="L170">      names = source.stream().map(Sort.Order::getProperty).collect(Collectors.toSet());</span>
     } else {
-<span class="fc" id="L147">      names = Arrays.stream(properties).collect(Collectors.toSet());</span>
+<span class="fc" id="L172">      names = Arrays.stream(properties).collect(Collectors.toSet());</span>
     }
-<span class="fc" id="L149">    return Sort.by(source.stream()</span>
-<span class="fc" id="L150">        .map(sortOrder -&gt; {</span>
-<span class="fc bfc" id="L151" title="All 2 branches covered.">          if (names.contains(sortOrder.getProperty())) {</span>
-<span class="fc" id="L152">            Sort.Order order = Sort.Order.by(sortOrder.getProperty())</span>
-<span class="fc" id="L153">                .with(newDirection(sortOrder.getDirection(), asc))</span>
-<span class="fc" id="L154">                .with(newNullHandling(sortOrder.getNullHandling(), nullIsFirst));</span>
-<span class="fc" id="L155">            return withNewCaseHandling(order, sortOrder.isIgnoreCase(), ignoreCase);</span>
+<span class="fc" id="L174">    return Sort.by(source.stream()</span>
+<span class="fc" id="L175">        .map(sortOrder -&gt; {</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">          if (names.contains(sortOrder.getProperty())) {</span>
+<span class="fc" id="L177">            Sort.Order order = Sort.Order.by(sortOrder.getProperty())</span>
+<span class="fc" id="L178">                .with(newDirection(sortOrder.getDirection(), asc))</span>
+<span class="fc" id="L179">                .with(newNullHandling(sortOrder.getNullHandling(), nullIsFirst));</span>
+<span class="fc" id="L180">            return withNewCaseHandling(order, sortOrder.isIgnoreCase(), ignoreCase);</span>
           }
-<span class="fc" id="L157">          return sortOrder;</span>
+<span class="fc" id="L182">          return sortOrder;</span>
         })
-<span class="fc" id="L159">        .collect(Collectors.toList()));</span>
+<span class="fc" id="L184">        .collect(Collectors.toList()));</span>
   }
 
   private static Direction newDirection(Direction oldDirection, Boolean asc) {
-<span class="fc" id="L163">    return Optional.ofNullable(asc)</span>
-<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        .map(isAsc -&gt; isAsc ? Direction.ASC : Direction.DESC)</span>
-<span class="fc" id="L165">        .orElse(oldDirection);</span>
+<span class="fc" id="L188">    return Optional.ofNullable(asc)</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        .map(isAsc -&gt; isAsc ? Direction.ASC : Direction.DESC)</span>
+<span class="fc" id="L190">        .orElse(oldDirection);</span>
   }
 
   private static NullHandling newNullHandling(NullHandling oldNullHandling, Boolean nullIsFirst) {
-<span class="fc" id="L169">    return Optional.ofNullable(nullIsFirst)</span>
-<span class="pc bpc" id="L170" title="1 of 2 branches missed.">        .map(isNullIsFirst -&gt; isNullIsFirst ? NullHandling.NULLS_FIRST : NullHandling.NULLS_LAST)</span>
-<span class="fc" id="L171">        .orElse(oldNullHandling);</span>
+<span class="fc" id="L194">    return Optional.ofNullable(nullIsFirst)</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        .map(isNullIsFirst -&gt; isNullIsFirst ? NullHandling.NULLS_FIRST : NullHandling.NULLS_LAST)</span>
+<span class="fc" id="L196">        .orElse(oldNullHandling);</span>
   }
 
   private static Sort.Order withNewCaseHandling(
@@ -176,10 +201,10 @@ public abstract class SortMapper {
       boolean oldIgnoresCase,
       Boolean newIgnoresCase) {
     //noinspection ConstantConditions
-<span class="fc" id="L179">    return Optional.ofNullable(newIgnoresCase)</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">        .map(ignoreCase -&gt; ignoreCase ? order.ignoreCase() : order)</span>
-<span class="pc bpc" id="L181" title="1 of 2 branches missed.">        .orElseGet(() -&gt; oldIgnoresCase ? order.ignoreCase() : order);</span>
+<span class="fc" id="L204">    return Optional.ofNullable(newIgnoresCase)</span>
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        .map(ignoreCase -&gt; ignoreCase ? order.ignoreCase() : order)</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">        .orElseGet(() -&gt; oldIgnoresCase ? order.ignoreCase() : order);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

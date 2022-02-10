@@ -9,7 +9,7 @@ Comparator,org.bremersee.comparator,ComparatorBuilder.DefaultComparatorBuilder,0
 Comparator,org.bremersee.comparator,ValueExtractor,26,190,10,26,5,40,9,17,0,8
 Comparator,org.bremersee.comparator,DelegatingComparator,6,45,0,4,2,10,1,4,1,2
 Comparator,org.bremersee.comparator,DefaultValueExtractor,0,131,0,22,0,32,0,15,0,4
-Comparator,org.bremersee.comparator.spring.mapper,SortMapper,7,227,3,35,0,52,3,30,0,14
+Comparator,org.bremersee.comparator.spring.mapper,SortMapper,5,247,2,38,0,56,2,33,0,15
 Comparator,org.bremersee.comparator.spring.converter,SortOrdersConverter,0,18,0,0,0,7,0,3,0,3
 Comparator,org.bremersee.comparator.spring.converter,SortOrderConverter,0,18,0,0,0,6,0,3,0,3
 Comparator,org.bremersee.comparator.model,SortOrder,0,284,0,10,0,58,0,25,0,20

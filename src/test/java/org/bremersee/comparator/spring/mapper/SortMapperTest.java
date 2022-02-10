@@ -27,6 +27,8 @@ import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
@@ -219,7 +221,7 @@ class SortMapperTest {
    */
   @Test
   void applyDefaults(SoftAssertions softly) {
-    softly.assertThat(SortMapper.applyDefaults(null, true, true, false))
+    softly.assertThat(SortMapper.applyDefaults((Sort) null, true, true, false))
         .as("Apply defaults on null")
         .isEmpty();
 
@@ -268,4 +270,19 @@ class SortMapperTest {
         .isEqualTo(sort.getOrderFor("b"));
   }
 
+  /**
+   * Apply defaults to pageable.
+   *
+   * @param softly the softly
+   */
+  @Test
+  void applyDefaultsToPageable(SoftAssertions softly) {
+    softly
+        .assertThat(SortMapper.applyDefaults((Pageable) null, true, true, false))
+        .isNull();
+    Pageable source = PageRequest.of(1, 10, Sort.by("abc").descending());
+    Pageable expected = PageRequest.of(1, 10, Sort.by("abc").ascending());
+    softly.assertThat(SortMapper.applyDefaults(source, true, null, null))
+        .isEqualTo(expected);
+  }
 }

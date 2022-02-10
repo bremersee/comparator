@@ -59,8 +59,5 @@ class ComparatorJaxbContextDataProviderTest {
     Collection<JaxbContextData> actual = target.getJaxbContextData();
     softly.assertThat(actual)
         .containsExactly(new JaxbContextData(ObjectFactory.class.getPackage()));
-    softly.assertThat(actual)
-        .map(JaxbContextData::getNameSpace)
-        .containsExactly(ComparatorJaxbContextDataProvider.getNamespace());
   }
 }

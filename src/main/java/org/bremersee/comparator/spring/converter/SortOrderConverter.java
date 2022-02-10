@@ -20,6 +20,7 @@ import java.util.Objects;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 
 /**
  * The sort order converter.
@@ -47,7 +48,7 @@ public class SortOrderConverter implements Converter<String, SortOrder> {
   }
 
   @Override
-  public SortOrder convert(String source) {
+  public SortOrder convert(@NonNull String source) {
     return SortOrder.fromSortOrderText(source, properties);
   }
 }

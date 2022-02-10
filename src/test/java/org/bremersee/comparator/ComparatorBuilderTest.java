@@ -49,7 +49,7 @@ class ComparatorBuilderTest {
    */
   @Test
   void testPrimitiveType() {
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .build()
         .compare(1, 2);
     assertThat(result)
@@ -64,7 +64,7 @@ class ComparatorBuilderTest {
   void testSimpleObject() {
     SimpleObject one = new SimpleObject(1);
     SimpleObject two = new SimpleObject(2);
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .add("number", true, true, false)
         .build()
         .compare(one, two);
@@ -80,7 +80,7 @@ class ComparatorBuilderTest {
   void testSimpleGetObject() {
     SimpleGetObject one = new SimpleGetObject(1);
     SimpleGetObject two = new SimpleGetObject(2);
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .add("number", true, true, false)
         .build()
         .compare(one, two);
@@ -101,7 +101,7 @@ class ComparatorBuilderTest {
         new SortOrder("anotherNumber", true, false, false));
     SimpleGetObject one = new SimpleGetObject(1, 1);
     SimpleGetObject two = new SimpleGetObject(1, 3);
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .addAll(orders)
         .build()
         .compare(one, two);
@@ -109,7 +109,7 @@ class ComparatorBuilderTest {
         .as("Compare %s with %s", one, two)
         .isLessThan(0);
 
-    result = ComparatorBuilder.builder()
+    result = ComparatorBuilder.newInstance()
         .addAll(orders, new DefaultValueExtractor())
         .build()
         .compare(two, one);
@@ -118,7 +118,7 @@ class ComparatorBuilderTest {
         .isGreaterThan(0);
 
     SortOrders sortOrders = new SortOrders(orders);
-    result = ComparatorBuilder.builder()
+    result = ComparatorBuilder.newInstance()
         .addAll(sortOrders)
         .build()
         .compare(one, two);
@@ -126,7 +126,7 @@ class ComparatorBuilderTest {
         .as("Compare %s with %s using %s", one, two, sortOrders)
         .isLessThan(0);
 
-    result = ComparatorBuilder.builder()
+    result = ComparatorBuilder.newInstance()
         .addAll(sortOrders, new DefaultValueExtractor())
         .build()
         .compare(two, one);
@@ -142,7 +142,7 @@ class ComparatorBuilderTest {
   void testSimpleIsObject() {
     SimpleIsObject one = new SimpleIsObject(true);
     SimpleIsObject two = new SimpleIsObject(false);
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .add("nice", false, true, false)
         .build()
         .compare(one, two);
@@ -158,7 +158,7 @@ class ComparatorBuilderTest {
   void testComplexObject() {
     ComplexObject one = new ComplexObject(new SimpleObject(1));
     ComplexObject two = new ComplexObject(new SimpleObject(2));
-    int result = ComparatorBuilder.builder()
+    int result = ComparatorBuilder.newInstance()
         .add("simple.number", true, true, false)
         .build()
         .compare(one, two);
@@ -178,13 +178,13 @@ class ComparatorBuilderTest {
     ComplexObject b = new ComplexObjectExtension(new SimpleObject(1), "b");
     List<ComplexObject> list = new ArrayList<>(List.of(b, a));
     // natural order
-    list.sort(ComparatorBuilder.builder().build());
+    list.sort(ComparatorBuilder.newInstance().build());
     softly.assertThat(list)
         .containsExactly(a, b);
 
     list = new ArrayList<>(List.of(b, a));
     // natural order
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add(new ComplexObjectExtensionComparator())
         .build());
     softly.assertThat(list)
@@ -192,7 +192,7 @@ class ComparatorBuilderTest {
 
     list = new ArrayList<>(List.of(b, a));
     // natural order
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add((SortOrder) null)
         .build());
     softly.assertThat(list)
@@ -200,7 +200,7 @@ class ComparatorBuilderTest {
 
     list = new ArrayList<>(List.of(a, b));
     // natural order
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add(new SortOrder("value", false, true, false))
         .build());
     softly.assertThat(list)
@@ -215,7 +215,7 @@ class ComparatorBuilderTest {
         new SortOrder("not_exists", true, true, false),
         new SortOrder("simple.number", false, true, false)
     );
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .addAll(sortOrders, sortOrder -> {
           if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
@@ -227,7 +227,7 @@ class ComparatorBuilderTest {
         .containsExactly(c, a, b);
 
     Collections.shuffle(list);
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .addAll(new SortOrders(sortOrders), sortOrder -> {
           if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
@@ -247,7 +247,7 @@ class ComparatorBuilderTest {
     SimpleObject a = new SimpleObject(1);
     SimpleObject b = new SimpleObject(1);
     List<SimpleObject> list = new ArrayList<>(List.of(b, a));
-    list.sort(ComparatorBuilder.builder()
+    list.sort(ComparatorBuilder.newInstance()
         .add("number")
         .build());
     assertThat(list)
@@ -260,7 +260,7 @@ class ComparatorBuilderTest {
   @Test
   void testStrings() {
     List<String> list = new ArrayList<>(List.of("b", "a"));
-    list.sort(ComparatorBuilder.builder().add(null, Comparator.naturalOrder()).build());
+    list.sort(ComparatorBuilder.newInstance().add(null, Comparator.naturalOrder()).build());
     assertThat(list)
         .containsExactly("a", "b");
   }
@@ -274,7 +274,7 @@ class ComparatorBuilderTest {
       SimpleObject a = new SimpleObject(1);
       SimpleObject b = new SimpleObject(1);
       List<SimpleObject> list = new ArrayList<>(List.of(b, a));
-      list.sort(ComparatorBuilder.builder().add(null, new DefaultValueExtractor()).build());
+      list.sort(ComparatorBuilder.newInstance().add(null, new DefaultValueExtractor()).build());
     });
   }
 

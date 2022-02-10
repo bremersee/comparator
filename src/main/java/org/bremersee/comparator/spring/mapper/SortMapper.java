@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
@@ -115,6 +117,29 @@ public abstract class SortMapper {
     return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),
         sortOrder.isIgnoreCase(),
         nullIsFirst);
+  }
+
+  /**
+   * Apply defaults to page request.
+   *
+   * @param source the source
+   * @param asc the asc
+   * @param ignoreCase the ignore case
+   * @param nullIsFirst the null is first
+   * @param properties the properties
+   * @return the pageable
+   */
+  public static Pageable applyDefaults(
+      Pageable source,
+      Boolean asc,
+      Boolean ignoreCase,
+      Boolean nullIsFirst,
+      String... properties) {
+
+    return Objects.isNull(source) ? null : PageRequest.of(
+        source.getPageNumber(),
+        source.getPageSize(),
+        applyDefaults(source.getSort(), asc, ignoreCase, nullIsFirst, properties));
   }
 
   /**

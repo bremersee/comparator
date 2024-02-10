@@ -58,7 +58,7 @@ public class DefaultValueExtractor implements ValueExtractor {
   @Override
   public Object findValue(Object obj, String fieldPath) {
     final String fieldIdentifier = trimFieldPath(fieldPath);
-    if (obj == null || fieldIdentifier == null || fieldIdentifier.length() == 0) {
+    if (obj == null || fieldIdentifier == null || fieldIdentifier.isEmpty()) {
       return obj;
     }
 

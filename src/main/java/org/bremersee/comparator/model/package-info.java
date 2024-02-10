@@ -19,8 +19,8 @@
  *
  * @author Christian Bremer
  */
-@javax.xml.bind.annotation.XmlSchema(
+@jakarta.xml.bind.annotation.XmlSchema(
     namespace = "http://bremersee.org/xmlschemas/comparator/v3",
     location = "http://bremersee.github.io/xmlschemas/comparator-v3.xsd",
-    elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+    elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.bremersee.comparator.model;

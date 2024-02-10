@@ -16,8 +16,8 @@
 
 package org.bremersee.comparator.model;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.immutables.value.Value;
 
 /**
@@ -111,7 +111,7 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isAsc(String value) {
-    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(getAscValue());
+    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(getAscValue());
   }
 
   /**
@@ -156,7 +156,7 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isCaseIgnored(String value) {
-    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(
+    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(
         getCaseInsensitiveValue());
   }
 

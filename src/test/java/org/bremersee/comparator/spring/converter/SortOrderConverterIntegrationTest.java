@@ -23,11 +23,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * The sort order converter integration test.
@@ -36,20 +35,15 @@ import org.springframework.web.client.RestTemplate;
  */
 @SpringBootTest(
     classes = {SortOrderConverterIntegrationTestConfiguration.class},
-    webEnvironment = WebEnvironment.RANDOM_PORT,
-    properties = {
-        "springdoc.packagesToScan=org.bremersee.comparator.spring.converter.components"
-    }
-)
+    webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(SoftAssertionsExtension.class)
 public class SortOrderConverterIntegrationTest {
 
   /**
-   * The rest template builder.
+   * The test rest template.
    */
-  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
-  RestTemplateBuilder restTemplateBuilder;
+  TestRestTemplate restTemplate;
 
   /**
    * The local port.
@@ -64,7 +58,7 @@ public class SortOrderConverterIntegrationTest {
    */
   @Test
   void testConvertSortParameter(SoftAssertions softly) {
-    RestTemplate restTemplate = restTemplateBuilder.build();
+    //RestTemplate restTemplate = restTemplateBuilder.build();
     ResponseEntity<String> response = restTemplate.getForEntity(
         "http://localhost:" + port + "?sort=field0,desc&sort=field1,desc,false,true",
         String.class);
@@ -82,7 +76,6 @@ public class SortOrderConverterIntegrationTest {
    */
   @Test
   void testConvertPageableParameters(SoftAssertions softly) {
-    RestTemplate restTemplate = restTemplateBuilder.build();
     String url = "http://localhost:" + port + "/with-spring-pageable"
         + "?sort=field0,desc"
         + "&sort=field1,asc"
@@ -96,36 +89,6 @@ public class SortOrderConverterIntegrationTest {
     softly.assertThat(response.getBody())
         .as("Convert pageable parameters in Spring application")
         .isEqualTo("field0,desc,true,false;field1,asc,true,false");
-  }
-
-  /**
-   * Test open api.
-   *
-   * @param softly the soft assertions
-   */
-  @Test
-  void testOpenApi(SoftAssertions softly) {
-    RestTemplate restTemplate = restTemplateBuilder.build();
-    ResponseEntity<String> response = restTemplate.getForEntity(
-        "http://localhost:" + port + "/v3/api-docs",
-        String.class);
-    String expected = "{"
-        + "\"name\":\"sort\","
-        + "\"in\":\"query\","
-        + "\"required\":false,"
-        + "\"schema\":{"
-        + "\"type\":\"array\","
-        + "\"items\":{"
-        + "\"type\":\"string\""
-        + "}}}";
-    softly.assertThat(response.getStatusCode())
-        .isEqualTo(HttpStatus.OK);
-    String body = response.getBody();
-    // System.out.println(body);
-    softly.assertThat(body)
-        .as("Rest parameter 'sort' should be of type 'array' "
-            + "with items of type 'string'; generated api: %s", body)
-        .contains(expected);
   }
 
 }

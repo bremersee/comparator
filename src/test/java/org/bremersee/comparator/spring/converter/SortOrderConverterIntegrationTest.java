@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -46,12 +45,6 @@ public class SortOrderConverterIntegrationTest {
   TestRestTemplate restTemplate;
 
   /**
-   * The local port.
-   */
-  @LocalServerPort
-  int port;
-
-  /**
    * Test convert sort parameter.
    *
    * @param softly the soft assertions
@@ -60,7 +53,7 @@ public class SortOrderConverterIntegrationTest {
   void testConvertSortParameter(SoftAssertions softly) {
     //RestTemplate restTemplate = restTemplateBuilder.build();
     ResponseEntity<String> response = restTemplate.getForEntity(
-        "http://localhost:" + port + "?sort=field0,desc&sort=field1,desc,false,true",
+        "/?sort=field0,desc&sort=field1,desc,false,true",
         String.class);
     softly.assertThat(response.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -76,7 +69,7 @@ public class SortOrderConverterIntegrationTest {
    */
   @Test
   void testConvertPageableParameters(SoftAssertions softly) {
-    String url = "http://localhost:" + port + "/with-spring-pageable"
+    String url = "/with-spring-pageable"
         + "?sort=field0,desc"
         + "&sort=field1,asc"
         + "&page=12"

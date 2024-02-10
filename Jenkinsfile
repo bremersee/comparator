@@ -4,6 +4,11 @@ pipeline {
   }
   environment {
     CODECOV_TOKEN = credentials('comparator-codecov-token')
+    TEST = true
+    DEPLOY = true
+    SNAPSHOT_SITE = true
+    RELEASE_SITE = true
+    DEPLOY_FEATURE = true
   }
   tools {
     jdk 'jdk17'

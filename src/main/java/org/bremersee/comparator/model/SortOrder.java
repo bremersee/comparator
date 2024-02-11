@@ -23,8 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -95,7 +93,6 @@ import lombok.Getter;
 @Schema(description = "A sort order defines how a field of an object is sorted.")
 @Getter
 @EqualsAndHashCode
-@Valid
 public class SortOrder {
 
   @Schema(description = "The field name or path.")
@@ -193,7 +190,6 @@ public class SortOrder {
    *
    * @return the sort order text
    */
-  @NotEmpty
   public String toSortOrderText() {
     return toSortOrderText(null);
   }
@@ -217,7 +213,6 @@ public class SortOrder {
    * @param properties the properties (can be {@code null}
    * @return the sort order text
    */
-  @NotEmpty
   public String toSortOrderText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());

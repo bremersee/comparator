@@ -16,8 +16,6 @@
 
 package org.bremersee.comparator.model;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import org.immutables.value.Value;
 
 /**
@@ -26,7 +24,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 public interface SortOrdersTextProperties {
 
   /**
@@ -53,7 +50,6 @@ public interface SortOrdersTextProperties {
    * @return the sort order separator
    */
   @Value.Default
-  @NotEmpty
   default String getSortOrderSeparator() {
     return ";";
   }
@@ -64,7 +60,6 @@ public interface SortOrdersTextProperties {
    * @return the sort order args separator
    */
   @Value.Default
-  @NotEmpty
   default String getSortOrderArgsSeparator() {
     return ",";
   }
@@ -75,7 +70,6 @@ public interface SortOrdersTextProperties {
    * @return the asc value
    */
   @Value.Default
-  @NotEmpty
   default String getAscValue() {
     return "asc";
   }
@@ -86,7 +80,6 @@ public interface SortOrdersTextProperties {
    * @return the desc value
    */
   @Value.Default
-  @NotEmpty
   default String getDescValue() {
     return "desc";
   }
@@ -98,7 +91,6 @@ public interface SortOrdersTextProperties {
    * @return the direction value
    */
   @Value.Derived
-  @NotEmpty
   default String getDirectionValue(boolean asc) {
     return asc ? getAscValue() : getDescValue();
   }
@@ -120,7 +112,6 @@ public interface SortOrdersTextProperties {
    * @return the case insensitive value
    */
   @Value.Default
-  @NotEmpty
   default String getCaseInsensitiveValue() {
     return "true";
   }
@@ -131,7 +122,6 @@ public interface SortOrdersTextProperties {
    * @return the case sensitive value
    */
   @Value.Default
-  @NotEmpty
   default String getCaseSensitiveValue() {
     return "false";
   }
@@ -143,7 +133,6 @@ public interface SortOrdersTextProperties {
    * @return the ignore case value
    */
   @Value.Derived
-  @NotEmpty
   default String getIgnoreCaseValue(boolean ignoreCase) {
     return ignoreCase ? getCaseInsensitiveValue() : getCaseSensitiveValue();
   }
@@ -166,7 +155,6 @@ public interface SortOrdersTextProperties {
    * @return the null is last value
    */
   @Value.Default
-  @NotEmpty
   default String getNullIsLastValue() {
     return "false";
   }
@@ -177,7 +165,6 @@ public interface SortOrdersTextProperties {
    * @return the null is first value
    */
   @Value.Default
-  @NotEmpty
   default String getNullIsFirstValue() {
     return "true";
   }
@@ -189,7 +176,6 @@ public interface SortOrdersTextProperties {
    * @return the null is first value
    */
   @Value.Derived
-  @NotEmpty
   default String getNullIsFirstValue(boolean nullIsFirst) {
     return nullIsFirst ? getNullIsFirstValue() : getNullIsLastValue();
   }

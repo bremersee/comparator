@@ -16,21 +16,22 @@
 
 package org.bremersee.comparator.model;
 
+import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
 import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * This class defines the sort order of a field.
@@ -74,7 +75,6 @@ import lombok.EqualsAndHashCode;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("SameNameButDifferent")
 @XmlRootElement(name = "sortOrder")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sortOrderType", propOrder = {
@@ -91,23 +91,23 @@ import lombok.EqualsAndHashCode;
     "nullIsFirst"
 })
 @Schema(description = "A sort order defines how a field of an object is sorted.")
+@Getter
 @EqualsAndHashCode
-@Valid
 public class SortOrder {
 
   @Schema(description = "The field name or path.")
   @XmlElement(name = "field")
   private final String field;
 
-  @Schema(description = "Is ascending or descending order.", required = true)
+  @Schema(description = "Is ascending or descending order.", requiredMode = REQUIRED)
   @XmlElement(name = "asc", defaultValue = "true")
   private final boolean asc;
 
-  @Schema(description = "Is case insensitive or sensitive order.", required = true)
+  @Schema(description = "Is case insensitive or sensitive order.", requiredMode = REQUIRED)
   @XmlElement(name = "ignoreCase", defaultValue = "true")
   private final boolean ignoreCase;
 
-  @Schema(description = "Is null is first.", required = true)
+  @Schema(description = "Is null is first.", requiredMode = REQUIRED)
   @XmlElement(name = "nullIsFirst", defaultValue = "false")
   private final boolean nullIsFirst;
 
@@ -123,8 +123,8 @@ public class SortOrder {
    *
    * @param field the field name or path (can be {@code null})
    * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
-   *     sensitive order
+   * @param ignoreCase {@code true} for a case-insensitive order,  {@code false} for a
+   *     case-sensitive order
    * @param nullIsFirst specifies the order of {@code null} values
    */
   @JsonCreator
@@ -137,42 +137,6 @@ public class SortOrder {
     this.asc = asc;
     this.ignoreCase = ignoreCase;
     this.nullIsFirst = nullIsFirst;
-  }
-
-  /**
-   * Gets field name or path.
-   *
-   * @return the field name or path
-   */
-  public String getField() {
-    return field;
-  }
-
-  /**
-   * Is ascending or descending order.
-   *
-   * @return {@code true} if ascending order, {@code false} if descending order
-   */
-  public boolean isAsc() {
-    return asc;
-  }
-
-  /**
-   * Is case-insensitive or case-sensitive order.
-   *
-   * @return {@code true} if case insensitive order, {@code false} if case sensitive order
-   */
-  public boolean isIgnoreCase() {
-    return ignoreCase;
-  }
-
-  /**
-   * Is null is first.
-   *
-   * @return {@code true} if null is first, otherwise {@code false}
-   */
-  public boolean isNullIsFirst() {
-    return nullIsFirst;
   }
 
   /**
@@ -226,7 +190,6 @@ public class SortOrder {
    *
    * @return the sort order text
    */
-  @NotEmpty
   public String toSortOrderText() {
     return toSortOrderText(null);
   }
@@ -250,7 +213,6 @@ public class SortOrder {
    * @param properties the properties (can be {@code null}
    * @return the sort order text
    */
-  @NotEmpty
   public String toSortOrderText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());
@@ -324,7 +286,7 @@ public class SortOrder {
               }
             }
           }
-          field = field.length() == 0 ? null : field;
+          field = field.isEmpty() ? null : field;
           return new SortOrder(field, asc, ignoreCase, nullIsFirst);
         })
         .orElseGet(() -> new SortOrder(null, true, true, false));

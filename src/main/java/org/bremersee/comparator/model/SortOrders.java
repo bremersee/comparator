@@ -21,6 +21,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElementRef;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,14 +36,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -45,14 +43,12 @@ import lombok.EqualsAndHashCode;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings("SameNameButDifferent")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "sortOrders")
 @XmlType(name = "sortOrdersType")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "A list of sort orders.")
 @EqualsAndHashCode
-@Valid
 public class SortOrders {
 
   @Schema(description = "The list of sort orders.")
@@ -101,8 +97,8 @@ public class SortOrders {
    * Checks whether this sort orders contains any entries. If there are entries, this is sorted,
    * otherwise it is unsorted.
    *
-   * @return {@code true} if the list of sort orders is not empty (aka sorted), otherwise {@code
-   *     false}
+   * @return {@code true} if the list of sort orders is not empty (aka sorted), otherwise
+   *     {@code false}
    */
   @XmlTransient
   @JsonIgnore
@@ -114,8 +110,8 @@ public class SortOrders {
    * Checks whether this sort orders contains any entries. If there are no entries, this is
    * unsorted, otherwise it is sorted.
    *
-   * @return {@code true} if the list of sort orders is empty (aka unsorted), otherwise {@code
-   *     false}
+   * @return {@code true} if the list of sort orders is empty (aka unsorted), otherwise
+   *     {@code false}
    */
   @XmlTransient
   @JsonIgnore
@@ -138,7 +134,6 @@ public class SortOrders {
    *
    * @return the sort orders text
    */
-  @NotEmpty
   public String toSortOrdersText() {
     return toSortOrdersText(null);
   }
@@ -162,7 +157,6 @@ public class SortOrders {
    * @param properties the properties
    * @return the sort orders text
    */
-  @NotEmpty
   public String toSortOrdersText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());

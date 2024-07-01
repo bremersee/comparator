@@ -21,10 +21,10 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlSchema;
 import org.bremersee.comparator.model.ObjectFactory;
-import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
+import org.bremersee.xml.JaxbContextMember;
 
 /**
  * The comparator jaxb context data provider.
@@ -40,14 +40,14 @@ public class ComparatorJaxbContextDataProvider implements JaxbContextDataProvide
    */
   public static String getNamespace() {
     return Optional.ofNullable(findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class))
-        .filter(xmlSchema -> xmlSchema.namespace().trim().length() > 0)
+        .filter(xmlSchema -> !xmlSchema.namespace().trim().isEmpty())
         .map(xmlSchema -> xmlSchema.namespace().trim())
         .orElseThrow(() -> new IllegalStateException(
             "Comparator model is missing xml namespace."));
   }
 
   @Override
-  public Collection<JaxbContextData> getJaxbContextData() {
-    return List.of(new JaxbContextData(ObjectFactory.class.getPackage()));
+  public Collection<JaxbContextMember> getJaxbContextData() {
+    return List.of(JaxbContextMember.byPackage(ObjectFactory.class.getPackage()).build());
   }
 }

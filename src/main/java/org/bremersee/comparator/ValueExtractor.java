@@ -86,7 +86,7 @@ public interface ValueExtractor {
    * @return the possible method names
    */
   default String[] getPossibleMethodNames(final String name) {
-    if (name == null || name.length() < 1) {
+    if (name == null || name.isEmpty()) {
       return new String[0];
     }
     final String baseName;

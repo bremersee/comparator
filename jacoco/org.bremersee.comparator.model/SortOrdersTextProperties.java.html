@@ -16,8 +16,6 @@
 
 package org.bremersee.comparator.model;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import org.immutables.value.Value;
 
 /**
@@ -26,7 +24,6 @@ import org.immutables.value.Value;
  * @author Christian Bremer
  */
 @Value.Immutable
-@Valid
 public interface SortOrdersTextProperties {
 
   /**
@@ -35,7 +32,7 @@ public interface SortOrdersTextProperties {
    * @return the builder
    */
   static ImmutableSortOrdersTextProperties.Builder builder() {
-<span class="fc" id="L38">    return ImmutableSortOrdersTextProperties.builder();</span>
+<span class="fc" id="L35">    return ImmutableSortOrdersTextProperties.builder();</span>
   }
 
   /**
@@ -44,7 +41,7 @@ public interface SortOrdersTextProperties {
    * @return the sort order(s) text properties
    */
   static SortOrdersTextProperties defaults() {
-<span class="fc" id="L47">    return builder().build();</span>
+<span class="fc" id="L44">    return builder().build();</span>
   }
 
   /**
@@ -53,9 +50,8 @@ public interface SortOrdersTextProperties {
    * @return the sort order separator
    */
   @Value.Default
-  @NotEmpty
   default String getSortOrderSeparator() {
-<span class="fc" id="L58">    return &quot;;&quot;;</span>
+<span class="fc" id="L54">    return &quot;;&quot;;</span>
   }
 
   /**
@@ -64,9 +60,8 @@ public interface SortOrdersTextProperties {
    * @return the sort order args separator
    */
   @Value.Default
-  @NotEmpty
   default String getSortOrderArgsSeparator() {
-<span class="fc" id="L69">    return &quot;,&quot;;</span>
+<span class="fc" id="L64">    return &quot;,&quot;;</span>
   }
 
   /**
@@ -75,9 +70,8 @@ public interface SortOrdersTextProperties {
    * @return the asc value
    */
   @Value.Default
-  @NotEmpty
   default String getAscValue() {
-<span class="fc" id="L80">    return &quot;asc&quot;;</span>
+<span class="fc" id="L74">    return &quot;asc&quot;;</span>
   }
 
   /**
@@ -86,9 +80,8 @@ public interface SortOrdersTextProperties {
    * @return the desc value
    */
   @Value.Default
-  @NotEmpty
   default String getDescValue() {
-<span class="fc" id="L91">    return &quot;desc&quot;;</span>
+<span class="fc" id="L84">    return &quot;desc&quot;;</span>
   }
 
   /**
@@ -98,9 +91,8 @@ public interface SortOrdersTextProperties {
    * @return the direction value
    */
   @Value.Derived
-  @NotEmpty
   default String getDirectionValue(boolean asc) {
-<span class="fc bfc" id="L103" title="All 2 branches covered.">    return asc ? getAscValue() : getDescValue();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">    return asc ? getAscValue() : getDescValue();</span>
   }
 
   /**
@@ -111,7 +103,7 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isAsc(String value) {
-<span class="pc bpc" id="L114" title="1 of 6 branches missed.">    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(getAscValue());</span>
+<span class="pc bpc" id="L106" title="1 of 6 branches missed.">    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(getAscValue());</span>
   }
 
   /**
@@ -120,9 +112,8 @@ public interface SortOrdersTextProperties {
    * @return the case insensitive value
    */
   @Value.Default
-  @NotEmpty
   default String getCaseInsensitiveValue() {
-<span class="fc" id="L125">    return &quot;true&quot;;</span>
+<span class="fc" id="L116">    return &quot;true&quot;;</span>
   }
 
   /**
@@ -131,9 +122,8 @@ public interface SortOrdersTextProperties {
    * @return the case sensitive value
    */
   @Value.Default
-  @NotEmpty
   default String getCaseSensitiveValue() {
-<span class="fc" id="L136">    return &quot;false&quot;;</span>
+<span class="fc" id="L126">    return &quot;false&quot;;</span>
   }
 
   /**
@@ -143,9 +133,8 @@ public interface SortOrdersTextProperties {
    * @return the ignore case value
    */
   @Value.Derived
-  @NotEmpty
   default String getIgnoreCaseValue(boolean ignoreCase) {
-<span class="fc bfc" id="L148" title="All 2 branches covered.">    return ignoreCase ? getCaseInsensitiveValue() : getCaseSensitiveValue();</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">    return ignoreCase ? getCaseInsensitiveValue() : getCaseSensitiveValue();</span>
   }
 
   /**
@@ -156,8 +145,8 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isCaseIgnored(String value) {
-<span class="pc bpc" id="L159" title="1 of 6 branches missed.">    return value == null || value.trim().length() == 0 || value.equalsIgnoreCase(</span>
-<span class="fc" id="L160">        getCaseInsensitiveValue());</span>
+<span class="pc bpc" id="L148" title="1 of 6 branches missed.">    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(</span>
+<span class="fc" id="L149">        getCaseInsensitiveValue());</span>
   }
 
   /**
@@ -166,9 +155,8 @@ public interface SortOrdersTextProperties {
    * @return the null is last value
    */
   @Value.Default
-  @NotEmpty
   default String getNullIsLastValue() {
-<span class="fc" id="L171">    return &quot;false&quot;;</span>
+<span class="fc" id="L159">    return &quot;false&quot;;</span>
   }
 
   /**
@@ -177,9 +165,8 @@ public interface SortOrdersTextProperties {
    * @return the null is first value
    */
   @Value.Default
-  @NotEmpty
   default String getNullIsFirstValue() {
-<span class="fc" id="L182">    return &quot;true&quot;;</span>
+<span class="fc" id="L169">    return &quot;true&quot;;</span>
   }
 
   /**
@@ -189,9 +176,8 @@ public interface SortOrdersTextProperties {
    * @return the null is first value
    */
   @Value.Derived
-  @NotEmpty
   default String getNullIsFirstValue(boolean nullIsFirst) {
-<span class="fc bfc" id="L194" title="All 2 branches covered.">    return nullIsFirst ? getNullIsFirstValue() : getNullIsLastValue();</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">    return nullIsFirst ? getNullIsFirstValue() : getNullIsLastValue();</span>
   }
 
   /**
@@ -202,8 +188,8 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isNullFirst(String value) {
-<span class="fc" id="L205">    return getNullIsFirstValue().equalsIgnoreCase(value);</span>
+<span class="fc" id="L191">    return getNullIsFirstValue().equalsIgnoreCase(value);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

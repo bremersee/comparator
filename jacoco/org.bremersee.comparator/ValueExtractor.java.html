@@ -86,7 +86,7 @@ public interface ValueExtractor {
    * @return the possible method names
    */
   default String[] getPossibleMethodNames(final String name) {
-<span class="fc bfc" id="L89" title="All 4 branches covered.">    if (name == null || name.length() &lt; 1) {</span>
+<span class="fc bfc" id="L89" title="All 4 branches covered.">    if (name == null || name.isEmpty()) {</span>
 <span class="fc" id="L90">      return new String[0];</span>
     }
     final String baseName;
@@ -188,4 +188,4 @@ public interface ValueExtractor {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>  <em class="jxr_javadoccomment">   * @return the possible method names</em>
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>    <strong class="jxr_keyword">default</strong> String[] getPossibleMethodNames(<strong class="jxr_keyword">final</strong> String name) {
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">if</strong> (name == <strong class="jxr_keyword">null</strong> || name.length() &lt; 1) {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      <strong class="jxr_keyword">if</strong> (name == <strong class="jxr_keyword">null</strong> || name.isEmpty()) {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String[0];
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">final</strong> String baseName;
@@ -198,6 +198,6 @@
 <a class="jxr_linenumber" name="L190" href="#L190">190</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2019&#x2013;2022 <a href="https://bremersee.org">bremersee.org</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2019&#x2013;2024 <a href="https://bremersee.org">bremersee.org</a>. All rights reserved.</div>
 </body>
 </html>

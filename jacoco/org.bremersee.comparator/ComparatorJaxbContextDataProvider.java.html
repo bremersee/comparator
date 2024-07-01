@@ -21,10 +21,10 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import javax.xml.bind.annotation.XmlSchema;
+import jakarta.xml.bind.annotation.XmlSchema;
 import org.bremersee.comparator.model.ObjectFactory;
-import org.bremersee.xml.JaxbContextData;
 import org.bremersee.xml.JaxbContextDataProvider;
+import org.bremersee.xml.JaxbContextMember;
 
 /**
  * The comparator jaxb context data provider.
@@ -40,15 +40,15 @@ import org.bremersee.xml.JaxbContextDataProvider;
    */
   public static String getNamespace() {
 <span class="fc" id="L42">    return Optional.ofNullable(findAnnotation(ObjectFactory.class.getPackage(), XmlSchema.class))</span>
-<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        .filter(xmlSchema -&gt; xmlSchema.namespace().trim().length() &gt; 0)</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        .filter(xmlSchema -&gt; !xmlSchema.namespace().trim().isEmpty())</span>
 <span class="fc" id="L44">        .map(xmlSchema -&gt; xmlSchema.namespace().trim())</span>
 <span class="pc" id="L45">        .orElseThrow(() -&gt; new IllegalStateException(</span>
             &quot;Comparator model is missing xml namespace.&quot;));
   }
 
   @Override
-  public Collection&lt;JaxbContextData&gt; getJaxbContextData() {
-<span class="fc" id="L51">    return List.of(new JaxbContextData(ObjectFactory.class.getPackage()));</span>
+  public Collection&lt;JaxbContextMember&gt; getJaxbContextData() {
+<span class="fc" id="L51">    return List.of(JaxbContextMember.byPackage(ObjectFactory.class.getPackage()).build());</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

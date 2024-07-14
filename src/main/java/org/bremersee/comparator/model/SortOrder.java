@@ -145,7 +145,7 @@ public class SortOrder {
    * With given direction.
    *
    * @param direction the direction
-   * @return the <bold>new</bold> sort order
+   * @return the new sort order
    */
   public SortOrder with(Direction direction) {
     return Optional.ofNullable(direction)
@@ -157,7 +157,7 @@ public class SortOrder {
    * With given case handling.
    *
    * @param caseHandling the case handling
-   * @return the <bold>new</bold> sort order
+   * @return the new sort order
    */
   public SortOrder with(CaseHandling caseHandling) {
     return Optional.ofNullable(caseHandling)
@@ -169,7 +169,7 @@ public class SortOrder {
    * With given null handling.
    *
    * @param nullHandling the null handling
-   * @return the <bold>new</bold> sort order
+   * @return the new sort order
    */
   public SortOrder with(NullHandling nullHandling) {
     return Optional.ofNullable(nullHandling)

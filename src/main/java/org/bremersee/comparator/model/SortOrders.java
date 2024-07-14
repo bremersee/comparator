@@ -134,8 +134,31 @@ public class SortOrders {
    *
    * @return the sort orders text
    */
+  @JsonIgnore
+  @XmlTransient
+  public String getSortOrdersText() {
+    return getSortOrdersText(null);
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * </pre>
+   *
+   * @return the sort orders text
+   * @deprecated Use {@link #getSortOrdersText()} instead.
+   */
+  @Deprecated
   public String toSortOrdersText() {
-    return toSortOrdersText(null);
+    return getSortOrdersText();
   }
 
   /**
@@ -157,17 +180,42 @@ public class SortOrders {
    * @param properties the properties
    * @return the sort orders text
    */
-  public String toSortOrdersText(SortOrdersTextProperties properties) {
+  public String getSortOrdersText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());
     return sortOrders.stream()
-        .map(sortOrder -> sortOrder.toSortOrderText(props))
+        .map(sortOrder -> sortOrder.getSortOrderText(props))
         .collect(Collectors.joining(props.getSortOrderSeparator()));
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>The separators (',') and (';') and the values of {@code direction}, {@code case-handling}
+   * and {@code null-handling} depend on the given {@link SortOrdersTextProperties}.
+   *
+   * <p>For example with default properties:
+   * <pre>
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * </pre>
+   *
+   * @param properties the properties
+   * @return the sort orders text
+   * @deprecated Use {@link #getSortOrdersText(SortOrdersTextProperties)} instead.
+   */
+  @Deprecated
+  public String toSortOrdersText(SortOrdersTextProperties properties) {
+    return getSortOrdersText(properties);
   }
 
   @Override
   public String toString() {
-    return toSortOrdersText();
+    return getSortOrdersText();
   }
 
   /**

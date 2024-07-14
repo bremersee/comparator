@@ -62,7 +62,7 @@ public class TestRestController {
       @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     log.info("Received sort orders {}", sort);
-    return ResponseEntity.ok(new SortOrders(sort).toSortOrdersText());
+    return ResponseEntity.ok(new SortOrders(sort).getSortOrdersText());
   }
 
   /**
@@ -95,6 +95,6 @@ public class TestRestController {
     Pageable pageable = PageRequest
         .of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
     SortOrders sortOrders = new SortOrders(SortMapper.fromSort(pageable.getSort()));
-    return ResponseEntity.ok(sortOrders.toSortOrdersText());
+    return ResponseEntity.ok(sortOrders.getSortOrdersText());
   }
 }

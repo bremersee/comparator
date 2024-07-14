@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>comparator</artifactId>
-  <version>4.1.0</version>
+  <version>4.2.0-SNAPSHOT</version>
   <name>Comparator</name>
   <description>A general object comparator</description>
   <url>https://github.com/bremersee/comparator</url>

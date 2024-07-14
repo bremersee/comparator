@@ -19,6 +19,7 @@ package org.bremersee.comparator.model;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -27,6 +28,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
 import java.util.Optional;
@@ -143,7 +145,7 @@ public class SortOrder {
    * With given direction.
    *
    * @param direction the direction
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(Direction direction) {
     return Optional.ofNullable(direction)
@@ -155,7 +157,7 @@ public class SortOrder {
    * With given case handling.
    *
    * @param caseHandling the case handling
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(CaseHandling caseHandling) {
     return Optional.ofNullable(caseHandling)
@@ -167,7 +169,7 @@ public class SortOrder {
    * With given null handling.
    *
    * @param nullHandling the null handling
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(NullHandling nullHandling) {
     return Optional.ofNullable(nullHandling)
@@ -190,8 +192,31 @@ public class SortOrder {
    *
    * @return the sort order text
    */
+  @JsonIgnore
+  @XmlTransient
+  public String getSortOrderText() {
+    return getSortOrderText(null);
+  }
+
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * person.lastName,asc,true,false
+   * </pre>
+   *
+   * @return the sort order text
+   * @deprecated Use {@link #getSortOrderText()} instead.
+   */
+  @Deprecated
   public String toSortOrderText() {
-    return toSortOrderText(null);
+    return getSortOrderText();
   }
 
   /**
@@ -203,7 +228,7 @@ public class SortOrder {
    * </pre>
    *
    * <p>The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
-   * null-handling} depend on the given {@link SortOrdersTextProperties}.
+   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
    *
    * <p>For example with default properties:
    * <pre>
@@ -213,7 +238,7 @@ public class SortOrder {
    * @param properties the properties (can be {@code null}
    * @return the sort order text
    */
-  public String toSortOrderText(SortOrdersTextProperties properties) {
+  public String getSortOrderText(SortOrdersTextProperties properties) {
     SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
         SortOrdersTextProperties.defaults());
     return (field != null ? field : "") + props.getSortOrderArgsSeparator()
@@ -222,9 +247,34 @@ public class SortOrder {
         + props.getNullIsFirstValue(nullIsFirst);
   }
 
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * </pre>
+   *
+   * <p>The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
+   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
+   *
+   * <p>For example with default properties:
+   * <pre>
+   * person.lastName,asc,true,false
+   * </pre>
+   *
+   * @param properties the properties (can be {@code null}
+   * @return the sort order text
+   * @deprecated Use {@link #getSortOrderText(SortOrdersTextProperties)} instead.
+   */
+  @Deprecated
+  public String toSortOrderText(SortOrdersTextProperties properties) {
+    return getSortOrderText(properties);
+  }
+
   @Override
   public String toString() {
-    return toSortOrderText();
+    return getSortOrderText();
   }
 
   /**

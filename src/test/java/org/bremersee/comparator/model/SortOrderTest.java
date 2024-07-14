@@ -131,17 +131,17 @@ class SortOrderTest {
    * @param softly the soft assertions
    */
   @Test
-  void testToSortOrderText(SoftAssertions softly) {
+  void testGetSortOrderText(SoftAssertions softly) {
     SortOrder sortOrder0 = new SortOrder("i0", true, false, true);
     SortOrder sortOrder1 = new SortOrder(null, false, true, false);
-    softly.assertThat(sortOrder0.toSortOrderText())
+    softly.assertThat(sortOrder0.getSortOrderText())
         .as("Create sort order text of %s", sortOrder0)
         .isEqualTo("i0,asc,false,true");
     softly.assertThat(sortOrder0.toString())
         .as("toString is equal to sort order text")
-        .isEqualTo(sortOrder0.toSortOrderText());
+        .isEqualTo(sortOrder0.getSortOrderText());
 
-    softly.assertThat(sortOrder1.toSortOrderText(SortOrdersTextProperties.builder()
+    softly.assertThat(sortOrder1.getSortOrderText(SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-")
             .ascValue("true")
             .descValue("false")

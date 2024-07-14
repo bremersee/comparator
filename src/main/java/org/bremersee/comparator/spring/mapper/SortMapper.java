@@ -80,7 +80,7 @@ public abstract class SortMapper {
         .flatMap(Sort::stream)
         .map(SortMapper::fromSortOrder)
         .filter(Objects::nonNull)
-        .collect(Collectors.toUnmodifiableList());
+        .toList();
   }
 
   /**
@@ -91,7 +91,7 @@ public abstract class SortMapper {
    */
   public static Sort.Order toSortOrder(SortOrder sortOrder) {
     if (sortOrder == null || sortOrder.getField() == null
-        || sortOrder.getField().trim().length() == 0) {
+        || sortOrder.getField().isBlank()) {
       return null;
     }
     Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;

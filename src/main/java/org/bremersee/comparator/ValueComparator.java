@@ -149,4 +149,5 @@ public class ValueComparator implements Comparator<Object> {
 
     throw new ComparatorException("Comparison of field '" + field + "' is not possible.");
   }
+
 }

@@ -152,11 +152,11 @@
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> <em class="jxr_javadoccomment">   * @param softly the soft assertions</em>
 <a class="jxr_linenumber" name="L145" href="#L145">145</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>   @Test
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">void</strong> testToSortOrdersText(SoftAssertions softly) {
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>   <strong class="jxr_keyword">void</strong> testGetSortOrdersText(SoftAssertions softly) {
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>     SortOrder sortOrder0 = <strong class="jxr_keyword">new</strong> SortOrder(<span class="jxr_string">"i0"</span>, <strong class="jxr_keyword">true</strong>, false, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L149" href="#L149">149</a>     SortOrder sortOrder1 = <strong class="jxr_keyword">new</strong> SortOrder(<span class="jxr_string">"i1"</span>, false, <strong class="jxr_keyword">true</strong>, false);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>     SortOrders sortOrders0 = <strong class="jxr_keyword">new</strong> SortOrders(List.of(sortOrder0, sortOrder1));
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>     String actual = sortOrders0.toSortOrdersText();
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     String actual = sortOrders0.getSortOrdersText();
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>     softly.assertThat(actual)
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>         .as(<span class="jxr_string">"Create sort orders text of %s"</span>, sortOrders0)
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>         .isEqualTo(<span class="jxr_string">"i0,asc,false,true;i1,desc,true,false"</span>);
@@ -164,7 +164,7 @@
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>         .as(<span class="jxr_string">"toString is equal to sort orders text"</span>)
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>         .isEqualTo(actual);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> 
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>     actual = sortOrders0.toSortOrdersText(SortOrdersTextProperties.builder()
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     actual = sortOrders0.getSortOrdersText(SortOrdersTextProperties.builder()
 <a class="jxr_linenumber" name="L160" href="#L160">160</a>         .sortOrderSeparator(<span class="jxr_string">"&amp;"</span>)
 <a class="jxr_linenumber" name="L161" href="#L161">161</a>         .sortOrderArgsSeparator(<span class="jxr_string">":"</span>)
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>         .build());

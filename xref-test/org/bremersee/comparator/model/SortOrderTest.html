@@ -139,17 +139,17 @@
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   * @param softly the soft assertions</em>
 <a class="jxr_linenumber" name="L132" href="#L132">132</a> <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>   @Test
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">void</strong> testToSortOrderText(SoftAssertions softly) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>   <strong class="jxr_keyword">void</strong> testGetSortOrderText(SoftAssertions softly) {
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>     SortOrder sortOrder0 = <strong class="jxr_keyword">new</strong> SortOrder(<span class="jxr_string">"i0"</span>, <strong class="jxr_keyword">true</strong>, false, <strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     SortOrder sortOrder1 = <strong class="jxr_keyword">new</strong> SortOrder(<strong class="jxr_keyword">null</strong>, false, <strong class="jxr_keyword">true</strong>, false);
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>     softly.assertThat(sortOrder0.toSortOrderText())
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     softly.assertThat(sortOrder0.getSortOrderText())
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>         .as(<span class="jxr_string">"Create sort order text of %s"</span>, sortOrder0)
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>         .isEqualTo(<span class="jxr_string">"i0,asc,false,true"</span>);
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     softly.assertThat(sortOrder0.toString())
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>         .as(<span class="jxr_string">"toString is equal to sort order text"</span>)
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>         .isEqualTo(sortOrder0.toSortOrderText());
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         .isEqualTo(sortOrder0.getSortOrderText());
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> 
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>     softly.assertThat(sortOrder1.toSortOrderText(SortOrdersTextProperties.builder()
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     softly.assertThat(sortOrder1.getSortOrderText(SortOrdersTextProperties.builder()
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>             .sortOrderArgsSeparator(<span class="jxr_string">"-"</span>)
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>             .ascValue(<span class="jxr_string">"true"</span>)
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>             .descValue(<span class="jxr_string">"false"</span>)

@@ -88,7 +88,7 @@
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>          .flatMap(Sort::stream)
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          .map(SortMapper::fromSortOrder)
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>          .filter(Objects::nonNull)
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>          .collect(Collectors.toUnmodifiableList());
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          .toList();
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>    <em class="jxr_javadoccomment">/**</em>
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  <em class="jxr_javadoccomment">   */</em>
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Sort.Order toSortOrder(SortOrder sortOrder) {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>      <strong class="jxr_keyword">if</strong> (sortOrder == <strong class="jxr_keyword">null</strong> || sortOrder.getField() == <strong class="jxr_keyword">null</strong>
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>          || sortOrder.getField().trim().length() == 0) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          || sortOrder.getField().isBlank()) {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>      Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;

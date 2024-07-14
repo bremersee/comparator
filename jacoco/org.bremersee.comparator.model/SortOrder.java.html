@@ -19,6 +19,7 @@ package org.bremersee.comparator.model;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -27,6 +28,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
 import java.util.Optional;
@@ -115,8 +117,8 @@ public class SortOrder {
    * Instantiates a new sort order.
    */
   protected SortOrder() {
-<span class="fc" id="L118">    this(null, true, true, false);</span>
-<span class="fc" id="L119">  }</span>
+<span class="fc" id="L120">    this(null, true, true, false);</span>
+<span class="fc" id="L121">  }</span>
 
   /**
    * Instantiates a new sort order.
@@ -132,47 +134,47 @@ public class SortOrder {
       @JsonProperty(&quot;field&quot;) String field,
       @JsonProperty(value = &quot;asc&quot;, required = true) boolean asc,
       @JsonProperty(value = &quot;ignoreCase&quot;, required = true) boolean ignoreCase,
-<span class="fc" id="L135">      @JsonProperty(value = &quot;nullIsFirst&quot;, required = true) boolean nullIsFirst) {</span>
-<span class="fc" id="L136">    this.field = field;</span>
-<span class="fc" id="L137">    this.asc = asc;</span>
-<span class="fc" id="L138">    this.ignoreCase = ignoreCase;</span>
-<span class="fc" id="L139">    this.nullIsFirst = nullIsFirst;</span>
-<span class="fc" id="L140">  }</span>
+<span class="fc" id="L137">      @JsonProperty(value = &quot;nullIsFirst&quot;, required = true) boolean nullIsFirst) {</span>
+<span class="fc" id="L138">    this.field = field;</span>
+<span class="fc" id="L139">    this.asc = asc;</span>
+<span class="fc" id="L140">    this.ignoreCase = ignoreCase;</span>
+<span class="fc" id="L141">    this.nullIsFirst = nullIsFirst;</span>
+<span class="fc" id="L142">  }</span>
 
   /**
    * With given direction.
    *
    * @param direction the direction
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(Direction direction) {
-<span class="fc" id="L149">    return Optional.ofNullable(direction)</span>
-<span class="fc" id="L150">        .map(dir -&gt; new SortOrder(getField(), dir.isAsc(), isIgnoreCase(), isNullIsFirst()))</span>
-<span class="fc" id="L151">        .orElse(this);</span>
+<span class="fc" id="L151">    return Optional.ofNullable(direction)</span>
+<span class="fc" id="L152">        .map(dir -&gt; new SortOrder(getField(), dir.isAsc(), isIgnoreCase(), isNullIsFirst()))</span>
+<span class="fc" id="L153">        .orElse(this);</span>
   }
 
   /**
    * With given case handling.
    *
    * @param caseHandling the case handling
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(CaseHandling caseHandling) {
-<span class="fc" id="L161">    return Optional.ofNullable(caseHandling)</span>
-<span class="fc" id="L162">        .map(ch -&gt; new SortOrder(getField(), isAsc(), ch.isIgnoreCase(), isNullIsFirst()))</span>
-<span class="fc" id="L163">        .orElse(this);</span>
+<span class="fc" id="L163">    return Optional.ofNullable(caseHandling)</span>
+<span class="fc" id="L164">        .map(ch -&gt; new SortOrder(getField(), isAsc(), ch.isIgnoreCase(), isNullIsFirst()))</span>
+<span class="fc" id="L165">        .orElse(this);</span>
   }
 
   /**
    * With given null handling.
    *
    * @param nullHandling the null handling
-   * @return the sort order
+   * @return the new sort order
    */
   public SortOrder with(NullHandling nullHandling) {
-<span class="fc" id="L173">    return Optional.ofNullable(nullHandling)</span>
-<span class="fc" id="L174">        .map(nh -&gt; new SortOrder(getField(), isAsc(), isIgnoreCase(), nh.isNullIsFirst()))</span>
-<span class="fc" id="L175">        .orElse(this);</span>
+<span class="fc" id="L175">    return Optional.ofNullable(nullHandling)</span>
+<span class="fc" id="L176">        .map(nh -&gt; new SortOrder(getField(), isAsc(), isIgnoreCase(), nh.isNullIsFirst()))</span>
+<span class="fc" id="L177">        .orElse(this);</span>
   }
 
   /**
@@ -190,8 +192,31 @@ public class SortOrder {
    *
    * @return the sort order text
    */
+  @JsonIgnore
+  @XmlTransient
+  public String getSortOrderText() {
+<span class="fc" id="L198">    return getSortOrderText(null);</span>
+  }
+
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;For example
+   * &lt;pre&gt;
+   * person.lastName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @return the sort order text
+   * @deprecated Use {@link #getSortOrderText()} instead.
+   */
+  @Deprecated
   public String toSortOrderText() {
-<span class="fc" id="L194">    return toSortOrderText(null);</span>
+<span class="nc" id="L219">    return getSortOrderText();</span>
   }
 
   /**
@@ -203,7 +228,7 @@ public class SortOrder {
    * &lt;/pre&gt;
    *
    * &lt;p&gt;The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
-   * null-handling} depend on the given {@link SortOrdersTextProperties}.
+   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
    *
    * &lt;p&gt;For example with default properties:
    * &lt;pre&gt;
@@ -213,18 +238,43 @@ public class SortOrder {
    * @param properties the properties (can be {@code null}
    * @return the sort order text
    */
+  public String getSortOrderText(SortOrdersTextProperties properties) {
+<span class="fc" id="L242">    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,</span>
+<span class="fc" id="L243">        SortOrdersTextProperties.defaults());</span>
+<span class="fc bfc" id="L244" title="All 2 branches covered.">    return (field != null ? field : &quot;&quot;) + props.getSortOrderArgsSeparator()</span>
+<span class="fc" id="L245">        + props.getDirectionValue(asc) + props.getSortOrderArgsSeparator()</span>
+<span class="fc" id="L246">        + props.getIgnoreCaseValue(ignoreCase) + props.getSortOrderArgsSeparator()</span>
+<span class="fc" id="L247">        + props.getNullIsFirstValue(nullIsFirst);</span>
+  }
+
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
+   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
+   *
+   * &lt;p&gt;For example with default properties:
+   * &lt;pre&gt;
+   * person.lastName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @param properties the properties (can be {@code null}
+   * @return the sort order text
+   * @deprecated Use {@link #getSortOrderText(SortOrdersTextProperties)} instead.
+   */
+  @Deprecated
   public String toSortOrderText(SortOrdersTextProperties properties) {
-<span class="fc" id="L217">    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,</span>
-<span class="fc" id="L218">        SortOrdersTextProperties.defaults());</span>
-<span class="fc bfc" id="L219" title="All 2 branches covered.">    return (field != null ? field : &quot;&quot;) + props.getSortOrderArgsSeparator()</span>
-<span class="fc" id="L220">        + props.getDirectionValue(asc) + props.getSortOrderArgsSeparator()</span>
-<span class="fc" id="L221">        + props.getIgnoreCaseValue(ignoreCase) + props.getSortOrderArgsSeparator()</span>
-<span class="fc" id="L222">        + props.getNullIsFirstValue(nullIsFirst);</span>
+<span class="nc" id="L272">    return getSortOrderText(properties);</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L227">    return toSortOrderText();</span>
+<span class="fc" id="L277">    return getSortOrderText();</span>
   }
 
   /**
@@ -234,7 +284,7 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder by(String field) {
-<span class="fc" id="L237">    return new SortOrder(field, true, true, false);</span>
+<span class="fc" id="L287">    return new SortOrder(field, true, true, false);</span>
   }
 
   /**
@@ -244,7 +294,7 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder fromSortOrderText(String source) {
-<span class="fc" id="L247">    return fromSortOrderText(source, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L297">    return fromSortOrderText(source, SortOrdersTextProperties.defaults());</span>
   }
 
   /**
@@ -255,55 +305,55 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder fromSortOrderText(String source, SortOrdersTextProperties properties) {
-<span class="fc" id="L258">    return Optional.ofNullable(source)</span>
-<span class="fc" id="L259">        .map(text -&gt; {</span>
-<span class="fc" id="L260">          SortOrdersTextProperties props = Objects</span>
-<span class="fc" id="L261">              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L308">    return Optional.ofNullable(source)</span>
+<span class="fc" id="L309">        .map(text -&gt; {</span>
+<span class="fc" id="L310">          SortOrdersTextProperties props = Objects</span>
+<span class="fc" id="L311">              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
           String field;
-<span class="fc" id="L263">          boolean asc = props.isAsc(null);</span>
-<span class="fc" id="L264">          boolean ignoreCase = props.isCaseIgnored(null);</span>
-<span class="fc" id="L265">          boolean nullIsFirst = props.isNullFirst(null);</span>
-<span class="fc" id="L266">          String separator = props.getSortOrderArgsSeparator();</span>
-<span class="fc" id="L267">          int index = text.indexOf(separator);</span>
-<span class="fc bfc" id="L268" title="All 2 branches covered.">          if (index &lt; 0) {</span>
-<span class="fc" id="L269">            field = text.trim();</span>
+<span class="fc" id="L313">          boolean asc = props.isAsc(null);</span>
+<span class="fc" id="L314">          boolean ignoreCase = props.isCaseIgnored(null);</span>
+<span class="fc" id="L315">          boolean nullIsFirst = props.isNullFirst(null);</span>
+<span class="fc" id="L316">          String separator = props.getSortOrderArgsSeparator();</span>
+<span class="fc" id="L317">          int index = text.indexOf(separator);</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">          if (index &lt; 0) {</span>
+<span class="fc" id="L319">            field = text.trim();</span>
           } else {
-<span class="fc" id="L271">            field = text.substring(0, index).trim();</span>
-<span class="fc" id="L272">            int from = index + separator.length();</span>
-<span class="fc" id="L273">            index = text.indexOf(separator, from);</span>
-<span class="fc bfc" id="L274" title="All 2 branches covered.">            if (index &lt; 0) {</span>
-<span class="fc" id="L275">              asc = props.isAsc(text.substring(from).trim());</span>
+<span class="fc" id="L321">            field = text.substring(0, index).trim();</span>
+<span class="fc" id="L322">            int from = index + separator.length();</span>
+<span class="fc" id="L323">            index = text.indexOf(separator, from);</span>
+<span class="fc bfc" id="L324" title="All 2 branches covered.">            if (index &lt; 0) {</span>
+<span class="fc" id="L325">              asc = props.isAsc(text.substring(from).trim());</span>
             } else {
-<span class="fc" id="L277">              asc = props.isAsc(text.substring(from, index).trim());</span>
-<span class="fc" id="L278">              from = index + separator.length();</span>
-<span class="fc" id="L279">              index = text.indexOf(separator, from);</span>
-<span class="fc bfc" id="L280" title="All 2 branches covered.">              if (index &lt; 0) {</span>
-<span class="fc" id="L281">                ignoreCase = props.isCaseIgnored(text.substring(from).trim());</span>
+<span class="fc" id="L327">              asc = props.isAsc(text.substring(from, index).trim());</span>
+<span class="fc" id="L328">              from = index + separator.length();</span>
+<span class="fc" id="L329">              index = text.indexOf(separator, from);</span>
+<span class="fc bfc" id="L330" title="All 2 branches covered.">              if (index &lt; 0) {</span>
+<span class="fc" id="L331">                ignoreCase = props.isCaseIgnored(text.substring(from).trim());</span>
               } else {
-<span class="fc" id="L283">                ignoreCase = props.isCaseIgnored(text.substring(from, index).trim());</span>
-<span class="fc" id="L284">                from = index + separator.length();</span>
-<span class="fc" id="L285">                nullIsFirst = props.isNullFirst(text.substring(from).trim());</span>
+<span class="fc" id="L333">                ignoreCase = props.isCaseIgnored(text.substring(from, index).trim());</span>
+<span class="fc" id="L334">                from = index + separator.length();</span>
+<span class="fc" id="L335">                nullIsFirst = props.isNullFirst(text.substring(from).trim());</span>
               }
             }
           }
-<span class="fc bfc" id="L289" title="All 2 branches covered.">          field = field.isEmpty() ? null : field;</span>
-<span class="fc" id="L290">          return new SortOrder(field, asc, ignoreCase, nullIsFirst);</span>
+<span class="fc bfc" id="L339" title="All 2 branches covered.">          field = field.isEmpty() ? null : field;</span>
+<span class="fc" id="L340">          return new SortOrder(field, asc, ignoreCase, nullIsFirst);</span>
         })
-<span class="fc" id="L292">        .orElseGet(() -&gt; new SortOrder(null, true, true, false));</span>
+<span class="fc" id="L342">        .orElseGet(() -&gt; new SortOrder(null, true, true, false));</span>
   }
 
   /**
    * The direction.
    */
-<span class="fc" id="L298">  public enum Direction {</span>
+<span class="fc" id="L348">  public enum Direction {</span>
     /**
      * Asc direction.
      */
-<span class="fc" id="L302">    ASC,</span>
+<span class="fc" id="L352">    ASC,</span>
     /**
      * Desc direction.
      */
-<span class="fc" id="L306">    DESC;</span>
+<span class="fc" id="L356">    DESC;</span>
 
     /**
      * Is asc.
@@ -311,22 +361,22 @@ public class SortOrder {
      * @return the boolean
      */
     public boolean isAsc() {
-<span class="fc" id="L314">      return ASC.equals(this);</span>
+<span class="fc" id="L364">      return ASC.equals(this);</span>
     }
   }
 
   /**
    * The case handling.
    */
-<span class="fc" id="L321">  public enum CaseHandling {</span>
+<span class="fc" id="L371">  public enum CaseHandling {</span>
     /**
      * Insensitive case handling.
      */
-<span class="fc" id="L325">    INSENSITIVE,</span>
+<span class="fc" id="L375">    INSENSITIVE,</span>
     /**
      * Sensitive case handling.
      */
-<span class="fc" id="L329">    SENSITIVE;</span>
+<span class="fc" id="L379">    SENSITIVE;</span>
 
     /**
      * Is ignore case.
@@ -334,22 +384,22 @@ public class SortOrder {
      * @return the boolean
      */
     public boolean isIgnoreCase() {
-<span class="fc" id="L337">      return INSENSITIVE.equals(this);</span>
+<span class="fc" id="L387">      return INSENSITIVE.equals(this);</span>
     }
   }
 
   /**
    * The null handling.
    */
-<span class="fc" id="L344">  public enum NullHandling {</span>
+<span class="fc" id="L394">  public enum NullHandling {</span>
     /**
      * Nulls first handling.
      */
-<span class="fc" id="L348">    NULLS_FIRST,</span>
+<span class="fc" id="L398">    NULLS_FIRST,</span>
     /**
      * Nulls last handling.
      */
-<span class="fc" id="L352">    NULLS_LAST;</span>
+<span class="fc" id="L402">    NULLS_LAST;</span>
 
     /**
      * Is null is first.
@@ -357,9 +407,9 @@ public class SortOrder {
      * @return the boolean
      */
     public boolean isNullIsFirst() {
-<span class="fc" id="L360">      return NULLS_FIRST.equals(this);</span>
+<span class="fc" id="L410">      return NULLS_FIRST.equals(this);</span>
     }
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

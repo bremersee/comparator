@@ -134,8 +134,31 @@ public class SortOrders {
    *
    * @return the sort orders text
    */
+  @JsonIgnore
+  @XmlTransient
+  public String getSortOrdersText() {
+<span class="fc" id="L140">    return getSortOrdersText(null);</span>
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;For example
+   * &lt;pre&gt;
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @return the sort orders text
+   * @deprecated Use {@link #getSortOrdersText()} instead.
+   */
+  @Deprecated
   public String toSortOrdersText() {
-<span class="fc" id="L138">    return toSortOrdersText(null);</span>
+<span class="nc" id="L161">    return getSortOrdersText();</span>
   }
 
   /**
@@ -157,17 +180,42 @@ public class SortOrders {
    * @param properties the properties
    * @return the sort orders text
    */
+  public String getSortOrdersText(SortOrdersTextProperties properties) {
+<span class="fc" id="L184">    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,</span>
+<span class="fc" id="L185">        SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L186">    return sortOrders.stream()</span>
+<span class="fc" id="L187">        .map(sortOrder -&gt; sortOrder.getSortOrderText(props))</span>
+<span class="fc" id="L188">        .collect(Collectors.joining(props.getSortOrderSeparator()));</span>
+  }
+
+  /**
+   * Creates the sort orders text of this ordering descriptions.
+   *
+   * &lt;p&gt;The syntax of the ordering description is
+   * &lt;pre&gt;
+   * fieldNameOrPath0,asc,ignoreCase,nullIsFirst;fieldNameOrPath1,asc,ignoreCase,nullIsFirst
+   * &lt;/pre&gt;
+   *
+   * &lt;p&gt;The separators (',') and (';') and the values of {@code direction}, {@code case-handling}
+   * and {@code null-handling} depend on the given {@link SortOrdersTextProperties}.
+   *
+   * &lt;p&gt;For example with default properties:
+   * &lt;pre&gt;
+   * room.number,asc,true,false;person.lastName,asc,true,false;person.firstName,asc,true,false
+   * &lt;/pre&gt;
+   *
+   * @param properties the properties
+   * @return the sort orders text
+   * @deprecated Use {@link #getSortOrdersText(SortOrdersTextProperties)} instead.
+   */
+  @Deprecated
   public String toSortOrdersText(SortOrdersTextProperties properties) {
-<span class="fc" id="L161">    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,</span>
-<span class="fc" id="L162">        SortOrdersTextProperties.defaults());</span>
-<span class="fc" id="L163">    return sortOrders.stream()</span>
-<span class="fc" id="L164">        .map(sortOrder -&gt; sortOrder.toSortOrderText(props))</span>
-<span class="fc" id="L165">        .collect(Collectors.joining(props.getSortOrderSeparator()));</span>
+<span class="nc" id="L213">    return getSortOrdersText(properties);</span>
   }
 
   @Override
   public String toString() {
-<span class="fc" id="L170">    return toSortOrdersText();</span>
+<span class="fc" id="L218">    return getSortOrdersText();</span>
   }
 
   /**
@@ -177,7 +225,7 @@ public class SortOrders {
    * @return the sort orders
    */
   public static SortOrders fromSortOrdersText(String source) {
-<span class="fc" id="L180">    return fromSortOrdersText(source, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L228">    return fromSortOrdersText(source, SortOrdersTextProperties.defaults());</span>
   }
 
   /**
@@ -188,18 +236,18 @@ public class SortOrders {
    * @return the sort orders
    */
   public static SortOrders fromSortOrdersText(String source, SortOrdersTextProperties properties) {
-<span class="fc" id="L191">    return Optional.ofNullable(source)</span>
-<span class="fc" id="L192">        .map(text -&gt; {</span>
-<span class="fc" id="L193">          SortOrdersTextProperties props = Objects</span>
-<span class="fc" id="L194">              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
-<span class="fc" id="L195">          List&lt;SortOrder&gt; sortOrders = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L196">          StringTokenizer tokenizer = new StringTokenizer(text, props.getSortOrderSeparator());</span>
-<span class="fc bfc" id="L197" title="All 2 branches covered.">          while (tokenizer.hasMoreTokens()) {</span>
-<span class="fc" id="L198">            sortOrders.add(SortOrder.fromSortOrderText(tokenizer.nextToken(), props));</span>
+<span class="fc" id="L239">    return Optional.ofNullable(source)</span>
+<span class="fc" id="L240">        .map(text -&gt; {</span>
+<span class="fc" id="L241">          SortOrdersTextProperties props = Objects</span>
+<span class="fc" id="L242">              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());</span>
+<span class="fc" id="L243">          List&lt;SortOrder&gt; sortOrders = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L244">          StringTokenizer tokenizer = new StringTokenizer(text, props.getSortOrderSeparator());</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">          while (tokenizer.hasMoreTokens()) {</span>
+<span class="fc" id="L246">            sortOrders.add(SortOrder.fromSortOrderText(tokenizer.nextToken(), props));</span>
           }
-<span class="fc" id="L200">          return new SortOrders(sortOrders);</span>
+<span class="fc" id="L248">          return new SortOrders(sortOrders);</span>
         })
-<span class="fc" id="L202">        .orElseGet(SortOrders::new);</span>
+<span class="fc" id="L250">        .orElseGet(SortOrders::new);</span>
   }
 
   /**
@@ -209,10 +257,10 @@ public class SortOrders {
    * @return the sort orders
    */
   public static SortOrders by(SortOrder... sortOrders) {
-<span class="fc" id="L212">    return Optional.ofNullable(sortOrders)</span>
-<span class="fc" id="L213">        .map(so -&gt; new SortOrders(Arrays.asList(so)))</span>
-<span class="fc" id="L214">        .orElseGet(SortOrders::new);</span>
+<span class="fc" id="L260">    return Optional.ofNullable(sortOrders)</span>
+<span class="fc" id="L261">        .map(so -&gt; new SortOrders(Arrays.asList(so)))</span>
+<span class="fc" id="L262">        .orElseGet(SortOrders::new);</span>
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

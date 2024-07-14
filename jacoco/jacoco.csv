@@ -9,13 +9,13 @@ Comparator,org.bremersee.comparator,ComparatorBuilder.DefaultComparatorBuilder,0
 Comparator,org.bremersee.comparator,ValueExtractor,26,189,10,26,5,40,9,17,0,8
 Comparator,org.bremersee.comparator,DelegatingComparator,6,45,0,4,2,10,1,4,1,2
 Comparator,org.bremersee.comparator,DefaultValueExtractor,0,131,0,22,0,32,0,15,0,4
-Comparator,org.bremersee.comparator.spring.mapper,SortMapper,5,247,2,38,0,56,2,33,0,15
+Comparator,org.bremersee.comparator.spring.mapper,SortMapper,5,244,2,38,0,56,2,33,0,15
 Comparator,org.bremersee.comparator.spring.converter,SortOrdersConverter,0,18,0,0,0,7,0,3,0,3
 Comparator,org.bremersee.comparator.spring.converter,SortOrderConverter,0,18,0,0,0,6,0,3,0,3
-Comparator,org.bremersee.comparator.model,SortOrder,0,272,0,10,0,54,0,21,0,16
+Comparator,org.bremersee.comparator.model,SortOrder,7,272,0,10,2,54,2,21,2,16
 Comparator,org.bremersee.comparator.model,SortOrder.NullHandling,0,19,0,0,0,4,0,2,0,2
 Comparator,org.bremersee.comparator.model,ObjectFactory,0,11,0,0,0,3,0,3,0,3
-Comparator,org.bremersee.comparator.model,SortOrders,1,131,1,7,0,32,1,18,0,15
+Comparator,org.bremersee.comparator.model,SortOrders,8,131,1,7,2,32,3,18,2,15
 Comparator,org.bremersee.comparator.model,SortOrdersTextProperties,0,80,2,16,0,17,2,23,0,16
 Comparator,org.bremersee.comparator.model,SortOrder.Direction,0,19,0,0,0,4,0,2,0,2
 Comparator,org.bremersee.comparator.model,SortOrder.CaseHandling,0,19,0,0,0,4,0,2,0,2

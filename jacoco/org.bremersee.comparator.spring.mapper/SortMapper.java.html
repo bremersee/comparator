@@ -80,7 +80,7 @@ public abstract class SortMapper {
 <span class="fc" id="L80">        .flatMap(Sort::stream)</span>
 <span class="fc" id="L81">        .map(SortMapper::fromSortOrder)</span>
 <span class="fc" id="L82">        .filter(Objects::nonNull)</span>
-<span class="fc" id="L83">        .collect(Collectors.toUnmodifiableList());</span>
+<span class="fc" id="L83">        .toList();</span>
   }
 
   /**
@@ -91,7 +91,7 @@ public abstract class SortMapper {
    */
   public static Sort.Order toSortOrder(SortOrder sortOrder) {
 <span class="fc bfc" id="L93" title="All 4 branches covered.">    if (sortOrder == null || sortOrder.getField() == null</span>
-<span class="fc bfc" id="L94" title="All 2 branches covered.">        || sortOrder.getField().trim().length() == 0) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        || sortOrder.getField().isBlank()) {</span>
 <span class="fc" id="L95">      return null;</span>
     }
 <span class="fc bfc" id="L97" title="All 2 branches covered.">    Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;</span>
@@ -207,4 +207,4 @@ public abstract class SortMapper {
   }
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

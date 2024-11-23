@@ -12,7 +12,7 @@ type like java.lang.String or a complex type which implements java.lang.Comparab
 
 - [Release](https://bremersee.github.io/comparator/index.html)
 
-- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/4.2.0-SNAPSHOT/index.html)
+- [Snapshot](https://nexus.bremersee.org/repository/maven-sites/comparator/4.1.1-SNAPSHOT/index.html)
 
 ### Usage
 

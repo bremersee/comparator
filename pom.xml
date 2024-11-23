@@ -6,12 +6,12 @@
   <parent>
     <groupId>org.bremersee</groupId>
     <artifactId>common-parent</artifactId>
-    <version>3.1.2-SNAPSHOT</version>
+    <version>3.1.2</version>
     <relativePath/>
   </parent>
 
   <artifactId>comparator</artifactId>
-  <version>4.1.1-SNAPSHOT</version>
+  <version>4.1.1</version>
   <name>Comparator</name>
   <description>A general object comparator</description>
   <url>https://github.com/bremersee/comparator</url>
@@ -21,7 +21,7 @@
     <github.repo>comparator</github.repo>
     <gh-pages-staging-dir>${project.build.directory}/staging</gh-pages-staging-dir>
 
-    <common-xml.version>3.1.1-SNAPSHOT</common-xml.version>
+    <common-xml.version>3.1.1</common-xml.version>
   </properties>
 
   <developers>

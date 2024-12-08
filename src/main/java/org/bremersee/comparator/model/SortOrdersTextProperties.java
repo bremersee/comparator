@@ -16,6 +16,7 @@
 
 package org.bremersee.comparator.model;
 
+import java.util.List;
 import org.immutables.value.Value;
 
 /**
@@ -69,9 +70,19 @@ public interface SortOrdersTextProperties {
    *
    * @return the asc value
    */
-  @Value.Default
+  @Value.Derived
   default String getAscValue() {
-    return "asc";
+    return getAscValues().stream().findFirst().orElse("asc");
+  }
+
+  /**
+   * Gets asc values.
+   *
+   * @return the asc values
+   */
+  @Value.Default
+  default List<String> getAscValues() {
+    return List.of("asc", "true", "on", "1");
   }
 
   /**
@@ -81,7 +92,17 @@ public interface SortOrdersTextProperties {
    */
   @Value.Default
   default String getDescValue() {
-    return "desc";
+    return getDescValues().stream().findFirst().orElse("desc");
+  }
+
+  /**
+   * Gets desc values.
+   *
+   * @return the desc values
+   */
+  @Value.Default
+  default List<String> getDescValues() {
+    return List.of("desc", "false", "off", "0");
   }
 
   /**
@@ -103,27 +124,48 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isAsc(String value) {
-    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(getAscValue());
+    return value == null || value.trim().isEmpty()
+        || !getDescValues().contains(value.toLowerCase());
   }
 
   /**
-   * Gets case insensitive value.
+   * Gets case-insensitive value.
    *
-   * @return the case insensitive value
+   * @return the case-insensitive value
    */
-  @Value.Default
+  @Value.Derived
   default String getCaseInsensitiveValue() {
-    return "true";
+    return getCaseInsensitiveValues().stream().findFirst().orElse("true");
   }
 
   /**
-   * Gets case sensitive value.
+   * Gets case-insensitive values.
    *
-   * @return the case sensitive value
+   * @return the case-insensitive values
    */
   @Value.Default
+  default List<String> getCaseInsensitiveValues() {
+    return List.of("true", "1", "on", "i", "insensitive");
+  }
+
+  /**
+   * Gets case-sensitive value.
+   *
+   * @return the case-sensitive value
+   */
+  @Value.Derived
   default String getCaseSensitiveValue() {
-    return "false";
+    return getCaseSensitiveValues().stream().findFirst().orElse("false");
+  }
+
+  /**
+   * Gets case-sensitive values.
+   *
+   * @return the case-sensitive values
+   */
+  @Value.Default
+  default List<String> getCaseSensitiveValues() {
+    return List.of("false", "0", "off", "s", "sensitive");
   }
 
   /**
@@ -145,8 +187,8 @@ public interface SortOrdersTextProperties {
    */
   @Value.Derived
   default boolean isCaseIgnored(String value) {
-    return value == null || value.trim().isEmpty() || value.equalsIgnoreCase(
-        getCaseInsensitiveValue());
+    return value == null || value.trim().isEmpty()
+        || !getCaseSensitiveValues().contains(value.toLowerCase());
   }
 
   /**

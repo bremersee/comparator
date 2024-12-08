@@ -49,7 +49,18 @@ public abstract class SortMapper {
    * @return the sort
    */
   public static Sort toSort(SortOrders sortOrders) {
-    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);
+    return toSort(sortOrders, true);
+  }
+
+  /**
+   * Transforms sort orders into a {@code Sort} object.
+   *
+   * @param sortOrders the sort orders
+   * @param isNullHandlingSupported is null handling supported
+   * @return the sort
+   */
+  public static Sort toSort(SortOrders sortOrders, boolean isNullHandlingSupported) {
+    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null, isNullHandlingSupported);
   }
 
   /**
@@ -63,6 +74,23 @@ public abstract class SortMapper {
         .stream()
         .flatMap(List::stream)
         .map(SortMapper::toSortOrder)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
+  }
+
+  /**
+   * Transforms the sort order into a {@code Sort} object.
+   *
+   * @param sortOrders the sort orders
+   * @param isNullHandlingSupported is null handling supported
+   * @return the sort
+   */
+  public static Sort toSort(List<? extends SortOrder> sortOrders, boolean isNullHandlingSupported) {
+    List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
+        .stream()
+        .flatMap(List::stream)
+        .map(order -> toSortOrder(order, isNullHandlingSupported))
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
     return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
@@ -90,14 +118,31 @@ public abstract class SortMapper {
    * @return the sort object
    */
   public static Sort.Order toSortOrder(SortOrder sortOrder) {
+    return toSortOrder(sortOrder, true);
+  }
+
+  /**
+   * To sort order sort . order.
+   *
+   * @param sortOrder the sort order
+   * @param isNullHandlingSupported is null handling supported
+   * @return the sort . order
+   */
+  public static Sort.Order toSortOrder(SortOrder sortOrder, boolean isNullHandlingSupported) {
     if (sortOrder == null || sortOrder.getField() == null
         || sortOrder.getField().isBlank()) {
       return null;
     }
     Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
-    Sort.NullHandling nullHandlingHint =
-        sortOrder.isNullIsFirst() ? Sort.NullHandling.NULLS_FIRST
-            : Sort.NullHandling.NULLS_LAST;
+    Sort.NullHandling nullHandlingHint;
+    if (isNullHandlingSupported) {
+      nullHandlingHint = sortOrder.isNullIsFirst()
+          ? Sort.NullHandling.NULLS_FIRST
+          : Sort.NullHandling.NULLS_LAST;
+    } else {
+      nullHandlingHint = Sort.NullHandling.NATIVE;
+    }
+
     Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);
     return sortOrder.isIgnoreCase() ? order.ignoreCase() : order;
   }

@@ -18,6 +18,7 @@ package org.bremersee.comparator.spring.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder;
@@ -56,8 +57,8 @@ class SortOrderConverterTest {
     SortOrderConverter converter = new SortOrderConverter(
         SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("::")
-            .caseSensitiveValue("cs")
-            .caseInsensitiveValue("cis")
+            .caseSensitiveValues(List.of("cs"))
+            .caseInsensitiveValues(List.of("cis"))
             .nullIsFirstValue("nif")
             .nullIsLastValue("nil")
             .build());

@@ -70,8 +70,8 @@ class SortOrdersConverterTest {
         SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-:-")
             .sortOrderSeparator("&&")
-            .caseSensitiveValue("cs")
-            .caseInsensitiveValue("cis")
+            .caseSensitiveValues(List.of("cs"))
+            .caseInsensitiveValues(List.of("cis"))
             .nullIsFirstValue("nif")
             .nullIsLastValue("nil")
             .build());

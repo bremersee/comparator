@@ -19,11 +19,12 @@ package org.bremersee.comparator.model;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.StringReader;
-import java.io.StringWriter;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder.CaseHandling;
@@ -143,8 +144,8 @@ class SortOrderTest {
 
     softly.assertThat(sortOrder1.getSortOrderText(SortOrdersTextProperties.builder()
             .sortOrderArgsSeparator("-")
-            .ascValue("true")
-            .descValue("false")
+            .ascValues(List.of("true"))
+            .descValues(List.of("false"))
             .build()))
         .as("Create sort order text with custom properties of %s", sortOrder0)
         .isEqualTo("-false-true-false");
@@ -176,8 +177,8 @@ class SortOrderTest {
   void testFromSortOrderTextWithProperties(SoftAssertions softly) {
     SortOrdersTextProperties properties = SortOrdersTextProperties.builder()
         .sortOrderArgsSeparator("::")
-        .caseSensitiveValue("cs")
-        .caseInsensitiveValue("cis")
+        .caseSensitiveValues(List.of("cs"))
+        .caseInsensitiveValues(List.of("cis"))
         .nullIsFirstValue("nif")
         .nullIsLastValue("nil")
         .build();

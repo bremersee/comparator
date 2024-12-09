@@ -86,6 +86,46 @@ class SortMapperTest {
         .isEqualTo(NullHandling.NULLS_LAST);
   }
 
+  @Test
+  void toSortWithoutNullHandling(SoftAssertions softly) {
+    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
+    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
+    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
+
+    Sort sort = SortMapper.toSort(sortOrders, false);
+
+    softly.assertThat(sort)
+        .isNotNull();
+
+    Sort.Order sortOrder = sort.getOrderFor("f0");
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isAscending, BOOLEAN)
+        .isTrue();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
+        .isTrue();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::getNullHandling)
+        .isEqualTo(NullHandling.NATIVE);
+
+    sortOrder = sort.getOrderFor("f1");
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isAscending, BOOLEAN)
+        .isFalse();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
+        .isFalse();
+    softly.assertThat(sortOrder)
+        .isNotNull()
+        .extracting(Sort.Order::getNullHandling)
+        .isEqualTo(NullHandling.NATIVE);
+  }
+
   /**
    * To sort with empty list.
    */

@@ -25,8 +25,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.bremersee.comparator.model.SortOrder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
@@ -108,20 +106,6 @@ public class DefaultSortMapper implements SortMapper {
     return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),
         sortOrder.isIgnoreCase(),
         nullIsFirst);
-  }
-
-  @Override
-  public Pageable applyDefaults(
-      Pageable source,
-      Boolean asc,
-      Boolean ignoreCase,
-      Boolean nullIsFirst,
-      String... properties) {
-
-    return isNull(source) ? null : PageRequest.of(
-        source.getPageNumber(),
-        source.getPageSize(),
-        applyDefaults(source.getSort(), asc, ignoreCase, nullIsFirst, properties));
   }
 
   @Override

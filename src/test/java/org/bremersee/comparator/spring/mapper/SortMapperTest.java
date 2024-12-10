@@ -44,7 +44,24 @@ class SortMapperTest {
 
   private static final SortMapper defaultTarget = SortMapper.defaultSortMapper();
 
-  private static final SortMapper targetWithNullHandling = new DefaultSortMapper(true, false);
+  private static final DefaultSortMapper targetWithNullHandling = new DefaultSortMapper(
+      true, false);
+
+  /**
+   * Is null handling supported.
+   */
+  @Test
+  void isNullHandlingSupported() {
+    assertThat(targetWithNullHandling.isNullHandlingSupported()).isTrue();
+  }
+
+  /**
+   * Is native null handling is null is first.
+   */
+  @Test
+  void isNativeNullHandlingIsNullIsFirst() {
+    assertThat(targetWithNullHandling.isNativeNullHandlingIsNullIsFirst()).isFalse();
+  }
 
   /**
    * Test to sort.

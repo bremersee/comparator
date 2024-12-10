@@ -16,20 +16,17 @@
 
 package org.bremersee.comparator.spring.mapper;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.bremersee.comparator.model.SortOrder;
 import org.bremersee.comparator.model.SortOrders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.NullHandling;
-import org.springframework.util.ObjectUtils;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 /**
  * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object from the
@@ -37,9 +34,15 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Christian Bremer
  */
-public abstract class SortMapper {
+public interface SortMapper {
 
-  private SortMapper() {
+  /**
+   * Returns default sort mapper.
+   *
+   * @return the sort mapper
+   */
+  static SortMapper defaultSortMapper() {
+    return new DefaultSortMapper();
   }
 
   /**
@@ -48,19 +51,9 @@ public abstract class SortMapper {
    * @param sortOrders the sort orders
    * @return the sort
    */
-  public static Sort toSort(SortOrders sortOrders) {
-    return toSort(sortOrders, true);
-  }
-
-  /**
-   * Transforms sort orders into a {@code Sort} object.
-   *
-   * @param sortOrders the sort orders
-   * @param isNullHandlingSupported is null handling supported
-   * @return the sort
-   */
-  public static Sort toSort(SortOrders sortOrders, boolean isNullHandlingSupported) {
-    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null, isNullHandlingSupported);
+  @NonNull
+  default Sort toSort(@Nullable SortOrders sortOrders) {
+    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);
   }
 
   /**
@@ -69,28 +62,12 @@ public abstract class SortMapper {
    * @param sortOrders the sort orders
    * @return the sort object
    */
-  public static Sort toSort(List<? extends SortOrder> sortOrders) {
+  @NonNull
+  default Sort toSort(@Nullable List<? extends SortOrder> sortOrders) {
     List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
         .stream()
         .flatMap(List::stream)
-        .map(SortMapper::toSortOrder)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
-    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
-  }
-
-  /**
-   * Transforms the sort order into a {@code Sort} object.
-   *
-   * @param sortOrders the sort orders
-   * @param isNullHandlingSupported is null handling supported
-   * @return the sort
-   */
-  public static Sort toSort(List<? extends SortOrder> sortOrders, boolean isNullHandlingSupported) {
-    List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
-        .stream()
-        .flatMap(List::stream)
-        .map(order -> toSortOrder(order, isNullHandlingSupported))
+        .map(this::toSortOrder)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
     return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
@@ -102,11 +79,12 @@ public abstract class SortMapper {
    * @param sort the {@code Sort} object
    * @return the sort order list
    */
-  public static List<SortOrder> fromSort(Sort sort) {
+  @NonNull
+  default List<SortOrder> fromSort(@Nullable Sort sort) {
     return Optional.ofNullable(sort)
         .stream()
         .flatMap(Sort::stream)
-        .map(SortMapper::fromSortOrder)
+        .map(this::fromSortOrder)
         .filter(Objects::nonNull)
         .toList();
   }
@@ -117,35 +95,8 @@ public abstract class SortMapper {
    * @param sortOrder the sort order
    * @return the sort object
    */
-  public static Sort.Order toSortOrder(SortOrder sortOrder) {
-    return toSortOrder(sortOrder, true);
-  }
-
-  /**
-   * To sort order sort . order.
-   *
-   * @param sortOrder the sort order
-   * @param isNullHandlingSupported is null handling supported
-   * @return the sort . order
-   */
-  public static Sort.Order toSortOrder(SortOrder sortOrder, boolean isNullHandlingSupported) {
-    if (sortOrder == null || sortOrder.getField() == null
-        || sortOrder.getField().isBlank()) {
-      return null;
-    }
-    Sort.Direction direction = sortOrder.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
-    Sort.NullHandling nullHandlingHint;
-    if (isNullHandlingSupported) {
-      nullHandlingHint = sortOrder.isNullIsFirst()
-          ? Sort.NullHandling.NULLS_FIRST
-          : Sort.NullHandling.NULLS_LAST;
-    } else {
-      nullHandlingHint = Sort.NullHandling.NATIVE;
-    }
-
-    Sort.Order order = new Sort.Order(direction, sortOrder.getField(), nullHandlingHint);
-    return sortOrder.isIgnoreCase() ? order.ignoreCase() : order;
-  }
+  @Nullable
+  Sort.Order toSortOrder(@Nullable SortOrder sortOrder);
 
   /**
    * Transforms a {@code Sort.Order} object into a sort order.
@@ -153,16 +104,8 @@ public abstract class SortMapper {
    * @param sortOrder the {@code Sort.Order} object
    * @return the sort order
    */
-  public static SortOrder fromSortOrder(Sort.Order sortOrder) {
-    //noinspection
-    if (sortOrder == null) {
-      return null;
-    }
-    boolean nullIsFirst = Sort.NullHandling.NULLS_FIRST.equals(sortOrder.getNullHandling());
-    return new SortOrder(sortOrder.getProperty(), sortOrder.isAscending(),
-        sortOrder.isIgnoreCase(),
-        nullIsFirst);
-  }
+  @Nullable
+  SortOrder fromSortOrder(@Nullable Sort.Order sortOrder);
 
   /**
    * Apply defaults to page request.
@@ -174,12 +117,13 @@ public abstract class SortMapper {
    * @param properties the properties
    * @return the pageable
    */
-  public static Pageable applyDefaults(
-      Pageable source,
-      Boolean asc,
-      Boolean ignoreCase,
-      Boolean nullIsFirst,
-      String... properties) {
+  @Nullable
+  default Pageable applyDefaults(
+      @Nullable Pageable source,
+      @Nullable Boolean asc,
+      @Nullable Boolean ignoreCase,
+      @Nullable Boolean nullIsFirst,
+      @Nullable String... properties) {
 
     return Objects.isNull(source) ? null : PageRequest.of(
         source.getPageNumber(),
@@ -197,58 +141,11 @@ public abstract class SortMapper {
    * @param properties the properties
    * @return the sort
    */
-  public static Sort applyDefaults(
-      Sort source,
-      Boolean asc,
-      Boolean ignoreCase,
-      Boolean nullIsFirst,
-      String... properties) {
-
-    if (Objects.isNull(source)) {
-      return Sort.unsorted();
-    }
-    if (Objects.isNull(asc) && Objects.isNull(ignoreCase) && Objects.isNull(nullIsFirst)) {
-      return source;
-    }
-    Set<String> names;
-    if (ObjectUtils.isEmpty(properties)) {
-      names = source.stream().map(Sort.Order::getProperty).collect(Collectors.toSet());
-    } else {
-      names = Arrays.stream(properties).collect(Collectors.toSet());
-    }
-    return Sort.by(source.stream()
-        .map(sortOrder -> {
-          if (names.contains(sortOrder.getProperty())) {
-            Sort.Order order = Sort.Order.by(sortOrder.getProperty())
-                .with(newDirection(sortOrder.getDirection(), asc))
-                .with(newNullHandling(sortOrder.getNullHandling(), nullIsFirst));
-            return withNewCaseHandling(order, sortOrder.isIgnoreCase(), ignoreCase);
-          }
-          return sortOrder;
-        })
-        .collect(Collectors.toList()));
-  }
-
-  private static Direction newDirection(Direction oldDirection, Boolean asc) {
-    return Optional.ofNullable(asc)
-        .map(isAsc -> isAsc ? Direction.ASC : Direction.DESC)
-        .orElse(oldDirection);
-  }
-
-  private static NullHandling newNullHandling(NullHandling oldNullHandling, Boolean nullIsFirst) {
-    return Optional.ofNullable(nullIsFirst)
-        .map(isNullIsFirst -> isNullIsFirst ? NullHandling.NULLS_FIRST : NullHandling.NULLS_LAST)
-        .orElse(oldNullHandling);
-  }
-
-  private static Sort.Order withNewCaseHandling(
-      Sort.Order order,
-      boolean oldIgnoresCase,
-      Boolean newIgnoresCase) {
-    //noinspection ConstantConditions
-    return Optional.ofNullable(newIgnoresCase)
-        .map(ignoreCase -> ignoreCase ? order.ignoreCase() : order)
-        .orElseGet(() -> oldIgnoresCase ? order.ignoreCase() : order);
-  }
+  Sort applyDefaults(
+      @Nullable Sort source,
+      @Nullable Boolean asc,
+      @Nullable Boolean ignoreCase,
+      @Nullable Boolean nullIsFirst,
+      @Nullable String... properties);
 
 }

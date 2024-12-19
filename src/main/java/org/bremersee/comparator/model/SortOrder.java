@@ -16,178 +16,126 @@
 
 package org.bremersee.comparator.model;
 
-import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementRef;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 /**
- * This class defines the sort order of a field.
- *
- * <pre>
- *  ---------------------------------------------------------------------------------------------
- * | Attribute    | Description                                                       | Default  |
- * |--------------|-------------------------------------------------------------------|----------|
- * | field        | The field name (or method name) of the object. It can be a path.  | null     |
- * |              | The segments are separated by a dot (.): field0.field1.field2     |          |
- * |              | It can be null. Then the object itself must be comparable.        |          |
- * |--------------|-------------------------------------------------------------------|----------|
- * | asc or desc  | Defines ascending or descending ordering.                         | asc      |
- * |--------------|-------------------------------------------------------------------|----------|
- * | ignoreCase   | Makes a case ignoring comparison (only for strings).              | true     |
- * |--------------|-------------------------------------------------------------------|----------|
- * | nullIsFirst  | Defines the ordering if one of the values is null.                | false    |
- *  ---------------------------------------------------------------------------------------------
- * </pre>
- *
- * <p>These values have a 'sort oder text' representation. The values are concatenated with comma
- * (,):
- * <pre>
- * fieldNameOrPath,asc,ignoreCase,nullIsFirst
- * </pre>
- *
- * <p>For example:
- * <pre>
- * properties.customSettings.priority,asc,true,false
- * </pre>
- *
- * <p>Defaults can be omitted. This is the same:
- * <pre>
- * properties.customSettings.priority
- * </pre>
- *
- * <p>The building of a chain is done by concatenate the fields with a semicolon (;):
- * <pre>
- * field0,asc,ignoreCase,nullIsFirst;field1,asc,ignoreCase,nullIsFirst
- * </pre>
+ * The list of sort orders.
  *
  * @author Christian Bremer
  */
-@XmlRootElement(name = "sortOrder")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "sortOrderType", propOrder = {
-    "field",
-    "asc",
-    "ignoreCase",
-    "nullIsFirst"
-})
+@XmlRootElement(name = "sortOrder")
+@XmlType(name = "sortOrderType")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder(value = {
-    "field",
-    "asc",
-    "ignoreCase",
-    "nullIsFirst"
-})
-@Schema(description = "A sort order defines how a field of an object is sorted.")
-@Getter
+@Schema(description = "The sort order.")
 @EqualsAndHashCode
 public class SortOrder {
 
-  @Schema(description = "The field name or path.")
-  @XmlElement(name = "field")
-  private final String field;
+  /**
+   * The constant SEPARATOR.
+   */
+  public static final String SEPARATOR = ";";
 
-  @Schema(description = "Is ascending or descending order.", requiredMode = REQUIRED)
-  @XmlElement(name = "asc", defaultValue = "true")
-  private final boolean asc;
-
-  @Schema(description = "Is case insensitive or sensitive order.", requiredMode = REQUIRED)
-  @XmlElement(name = "ignoreCase", defaultValue = "true")
-  private final boolean ignoreCase;
-
-  @Schema(description = "Is null is first.", requiredMode = REQUIRED)
-  @XmlElement(name = "nullIsFirst", defaultValue = "false")
-  private final boolean nullIsFirst;
+  @Schema(description = "The sort order items.")
+  @XmlElementRef
+  private final List<SortOrderItem> items = new ArrayList<>();
 
   /**
-   * Instantiates a new sort order.
+   * Instantiates an empty sort order.
    */
   protected SortOrder() {
-    this(null, true, true, false);
   }
 
   /**
-   * Instantiates a new sort order.
+   * Instantiates a new unmodifiable sort order.
    *
-   * @param field the field name or path (can be {@code null})
-   * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case-insensitive order,  {@code false} for a
-   *     case-sensitive order
-   * @param nullIsFirst specifies the order of {@code null} values
+   * @param sortOrderItems the sort order items
    */
   @JsonCreator
-  public SortOrder(
-      @JsonProperty("field") String field,
-      @JsonProperty(value = "asc", required = true) boolean asc,
-      @JsonProperty(value = "ignoreCase", required = true) boolean ignoreCase,
-      @JsonProperty(value = "nullIsFirst", required = true) boolean nullIsFirst) {
-    this.field = field;
-    this.asc = asc;
-    this.ignoreCase = ignoreCase;
-    this.nullIsFirst = nullIsFirst;
+  public SortOrder(@JsonProperty("items") Collection<? extends SortOrderItem> sortOrderItems) {
+    if (sortOrderItems != null) {
+      this.items.addAll(sortOrderItems);
+    }
   }
 
   /**
-   * With given direction.
+   * Gets the unmodifiable list of sort order items.
    *
-   * @param direction the direction
-   * @return the new sort order
+   * @return the list of sort order items
    */
-  public SortOrder with(Direction direction) {
-    return Optional.ofNullable(direction)
-        .map(dir -> new SortOrder(getField(), dir.isAsc(), isIgnoreCase(), isNullIsFirst()))
-        .orElse(this);
+  public List<SortOrderItem> getItems() {
+    return Collections.unmodifiableList(items);
   }
 
   /**
-   * With given case handling.
+   * Checks whether the list of items is empty or not.
    *
-   * @param caseHandling the case handling
-   * @return the new sort order
+   * @return {@code true} if the list of items is empty, otherwise {@code false}
    */
-  public SortOrder with(CaseHandling caseHandling) {
-    return Optional.ofNullable(caseHandling)
-        .map(ch -> new SortOrder(getField(), isAsc(), ch.isIgnoreCase(), isNullIsFirst()))
-        .orElse(this);
+  @XmlTransient
+  @JsonIgnore
+  public boolean isEmpty() {
+    return items.isEmpty();
   }
 
   /**
-   * With given null handling.
+   * Checks whether this sort order contains any entries. If there are entries, this is sorted,
+   * otherwise it is unsorted.
    *
-   * @param nullHandling the null handling
-   * @return the new sort order
+   * @return {@code true} if the list of sort orders is not empty (aka sorted), otherwise
+   *     {@code false}
    */
-  public SortOrder with(NullHandling nullHandling) {
-    return Optional.ofNullable(nullHandling)
-        .map(nh -> new SortOrder(getField(), isAsc(), isIgnoreCase(), nh.isNullIsFirst()))
-        .orElse(this);
+  @XmlTransient
+  @JsonIgnore
+  public boolean isSorted() {
+    return !isEmpty();
   }
 
   /**
-   * Creates the sort order text of this ordering description.
+   * Checks whether this sort order contains any entries. If there are no entries, this is unsorted,
+   * otherwise it is sorted.
+   *
+   * @return {@code true} if the list of sort orders is empty (aka unsorted), otherwise
+   *     {@code false}
+   */
+  @XmlTransient
+  @JsonIgnore
+  public boolean isUnsorted() {
+    return !isSorted();
+  }
+
+  /**
+   * Creates the sort order text of this ordering descriptions.
    *
    * <p>The syntax of the ordering description is
    * <pre>
-   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
+   * fieldNameOrPath0,direction,case-handling,null-handling;fieldNameOrPath1,direction,case-handling,null-handling
    * </pre>
    *
    * <p>For example
    * <pre>
-   * person.lastName,asc,true,false
+   * created,desc;person.lastName,asc;person.firstName,asc
    * </pre>
    *
    * @return the sort order text
@@ -195,96 +143,14 @@ public class SortOrder {
   @JsonIgnore
   @XmlTransient
   public String getSortOrderText() {
-    return getSortOrderText(null);
-  }
-
-  /**
-   * Creates the sort order text of this ordering description.
-   *
-   * <p>The syntax of the ordering description is
-   * <pre>
-   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
-   * </pre>
-   *
-   * <p>For example
-   * <pre>
-   * person.lastName,asc,true,false
-   * </pre>
-   *
-   * @return the sort order text
-   * @deprecated Use {@link #getSortOrderText()} instead.
-   */
-  @Deprecated
-  public String toSortOrderText() {
-    return getSortOrderText();
-  }
-
-  /**
-   * Creates the sort order text of this ordering description.
-   *
-   * <p>The syntax of the ordering description is
-   * <pre>
-   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
-   * </pre>
-   *
-   * <p>The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
-   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
-   *
-   * <p>For example with default properties:
-   * <pre>
-   * person.lastName,asc,true,false
-   * </pre>
-   *
-   * @param properties the properties (can be {@code null}
-   * @return the sort order text
-   */
-  public String getSortOrderText(SortOrdersTextProperties properties) {
-    SortOrdersTextProperties props = Objects.requireNonNullElse(properties,
-        SortOrdersTextProperties.defaults());
-    return (field != null ? field : "") + props.getSortOrderArgsSeparator()
-        + props.getDirectionValue(asc) + props.getSortOrderArgsSeparator()
-        + props.getIgnoreCaseValue(ignoreCase) + props.getSortOrderArgsSeparator()
-        + props.getNullIsFirstValue(nullIsFirst);
-  }
-
-  /**
-   * Creates the sort order text of this ordering description.
-   *
-   * <p>The syntax of the ordering description is
-   * <pre>
-   * fieldNameOrPath,asc,ignoreCase,nullIsFirst
-   * </pre>
-   *
-   * <p>The separator (',') and the values of {@code direction}, {@code case-handling} and {@code
-   * null-handling}** depend on the given {@link SortOrdersTextProperties}.
-   *
-   * <p>For example with default properties:
-   * <pre>
-   * person.lastName,asc,true,false
-   * </pre>
-   *
-   * @param properties the properties (can be {@code null}
-   * @return the sort order text
-   * @deprecated Use {@link #getSortOrderText(SortOrdersTextProperties)} instead.
-   */
-  @Deprecated
-  public String toSortOrderText(SortOrdersTextProperties properties) {
-    return getSortOrderText(properties);
+    return items.stream()
+        .map(SortOrderItem::getSortOrderText)
+        .collect(Collectors.joining(SEPARATOR));
   }
 
   @Override
   public String toString() {
     return getSortOrderText();
-  }
-
-  /**
-   * Creates a new sort order for the given field.
-   *
-   * @param field the field
-   * @return the sort order
-   */
-  public static SortOrder by(String field) {
-    return new SortOrder(field, true, true, false);
   }
 
   /**
@@ -294,121 +160,45 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder fromSortOrderText(String source) {
-    return fromSortOrderText(source, SortOrdersTextProperties.defaults());
-  }
-
-  /**
-   * From sort order text.
-   *
-   * @param source the sort order text
-   * @param properties the properties
-   * @return the sort order
-   */
-  public static SortOrder fromSortOrderText(String source, SortOrdersTextProperties properties) {
     return Optional.ofNullable(source)
         .map(text -> {
-          SortOrdersTextProperties props = Objects
-              .requireNonNullElse(properties, SortOrdersTextProperties.defaults());
-          String field;
-          boolean asc = props.isAsc(null);
-          boolean ignoreCase = props.isCaseIgnored(null);
-          boolean nullIsFirst = props.isNullFirst(null);
-          String separator = props.getSortOrderArgsSeparator();
-          int index = text.indexOf(separator);
-          if (index < 0) {
-            field = text.trim();
-          } else {
-            field = text.substring(0, index).trim();
-            int from = index + separator.length();
-            index = text.indexOf(separator, from);
-            if (index < 0) {
-              asc = props.isAsc(text.substring(from).trim());
-            } else {
-              asc = props.isAsc(text.substring(from, index).trim());
-              from = index + separator.length();
-              index = text.indexOf(separator, from);
-              if (index < 0) {
-                ignoreCase = props.isCaseIgnored(text.substring(from).trim());
-              } else {
-                ignoreCase = props.isCaseIgnored(text.substring(from, index).trim());
-                from = index + separator.length();
-                nullIsFirst = props.isNullFirst(text.substring(from).trim());
-              }
-            }
+          List<SortOrderItem> sortOrderItems = new ArrayList<>();
+          StringTokenizer tokenizer = new StringTokenizer(text, SEPARATOR);
+          while (tokenizer.hasMoreTokens()) {
+            sortOrderItems.add(SortOrderItem.fromSortOrderText(tokenizer.nextToken()));
           }
-          field = field.isEmpty() ? null : field;
-          return new SortOrder(field, asc, ignoreCase, nullIsFirst);
+          return new SortOrder(sortOrderItems);
         })
-        .orElseGet(() -> new SortOrder(null, true, true, false));
+        .orElseGet(SortOrder::new);
   }
 
   /**
-   * The direction.
+   * Creates new sort order with the given items.
+   *
+   * @param sortOrderItems the sort orders
+   * @return the sort order
    */
-  public enum Direction {
-    /**
-     * Asc direction.
-     */
-    ASC,
-    /**
-     * Desc direction.
-     */
-    DESC;
-
-    /**
-     * Is asc.
-     *
-     * @return the boolean
-     */
-    public boolean isAsc() {
-      return ASC.equals(this);
-    }
+  public static SortOrder by(SortOrderItem... sortOrderItems) {
+    return Optional.ofNullable(sortOrderItems)
+        .map(so -> new SortOrder(Arrays.asList(so)))
+        .orElseGet(SortOrder::new);
   }
 
   /**
-   * The case handling.
+   * Combines the given sort orders.
+   *
+   * @param sortOrders the sort orders
+   * @return the combined sort order
    */
-  public enum CaseHandling {
-    /**
-     * Insensitive case handling.
-     */
-    INSENSITIVE,
-    /**
-     * Sensitive case handling.
-     */
-    SENSITIVE;
-
-    /**
-     * Is ignore case.
-     *
-     * @return the boolean
-     */
-    public boolean isIgnoreCase() {
-      return INSENSITIVE.equals(this);
-    }
-  }
-
-  /**
-   * The null handling.
-   */
-  public enum NullHandling {
-    /**
-     * Nulls first handling.
-     */
-    NULLS_FIRST,
-    /**
-     * Nulls last handling.
-     */
-    NULLS_LAST;
-
-    /**
-     * Is null is first.
-     *
-     * @return the boolean
-     */
-    public boolean isNullIsFirst() {
-      return NULLS_FIRST.equals(this);
-    }
+  public static SortOrder by(Collection<? extends SortOrder> sortOrders) {
+    List<SortOrderItem> items = Stream.ofNullable(sortOrders)
+        .flatMap(Collection::stream)
+        .filter(Objects::nonNull)
+        .map(SortOrder::getItems)
+        .flatMap(Collection::stream)
+        .filter(Objects::nonNull)
+        .toList();
+    return new SortOrder(items);
   }
 
 }

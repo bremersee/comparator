@@ -24,8 +24,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
-import org.bremersee.comparator.spring.mapper.DefaultSortMapper;
 import org.bremersee.comparator.spring.mapper.SortMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestRestController {
 
-  private final SortMapper sortMapper = new DefaultSortMapper(true, false);
+  private final SortMapper sortMapper = SortMapper.defaultSortMapper();
 
   /**
    * Gets something sorted.
@@ -65,7 +63,7 @@ public class TestRestController {
       @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
 
     log.info("Received sort orders {}", sort);
-    return ResponseEntity.ok(new SortOrders(sort).getSortOrdersText());
+    return ResponseEntity.ok(SortOrder.by(sort).getSortOrderText());
   }
 
   /**
@@ -94,10 +92,10 @@ public class TestRestController {
     log.info("Pageable = {}", pageRequest);
     // We can't pass ignore case as url parameter value, so we set it here
     Sort sort = sortMapper
-        .applyDefaults(pageRequest.getSort(), null, true, false);
+        .applyDefaults(pageRequest.getSort(), null, true, null);
     Pageable pageable = PageRequest
         .of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
-    SortOrders sortOrders = new SortOrders(sortMapper.fromSort(pageable.getSort()));
-    return ResponseEntity.ok(sortOrders.getSortOrdersText());
+    SortOrder sortOrder = sortMapper.fromSort(pageable.getSort());
+    return ResponseEntity.ok(sortOrder.getSortOrderText());
   }
 }

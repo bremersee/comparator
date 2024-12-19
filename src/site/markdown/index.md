@@ -154,9 +154,9 @@ class Example {
     // add employees
     list.sort(ComparatorBuilder.newInstance()
         .addAll(List.of(
-            new SortOrder("room.number", true, true, false),
-            new SortOrder("person.lastName", true, true, false),
-            new SortOrder("person.firstName", true, true, false)
+            new SortOrderItem("room.number", true, true, false),
+            new SortOrderItem("person.lastName", true, true, false),
+            new SortOrderItem("person.firstName", true, true, false)
         ))
         .build());
   }
@@ -196,7 +196,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
-import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrderItem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -213,7 +213,7 @@ public class TestRestController {
   @GetMapping(path = "/")
   public ResponseEntity<List<Employee>> getSomethingSorted(
       @Parameter(array = @ArraySchema(schema = @Schema(type = "string")))
-      @RequestParam(name = "sort", required = false) List<SortOrder> sort) {
+      @RequestParam(name = "sort", required = false) List<SortOrderItem> sort) {
 
     List<Empployy> list = service.findEmployees();
     list.sort(ComparatorBuilder.newInstance()
@@ -234,7 +234,7 @@ http://localhost:8080?sort=room.number,asc&sort=person.lastName,asc,true
 The parsing of the string is done by providing the `SortOrderConverter` as a Spring bean:
 
 ```java
-import org.bremersee.comparator.spring.converter.SortOrderConverter;
+import org.bremersee.comparator.spring.converter.SortOrderItemConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -242,8 +242,8 @@ import org.springframework.context.annotation.Configuration;
 public class SortOrderConverterConfiguration {
 
   @Bean
-  public SortOrderConverter sortOrderConverter() {
-    return new SortOrderConverter();
+  public SortOrderItemConverter sortOrderConverter() {
+    return new SortOrderItemConverter();
   }
 
 }

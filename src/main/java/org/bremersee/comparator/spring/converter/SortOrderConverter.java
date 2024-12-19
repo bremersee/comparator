@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,7 @@
 
 package org.bremersee.comparator.spring.converter;
 
-import java.util.Objects;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrdersTextProperties;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 
@@ -29,26 +27,8 @@ import org.springframework.lang.NonNull;
  */
 public class SortOrderConverter implements Converter<String, SortOrder> {
 
-  private final SortOrdersTextProperties properties;
-
-  /**
-   * Instantiates a new sort order converter.
-   */
-  public SortOrderConverter() {
-    this(SortOrdersTextProperties.defaults());
-  }
-
-  /**
-   * Instantiates a new sort order converter.
-   *
-   * @param properties the properties
-   */
-  public SortOrderConverter(SortOrdersTextProperties properties) {
-    this.properties = Objects.requireNonNullElse(properties, SortOrdersTextProperties.defaults());
-  }
-
   @Override
   public SortOrder convert(@NonNull String source) {
-    return SortOrder.fromSortOrderText(source, properties);
+    return SortOrder.fromSortOrderText(source);
   }
 }

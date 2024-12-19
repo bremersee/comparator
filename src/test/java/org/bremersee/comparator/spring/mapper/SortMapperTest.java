@@ -24,7 +24,8 @@ import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.PageRequest;
@@ -42,26 +43,7 @@ import org.springframework.data.domain.Sort.Order;
 @ExtendWith(SoftAssertionsExtension.class)
 class SortMapperTest {
 
-  private static final SortMapper defaultTarget = SortMapper.defaultSortMapper();
-
-  private static final DefaultSortMapper targetWithNullHandling = new DefaultSortMapper(
-      true, false);
-
-  /**
-   * Is null handling supported.
-   */
-  @Test
-  void isNullHandlingSupported() {
-    assertThat(targetWithNullHandling.isNullHandlingSupported()).isTrue();
-  }
-
-  /**
-   * Is native null handling is null is first.
-   */
-  @Test
-  void isNativeNullHandlingIsNullIsFirst() {
-    assertThat(targetWithNullHandling.isNativeNullHandlingIsNullIsFirst()).isFalse();
-  }
+  private static final SortMapper target = SortMapper.defaultSortMapper();
 
   /**
    * Test to sort.
@@ -70,11 +52,20 @@ class SortMapperTest {
    */
   @Test
   void toSort(SoftAssertions softly) {
-    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
-    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
+    SortOrderItem sortOrderItem0 = new SortOrderItem(
+        "f0", SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+        SortOrderItem.NullHandling.NULLS_FIRST);
+    SortOrderItem sortOrderItem1 = new SortOrderItem(
+        "f1", SortOrderItem.Direction.DESC, CaseHandling.SENSITIVE,
+        SortOrderItem.NullHandling.NULLS_LAST);
+    SortOrderItem sortOrderItem2 = new SortOrderItem(
+        "f2", SortOrderItem.Direction.DESC, CaseHandling.SENSITIVE,
+        SortOrderItem.NullHandling.NATIVE);
 
-    Sort sort = targetWithNullHandling.toSort(sortOrders);
+    SortOrder sortOrder0 = new SortOrder(List.of(sortOrderItem0, sortOrderItem1));
+    SortOrder sortOrder1 = new SortOrder(List.of(sortOrderItem2));
+
+    Sort sort = target.toSort(SortOrder.by(List.of(sortOrder0, sortOrder1)));
 
     softly.assertThat(sort)
         .isNotNull();
@@ -106,39 +97,8 @@ class SortMapperTest {
         .isNotNull()
         .extracting(Sort.Order::getNullHandling)
         .isEqualTo(NullHandling.NULLS_LAST);
-  }
 
-  /**
-   * To sort without null handling.
-   *
-   * @param softly the softly
-   */
-  @Test
-  void toSortWithoutNullHandling(SoftAssertions softly) {
-    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
-    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
-
-    Sort sort = defaultTarget.toSort(sortOrders);
-
-    softly.assertThat(sort)
-        .isNotNull();
-
-    Sort.Order sortOrder = sort.getOrderFor("f0");
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isAscending, BOOLEAN)
-        .isTrue();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
-        .isTrue();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::getNullHandling)
-        .isEqualTo(NullHandling.NATIVE);
-
-    sortOrder = sort.getOrderFor("f1");
+    sortOrder = sort.getOrderFor("f2");
     softly.assertThat(sortOrder)
         .isNotNull()
         .extracting(Sort.Order::isAscending, BOOLEAN)
@@ -158,225 +118,141 @@ class SortMapperTest {
    */
   @Test
   void toSortWithEmptyList() {
-    Sort sort = targetWithNullHandling.toSort(Collections.emptyList());
+    Sort sort = target.toSort(Collections.emptyList());
     assertThat(sort.isUnsorted()).isTrue();
   }
 
   /**
-   * To sort with list null.
+   * To sort with empty sort order.
    */
   @Test
-  void toSortWithListNull() {
-    Sort sort = targetWithNullHandling.toSort((List<? extends SortOrder>) null);
+  void toSortWithEmptySortOrder() {
+    Sort sort = target.toSort(new SortOrder(List.of()));
     assertThat(sort.isUnsorted()).isTrue();
   }
 
   /**
-   * To sort with sort orders.
+   * To sort with null.
+   */
+  @Test
+  void toSortWithNull() {
+    Sort sort = target.toSort((SortOrder) null);
+    assertThat(sort.isUnsorted()).isTrue();
+  }
+
+  /**
+   * To sort order with null.
    *
    * @param softly the softly
    */
   @Test
-  void toSortWithSortOrders(SoftAssertions softly) {
-    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
-    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
-
-    Sort sort = targetWithNullHandling.toSort(new SortOrders(sortOrders));
-
-    softly.assertThat(sort)
-        .isNotNull();
-
-    Sort.Order sortOrder = sort.getOrderFor("f0");
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isAscending, BOOLEAN)
-        .isTrue();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
-        .isTrue();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::getNullHandling)
-        .isEqualTo(NullHandling.NULLS_FIRST);
-
-    sortOrder = sort.getOrderFor("f1");
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isAscending, BOOLEAN)
-        .isFalse();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
-        .isFalse();
-    softly.assertThat(sortOrder)
-        .isNotNull()
-        .extracting(Sort.Order::getNullHandling)
-        .isEqualTo(NullHandling.NULLS_LAST);
+  void toSortOrderWithNull(SoftAssertions softly) {
+    softly.assertThat(target.toSortOrder(null)).isNull();
+    softly.assertThat(target.toSortOrder(SortOrderItem.by(null))).isNull();
+    softly.assertThat(target.toSortOrder(SortOrderItem.by(""))).isNull();
   }
 
   /**
-   * To sort with empty sort orders.
-   */
-  @Test
-  void toSortWithEmptySortOrders() {
-    Sort sort = targetWithNullHandling.toSort(SortOrders.by());
-    assertThat(sort.isUnsorted()).isTrue();
-  }
-
-  /**
-   * To sort with sort orders null.
-   */
-  @Test
-  void toSortWithSortOrdersNull() {
-    Sort sort = targetWithNullHandling.toSort((SortOrders) null);
-    assertThat(sort.isUnsorted()).isTrue();
-  }
-
-  /**
-   * Test from sort.
+   * From sort.
    */
   @Test
   void fromSort() {
-    SortOrder sortOrder0 = new SortOrder("f0", true, true, true);
-    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
-    List<SortOrder> actualFields = targetWithNullHandling
-        .fromSort(Sort
-            .by(Order.by("f0").with(Direction.ASC).with(NullHandling.NULLS_FIRST).ignoreCase(),
-                Order.by("f1").with(Direction.DESC).with(NullHandling.NULLS_LAST)));
-    assertThat(actualFields)
-        .isEqualTo(sortOrders);
-  }
-
-  /**
-   * From sort without null handling.
-   */
-  @Test
-  void fromSortWithoutNullHandling() {
-    SortOrder sortOrder0 = new SortOrder("f0", true, true, false);
-    SortOrder sortOrder1 = new SortOrder("f1", false, false, false);
-    List<SortOrder> sortOrders = List.of(sortOrder0, sortOrder1);
-    List<SortOrder> actualFields = targetWithNullHandling
-        .fromSort(Sort
-            .by(Order.by("f0").with(Direction.ASC).with(NullHandling.NATIVE).ignoreCase(),
-                Order.by("f1").with(Direction.DESC).with(NullHandling.NATIVE)));
-    assertThat(actualFields)
-        .isEqualTo(sortOrders);
-  }
-
-  /**
-   * From sort with null.
-   */
-  @Test
-  void fromSortWithNull() {
-    List<SortOrder> sortOrders = targetWithNullHandling.fromSort(null);
-    assertThat(sortOrders).isEmpty();
-  }
-
-  /**
-   * To sort order.
-   *
-   * @param softly the soft assertions
-   */
-  @Test
-  void toSortOrder(SoftAssertions softly) {
-    softly.assertThat(targetWithNullHandling.toSortOrder(null))
-        .isNull();
-    softly
-        .assertThat(targetWithNullHandling
-            .toSortOrder(new SortOrder(null, true, true, true)))
-        .isNull();
-    softly
-        .assertThat(targetWithNullHandling
-            .toSortOrder(new SortOrder("", true, true, true)))
-        .isNull();
-  }
-
-  /**
-   * From sort order.
-   */
-  @Test
-  void fromSortOrder() {
-    assertThat(targetWithNullHandling.fromSortOrder(null))
-        .isNull();
-  }
-
-  /**
-   * Apply defaults.
-   *
-   * @param softly the soft assertions
-   */
-  @Test
-  void applyDefaults(SoftAssertions softly) {
-    softly
-        .assertThat(targetWithNullHandling
-            .applyDefaults((Sort) null, true, true, false))
-        .as("Apply defaults on null")
-        .isEmpty();
-
-    Sort expected = Sort.by(Sort.Order.by("something"));
-    softly.
-        assertThat(targetWithNullHandling
-            .applyDefaults(expected, null, null, null))
-        .as("Apply defaults with no changes.")
-        .isEqualTo(expected);
+    SortOrderItem sortOrderItem0 = new SortOrderItem(
+        "f0", SortOrderItem.Direction.ASC, CaseHandling.INSENSITIVE,
+        SortOrderItem.NullHandling.NULLS_FIRST);
+    SortOrderItem sortOrderItem1 = new SortOrderItem(
+        "f1", SortOrderItem.Direction.DESC, CaseHandling.SENSITIVE,
+        SortOrderItem.NullHandling.NULLS_LAST);
+    SortOrderItem sortOrderItem2 = new SortOrderItem(
+        "f2", SortOrderItem.Direction.DESC, CaseHandling.SENSITIVE,
+        SortOrderItem.NullHandling.NATIVE);
+    SortOrder expected = new SortOrder(List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2));
 
     Sort sort = Sort.by(
-        Sort.Order.by("a").with(Direction.ASC),
-        Sort.Order.by("b").with(Direction.ASC));
-    Sort actual = targetWithNullHandling.applyDefaults(sort, false, null, null, "a");
-    softly.assertThat(actual.getOrderFor("a"))
-        .isNotNull()
-        .extracting(Sort.Order::isAscending, BOOLEAN)
-        .as("Apply defaults (direction) of property 'a'")
-        .isFalse();
-    softly.assertThat(actual.getOrderFor("b"))
-        .as("Apply defaults (direction) of property 'b' and expect no changes")
-        .isEqualTo(sort.getOrderFor("b"));
+        Order.by("f0").with(Direction.ASC).with(NullHandling.NULLS_FIRST).ignoreCase(),
+        Order.by("f1").with(Direction.DESC).with(NullHandling.NULLS_LAST),
+        Order.by("f2").with(Direction.DESC).with(NullHandling.NATIVE));
 
-    sort = Sort.by(
-        Sort.Order.by("a").ignoreCase(),
-        Sort.Order.by("b"));
-    actual = targetWithNullHandling.applyDefaults(sort, null, false, null, "a");
-    softly.assertThat(actual.getOrderFor("a"))
-        .isNotNull()
-        .extracting(Sort.Order::isIgnoreCase, BOOLEAN)
-        .as("Apply defaults (case-handling) of property 'a")
-        .isFalse();
-    softly.assertThat(actual.getOrderFor("b"))
-        .as("Apply defaults (case-handling) of property 'b' and expect no changes")
-        .isEqualTo(sort.getOrderFor("b"));
+    SortOrder actual = target.fromSort(sort);
 
-    sort = Sort.by(
-        Sort.Order.by("a").with(NullHandling.NULLS_FIRST),
-        Sort.Order.by("b").with(NullHandling.NULLS_LAST));
-    actual = targetWithNullHandling.applyDefaults(sort, null, null, false, "a");
-    softly.assertThat(actual.getOrderFor("a"))
-        .isNotNull()
-        .extracting(Sort.Order::getNullHandling)
-        .as("Apply defaults (null-handling) of property 'a'")
-        .isEqualTo(NullHandling.NULLS_LAST);
-    softly.assertThat(actual.getOrderFor("b"))
-        .as("Apply defaults (null-handling) of property 'b' and expect no changes")
-        .isEqualTo(sort.getOrderFor("b"));
+    assertThat(actual).isEqualTo(expected);
   }
 
   /**
-   * Apply defaults to pageable.
-   *
-   * @param softly the softly
+   * From sort order with null.
    */
   @Test
-  void applyDefaultsToPageable(SoftAssertions softly) {
-    softly
-        .assertThat(targetWithNullHandling.applyDefaults((Pageable) null, true, true, false))
-        .isNull();
-    Pageable source = PageRequest.of(1, 10, Sort.by("abc").descending());
-    Pageable expected = PageRequest.of(1, 10, Sort.by("abc").ascending());
-    softly
-        .assertThat(targetWithNullHandling.applyDefaults(source, true, null, null))
-        .isEqualTo(expected);
+  void fromSortOrderWithNull() {
+    assertThat(target.fromSortOrder(null)).isNull();
   }
+
+  /**
+   * Apply defaults for pageable.
+   */
+  @Test
+  void applyDefaultsForPageable() {
+    Pageable pageable = PageRequest.of(0, 10)
+        .withSort(Sort.by("f0", "f1"));
+    Pageable actual = target
+        .applyDefaults(pageable, Direction.DESC, true, NullHandling.NULLS_LAST, "f0");
+    assertThat(actual)
+        .extracting(Pageable::getSort)
+        .isEqualTo(Sort.by(
+            Order.by("f0")
+                .with(Direction.DESC)
+                .with(NullHandling.NULLS_LAST)
+                .ignoreCase(),
+            Order.by("f1")));
+  }
+
+  /**
+   * Apply defaults for pageable of null.
+   */
+  @Test
+  void applyDefaultsForPageableOfNull() {
+    Pageable actual = target
+        .applyDefaults((Pageable) null, Direction.DESC, true, NullHandling.NULLS_LAST);
+    assertThat(actual).isNull();
+  }
+
+  /**
+   * Apply defaults for sort.
+   */
+  @Test
+  void applyDefaultsForSort() {
+    Sort sort = Sort.by("f0");
+    Sort actual = target
+        .applyDefaults(sort, Direction.DESC, true, NullHandling.NULLS_LAST);
+    assertThat(actual)
+        .isEqualTo(Sort.by(Order.by("f0")
+            .with(Direction.DESC)
+            .with(NullHandling.NULLS_LAST)
+            .ignoreCase()));
+  }
+
+  /**
+   * Apply defaults for sort of null.
+   */
+  @Test
+  void applyDefaultsForSortOfNull() {
+    Sort actual = target
+        .applyDefaults((Sort) null, Direction.DESC, true, NullHandling.NULLS_LAST);
+    assertThat(actual)
+        .isEqualTo(Sort.unsorted());
+  }
+
+  /**
+   * Apply defaults for sort with no changes.
+   */
+  @Test
+  void applyDefaultsForSortWithNoChanges() {
+    Sort sort = Sort.by("f0");
+    Sort actual = target
+        .applyDefaults(sort, null, null, null);
+    assertThat(actual)
+        .isEqualTo(Sort.by(Order.by("f0")
+            .with(Direction.ASC)
+            .with(NullHandling.NATIVE)));
+  }
+
 }

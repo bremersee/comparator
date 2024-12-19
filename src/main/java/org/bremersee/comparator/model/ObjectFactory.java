@@ -31,8 +31,8 @@ public class ObjectFactory {
    *
    * @return the sort order
    */
-  public SortOrder createSortOrder() {
-    return new SortOrder();
+  public SortOrderItem createSortOrder() {
+    return new SortOrderItem();
   }
 
   /**
@@ -40,8 +40,8 @@ public class ObjectFactory {
    *
    * @return the sort orders
    */
-  public SortOrders createSortOrders() {
-    return new SortOrders();
+  public SortOrder createSortOrders() {
+    return new SortOrder();
   }
 
 }

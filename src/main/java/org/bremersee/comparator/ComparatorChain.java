@@ -27,7 +27,7 @@ import lombok.ToString;
  *
  * @author Christian Bremer
  */
-@SuppressWarnings({"rawtypes", "SameNameButDifferent"})
+@SuppressWarnings({"rawtypes"})
 @ToString
 public class ComparatorChain implements Comparator<Object> {
 

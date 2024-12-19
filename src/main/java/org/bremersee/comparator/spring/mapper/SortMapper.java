@@ -16,21 +16,31 @@
 
 package org.bremersee.comparator.spring.mapper;
 
+import static java.util.Objects.isNull;
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * This mapper provides methods to transform a {@link SortOrder} into a {@code Sort} object from the
- * Spring framework (spring-data-common) and vice versa.
+ * This mapper provides methods to transform a {@link SortOrderItem} into a {@code Sort} object from
+ * the Spring framework (spring-data-common) and vice versa.
  *
  * @author Christian Bremer
  */
@@ -42,7 +52,7 @@ public interface SortMapper {
    * @return the sort mapper
    */
   static SortMapper defaultSortMapper() {
-    return new DefaultSortMapper();
+    return DefaultSortMapper.getInstance();
   }
 
   /**
@@ -52,51 +62,68 @@ public interface SortMapper {
    * @return the sort
    */
   @NonNull
-  default Sort toSort(@Nullable SortOrders sortOrders) {
-    return toSort(sortOrders != null ? sortOrders.getSortOrders() : null);
+  default Sort toSort(@Nullable Collection<? extends SortOrder> sortOrders) {
+    return toSort(SortOrder.by(sortOrders));
   }
 
   /**
-   * Transforms the sort order into a {@code Sort} object.
+   * Transforms sort order into a {@code Sort} object.
    *
-   * @param sortOrders the sort orders
-   * @return the sort object
+   * @param sortOrder the sort order
+   * @return the sort
    */
   @NonNull
-  default Sort toSort(@Nullable List<? extends SortOrder> sortOrders) {
-    List<Sort.Order> orderList = Optional.ofNullable(sortOrders)
-        .stream()
-        .flatMap(List::stream)
+  default Sort toSort(@Nullable SortOrder sortOrder) {
+    List<Sort.Order> orderList = Stream.ofNullable(sortOrder)
+        .map(SortOrder::getItems)
+        .flatMap(Collection::stream)
+        .filter(Objects::nonNull)
         .map(this::toSortOrder)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
-    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
-  }
-
-  /**
-   * Transforms a {@code Sort} object into a sort order list.
-   *
-   * @param sort the {@code Sort} object
-   * @return the sort order list
-   */
-  @NonNull
-  default List<SortOrder> fromSort(@Nullable Sort sort) {
-    return Optional.ofNullable(sort)
-        .stream()
-        .flatMap(Sort::stream)
-        .map(this::fromSortOrder)
-        .filter(Objects::nonNull)
         .toList();
+    return orderList.isEmpty() ? Sort.unsorted() : Sort.by(orderList);
   }
 
   /**
    * Transforms the sort order into a {@code Sort.Order} object.
    *
-   * @param sortOrder the sort order
+   * @param sortOrderItem the sort order
    * @return the sort object
    */
   @Nullable
-  Sort.Order toSortOrder(@Nullable SortOrder sortOrder);
+  default Sort.Order toSortOrder(@Nullable SortOrderItem sortOrderItem) {
+    if (sortOrderItem == null || sortOrderItem.getField() == null) {
+      return null;
+    }
+    Direction direction = sortOrderItem.getDirection().isAscending()
+        ? Direction.ASC
+        : Direction.DESC;
+    NullHandling nullHandling = switch (sortOrderItem.getNullHandling()) {
+      case NULLS_FIRST -> NullHandling.NULLS_FIRST;
+      case NULLS_LAST -> NullHandling.NULLS_LAST;
+      case NATIVE -> NullHandling.NATIVE;
+    };
+    Sort.Order order = new Sort.Order(direction, sortOrderItem.getField(), nullHandling);
+    return sortOrderItem.getCaseHandling().isInsensitive()
+        ? order.ignoreCase()
+        : order;
+  }
+
+
+  /**
+   * Transforms a {@code Sort} object into a sort order.
+   *
+   * @param sort the {@code Sort} object
+   * @return the sort order
+   */
+  @NonNull
+  default SortOrder fromSort(@Nullable Sort sort) {
+    List<SortOrderItem> items = Stream.ofNullable(sort)
+        .flatMap(Sort::stream)
+        .map(this::fromSortOrder)
+        .filter(Objects::nonNull)
+        .toList();
+    return new SortOrder(items);
+  }
 
   /**
    * Transforms a {@code Sort.Order} object into a sort order.
@@ -105,47 +132,133 @@ public interface SortMapper {
    * @return the sort order
    */
   @Nullable
-  SortOrder fromSortOrder(@Nullable Sort.Order sortOrder);
+  default SortOrderItem fromSortOrder(@Nullable Sort.Order sortOrder) {
+    if (sortOrder == null) {
+      return null;
+    }
+    SortOrderItem.Direction direction = sortOrder.getDirection().isAscending()
+        ? SortOrderItem.Direction.ASC
+        : SortOrderItem.Direction.DESC;
+    CaseHandling caseHandling = sortOrder.isIgnoreCase()
+        ? CaseHandling.INSENSITIVE
+        : CaseHandling.SENSITIVE;
+    SortOrderItem.NullHandling nullHandling = switch (sortOrder.getNullHandling()) {
+      case NULLS_FIRST -> SortOrderItem.NullHandling.NULLS_FIRST;
+      case NULLS_LAST -> SortOrderItem.NullHandling.NULLS_LAST;
+      case NATIVE -> SortOrderItem.NullHandling.NATIVE;
+    };
+    return new SortOrderItem(
+        sortOrder.getProperty(),
+        direction,
+        caseHandling,
+        nullHandling);
+  }
 
   /**
    * Apply defaults to page request.
    *
    * @param source the source
-   * @param asc the asc
+   * @param direction the direction
    * @param ignoreCase the ignore case
-   * @param nullIsFirst the null is first
+   * @param nullHandling the null handling
    * @param properties the properties
    * @return the pageable
    */
   @Nullable
   default Pageable applyDefaults(
       @Nullable Pageable source,
-      @Nullable Boolean asc,
+      @Nullable Direction direction,
       @Nullable Boolean ignoreCase,
-      @Nullable Boolean nullIsFirst,
+      @Nullable NullHandling nullHandling,
       @Nullable String... properties) {
 
     return Objects.isNull(source) ? null : PageRequest.of(
         source.getPageNumber(),
         source.getPageSize(),
-        applyDefaults(source.getSort(), asc, ignoreCase, nullIsFirst, properties));
+        applyDefaults(source.getSort(), direction, ignoreCase, nullHandling, properties));
   }
 
   /**
    * Apply defaults to sort.
    *
    * @param source the source
-   * @param asc the asc
-   * @param ignoreCase the ignore-case flag
-   * @param nullIsFirst the null is first flag
+   * @param direction the direction
+   * @param ignoreCase the ignore case
+   * @param nullHandling the null handling
    * @param properties the properties
    * @return the sort
    */
-  Sort applyDefaults(
+  @NonNull
+  default Sort applyDefaults(
       @Nullable Sort source,
-      @Nullable Boolean asc,
+      @Nullable Direction direction,
       @Nullable Boolean ignoreCase,
-      @Nullable Boolean nullIsFirst,
-      @Nullable String... properties);
+      @Nullable NullHandling nullHandling,
+      @Nullable String... properties) {
+
+    if (isNull(source)) {
+      return Sort.unsorted();
+    }
+    if (isNull(direction) && isNull(ignoreCase) && isNull(nullHandling)) {
+      return source;
+    }
+    Set<String> names;
+    if (isEmpty(properties)) {
+      names = source.stream().map(Sort.Order::getProperty).collect(Collectors.toSet());
+    } else {
+      names = Arrays.stream(properties).collect(Collectors.toSet());
+    }
+    return Sort.by(source.stream()
+        .map(sortOrder -> {
+          if (names.contains(sortOrder.getProperty())) {
+            Sort.Order order = Sort.Order.by(sortOrder.getProperty())
+                .with(newDirection(sortOrder.getDirection(), direction))
+                .with(newNullHandling(sortOrder.getNullHandling(), nullHandling));
+            return withNewCaseHandling(order, sortOrder.isIgnoreCase(), ignoreCase);
+          }
+          return sortOrder;
+        })
+        .toList());
+  }
+
+  private Direction newDirection(Direction oldDirection, Direction newDirection) {
+    return Optional.ofNullable(newDirection)
+        .orElse(oldDirection);
+  }
+
+  private NullHandling newNullHandling(NullHandling oldNullHandling, NullHandling newNullHandling) {
+    return Optional.ofNullable(newNullHandling)
+        .orElse(oldNullHandling);
+  }
+
+  private Sort.Order withNewCaseHandling(
+      Sort.Order order,
+      boolean oldIgnoresCase,
+      Boolean newIgnoresCase) {
+    //noinspection ConstantConditions
+    return Optional.ofNullable(newIgnoresCase)
+        .map(ignoreCase -> ignoreCase ? order.ignoreCase() : order)
+        .orElseGet(() -> oldIgnoresCase ? order.ignoreCase() : order);
+  }
+
+  /**
+   * The type Default sort mapper.
+   */
+  class DefaultSortMapper implements SortMapper {
+
+    private static final SortMapper INSTANCE = new DefaultSortMapper();
+
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
+    public static SortMapper getInstance() {
+      return INSTANCE;
+    }
+
+    private DefaultSortMapper() {
+    }
+  }
 
 }

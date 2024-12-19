@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
+package org.bremersee.comparator.spring.converter;
+
+import org.bremersee.comparator.model.SortOrderItem;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
+
 /**
- * This package contains the model of the comparator.
+ * The sort order converter.
  *
  * @author Christian Bremer
  */
-@jakarta.xml.bind.annotation.XmlSchema(
-    namespace = "http://bremersee.org/xmlschemas/comparator/v4",
-    location = "http://bremersee.github.io/xmlschemas/comparator-v4.xsd",
-    elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package org.bremersee.comparator.model;
+public class SortOrderItemConverter implements Converter<String, SortOrderItem> {
+
+  @Override
+  public SortOrderItem convert(@NonNull String source) {
+    return SortOrderItem.fromSortOrderText(source);
+  }
+}

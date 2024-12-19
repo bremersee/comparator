@@ -26,7 +26,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
+import org.bremersee.comparator.model.SortOrderItem.Direction;
+import org.bremersee.comparator.model.SortOrderItem.NullHandling;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -37,7 +40,7 @@ import org.junit.jupiter.api.Test;
 class ValueComparatorTest {
 
   /**
-   * Test with non comparable values and expect comparator exception.
+   * Test with non-comparable values and expect comparator exception.
    */
   @Test
   void testWithNonComparableValuesAndExpectComparatorException() {
@@ -45,7 +48,7 @@ class ValueComparatorTest {
       ValueExtractor valueExtractor = mock(ValueExtractor.class);
       when(valueExtractor.findValue(any(), anyString())).thenReturn(new Object());
       //noinspection EqualsWithItself,ResultOfMethodCallIgnored
-      new ValueComparator("someField", true, true, false, valueExtractor)
+      new ValueComparator(SortOrderItem.by("someField"), valueExtractor)
           .compare(new Object(), new Object());
     });
   }
@@ -59,7 +62,7 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(any(), anyString())).thenReturn(null);
 
     //noinspection EqualsWithItself
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    int result = new ValueComparator(SortOrderItem.by("someField"), valueExtractor)
         .compare(new Object(), new Object());
 
     assertThat(result)
@@ -76,7 +79,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator(new SortOrder("someField", true, true, true), valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(NullHandling.NULLS_FIRST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("null", 1);
 
     assertThat(result)
@@ -94,7 +100,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", false, true, true, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(NullHandling.NULLS_FIRST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("null", 1);
 
     assertThat(result)
@@ -112,7 +121,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(NullHandling.NULLS_LAST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("null", 1);
 
     assertThat(result)
@@ -130,7 +142,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", false, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(NullHandling.NULLS_LAST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("null", 1);
 
     assertThat(result)
@@ -148,7 +163,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", true, true, true, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(NullHandling.NULLS_FIRST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(1, "null");
 
     assertThat(result)
@@ -166,7 +184,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", false, true, true, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(NullHandling.NULLS_FIRST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(1, "null");
 
     assertThat(result)
@@ -184,7 +205,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(NullHandling.NULLS_LAST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(1, "null");
 
     assertThat(result)
@@ -202,7 +226,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(null);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(1);
 
-    int result = new ValueComparator("someField", false, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(NullHandling.NULLS_LAST);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(1, "null");
 
     assertThat(result)
@@ -219,8 +246,9 @@ class ValueComparatorTest {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
 
+    SortOrderItem orderItem = SortOrderItem.by("someField");
     //noinspection EqualsWithItself
-    int result = new ValueComparator("someField", true, false, false, valueExtractor)
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", "A");
 
     assertThat(result)
@@ -237,7 +265,8 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(2);
 
-    int result = new ValueComparator("someField", true, false, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField");
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", 8);
 
     assertThat(result)
@@ -255,7 +284,9 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(2);
 
-    int result = new ValueComparator("someField", false, false, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", 8);
 
     assertThat(result)
@@ -273,7 +304,9 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(2);
 
-    int result = new ValueComparator("someField", true, false, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(8, "A");
 
     assertThat(result)
@@ -291,7 +324,9 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn(1);
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn(2);
 
-    int result = new ValueComparator("someField", false, false, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(8, "A");
 
     assertThat(result)
@@ -308,8 +343,9 @@ class ValueComparatorTest {
     ValueExtractor valueExtractor = mock(ValueExtractor.class);
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
 
+    SortOrderItem orderItem = SortOrderItem.by("someField");
     //noinspection EqualsWithItself
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", "A");
 
     assertThat(result)
@@ -326,7 +362,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn("b");
 
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(CaseHandling.INSENSITIVE);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", 8);
 
     assertThat(result)
@@ -344,7 +383,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn("b");
 
-    int result = new ValueComparator("someField", false, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(CaseHandling.INSENSITIVE);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare("A", 8);
 
     assertThat(result)
@@ -362,7 +404,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn("b");
 
-    int result = new ValueComparator("someField", true, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.ASC)
+        .with(CaseHandling.INSENSITIVE);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(8, "A");
 
     assertThat(result)
@@ -380,7 +425,10 @@ class ValueComparatorTest {
     when(valueExtractor.findValue(anyString(), anyString())).thenReturn("a");
     when(valueExtractor.findValue(anyInt(), anyString())).thenReturn("b");
 
-    int result = new ValueComparator("someField", false, true, false, valueExtractor)
+    SortOrderItem orderItem = SortOrderItem.by("someField")
+        .with(Direction.DESC)
+        .with(CaseHandling.INSENSITIVE);
+    int result = new ValueComparator(orderItem, valueExtractor)
         .compare(8, "A");
 
     assertThat(result)
@@ -394,8 +442,9 @@ class ValueComparatorTest {
    */
   @Test
   void testToString() {
-    assertThat(new ValueComparator("qwertz", true, false, true).toString())
-        .contains("qwertz", "true", "false");
+    SortOrderItem orderItem = SortOrderItem.by("qwertz");
+    assertThat(new ValueComparator(orderItem).toString())
+        .contains(orderItem.toString());
   }
 
 }

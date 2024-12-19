@@ -51,15 +51,14 @@ public class SortOrderConverterIntegrationTest {
    */
   @Test
   void testConvertSortParameter(SoftAssertions softly) {
-    //RestTemplate restTemplate = restTemplateBuilder.build();
     ResponseEntity<String> response = restTemplate.getForEntity(
-        "/?sort=field0,desc&sort=field1,desc,false,true",
+        "/?sort=field0,desc&sort=field1,desc;field3,desc",
         String.class);
     softly.assertThat(response.getStatusCode())
         .isEqualTo(HttpStatus.OK);
     softly.assertThat(response.getBody())
         .as("Convert sort parameter in Spring application")
-        .isEqualTo("field0,desc,true,false;field1,desc,false,true");
+        .isEqualTo("field0,desc;field1,desc;field3,desc");
   }
 
   /**
@@ -81,7 +80,7 @@ public class SortOrderConverterIntegrationTest {
         .isEqualTo(HttpStatus.OK);
     softly.assertThat(response.getBody())
         .as("Convert pageable parameters in Spring application")
-        .isEqualTo("field0,desc,true,false;field1,asc,true,false");
+        .isEqualTo("field0,desc;field1");
   }
 
 }

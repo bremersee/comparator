@@ -35,7 +35,7 @@ class ObjectFactoryTest {
   @Test
   void createSortOrder() {
     assertThat(factory.createSortOrder())
-        .isEqualTo(new SortOrder());
+        .isEqualTo(new SortOrderItem());
   }
 
   /**
@@ -44,6 +44,6 @@ class ObjectFactoryTest {
   @Test
   public void createSortOrders() {
     assertThat(factory.createSortOrders())
-        .isEqualTo(new SortOrders());
+        .isEqualTo(new SortOrder());
   }
 }

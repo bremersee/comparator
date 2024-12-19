@@ -26,7 +26,8 @@ import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.Direction;
 import org.bremersee.comparator.testmodel.ComplexObject;
 import org.bremersee.comparator.testmodel.ComplexObjectExtension;
 import org.bremersee.comparator.testmodel.ComplexObjectExtensionComparator;
@@ -65,7 +66,7 @@ class ComparatorBuilderTest {
     SimpleObject one = new SimpleObject(1);
     SimpleObject two = new SimpleObject(2);
     int result = ComparatorBuilder.newInstance()
-        .add("number", true, true, false)
+        .add(SortOrderItem.by("number"))
         .build()
         .compare(one, two);
     assertThat(result)
@@ -81,7 +82,7 @@ class ComparatorBuilderTest {
     SimpleGetObject one = new SimpleGetObject(1);
     SimpleGetObject two = new SimpleGetObject(2);
     int result = ComparatorBuilder.newInstance()
-        .add("number", true, true, false)
+        .add(SortOrderItem.by("number"))
         .build()
         .compare(one, two);
     assertThat(result)
@@ -96,9 +97,9 @@ class ComparatorBuilderTest {
    */
   @Test
   void testSimpleGetObjectWithSortOrders(SoftAssertions softly) {
-    List<SortOrder> orders = List.of(
-        new SortOrder("number", true, false, false),
-        new SortOrder("anotherNumber", true, false, false));
+    List<SortOrderItem> orders = List.of(
+        SortOrderItem.by("number"),
+        SortOrderItem.by("anotherNumber"));
     SimpleGetObject one = new SimpleGetObject(1, 1);
     SimpleGetObject two = new SimpleGetObject(1, 3);
     int result = ComparatorBuilder.newInstance()
@@ -117,21 +118,21 @@ class ComparatorBuilderTest {
         .as("Compare with given value extractor %s with %s", two, one)
         .isGreaterThan(0);
 
-    SortOrders sortOrders = new SortOrders(orders);
+    SortOrder sortOrder = new SortOrder(orders);
     result = ComparatorBuilder.newInstance()
-        .addAll(sortOrders)
+        .addAll(sortOrder)
         .build()
         .compare(one, two);
     softly.assertThat(result)
-        .as("Compare %s with %s using %s", one, two, sortOrders)
+        .as("Compare %s with %s using %s", one, two, sortOrder)
         .isLessThan(0);
 
     result = ComparatorBuilder.newInstance()
-        .addAll(sortOrders, new DefaultValueExtractor())
+        .addAll(sortOrder, new DefaultValueExtractor())
         .build()
         .compare(two, one);
     softly.assertThat(result)
-        .as("Compare with given value extractor %s with %s using %s", two, one, sortOrders)
+        .as("Compare with given value extractor %s with %s using %s", two, one, sortOrder)
         .isGreaterThan(0);
   }
 
@@ -143,7 +144,7 @@ class ComparatorBuilderTest {
     SimpleIsObject one = new SimpleIsObject(true);
     SimpleIsObject two = new SimpleIsObject(false);
     int result = ComparatorBuilder.newInstance()
-        .add("nice", false, true, false)
+        .add(SortOrderItem.by("nice").with(Direction.DESC))
         .build()
         .compare(one, two);
     assertThat(result)
@@ -159,7 +160,7 @@ class ComparatorBuilderTest {
     ComplexObject one = new ComplexObject(new SimpleObject(1));
     ComplexObject two = new ComplexObject(new SimpleObject(2));
     int result = ComparatorBuilder.newInstance()
-        .add("simple.number", true, true, false)
+        .add(SortOrderItem.by("simple.number"))
         .build()
         .compare(one, two);
     assertThat(result)
@@ -193,7 +194,7 @@ class ComparatorBuilderTest {
     list = new ArrayList<>(List.of(b, a));
     // natural order
     list.sort(ComparatorBuilder.newInstance()
-        .add((SortOrder) null)
+        .add((SortOrderItem) null)
         .build());
     softly.assertThat(list)
         .containsExactly(a, b);
@@ -201,7 +202,7 @@ class ComparatorBuilderTest {
     list = new ArrayList<>(List.of(a, b));
     // natural order
     list.sort(ComparatorBuilder.newInstance()
-        .add(new SortOrder("value", false, true, false))
+        .add(SortOrderItem.by("value").with(Direction.DESC))
         .build());
     softly.assertThat(list)
         .containsExactly(b, a);
@@ -211,12 +212,12 @@ class ComparatorBuilderTest {
     ComplexObject c = new ComplexObjectExtension(new SimpleObject(2), "c");
     list = new ArrayList<>(List.of(b, c, a));
 
-    List<SortOrder> sortOrders = List.of(
-        new SortOrder("not_exists", true, true, false),
-        new SortOrder("simple.number", false, true, false)
+    List<SortOrderItem> sortOrderItems = List.of(
+        SortOrderItem.by("not_exists").with(Direction.ASC),
+        SortOrderItem.by("simple.number").with(Direction.DESC)
     );
     list.sort(ComparatorBuilder.newInstance()
-        .addAll(sortOrders, sortOrder -> {
+        .addAll(sortOrderItems, sortOrder -> {
           if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
           }
@@ -228,7 +229,7 @@ class ComparatorBuilderTest {
 
     Collections.shuffle(list);
     list.sort(ComparatorBuilder.newInstance()
-        .addAll(new SortOrders(sortOrders), sortOrder -> {
+        .addAll(new SortOrder(sortOrderItems), sortOrder -> {
           if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
           }

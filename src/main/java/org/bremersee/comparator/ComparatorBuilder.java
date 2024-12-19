@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrders;
+import org.bremersee.comparator.model.SortOrderItem;
 
 /**
  * The comparator builder.
@@ -57,7 +57,7 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder add(String field) {
-    return add(field, true, true, false);
+    return add(SortOrderItem.by(field));
   }
 
   /**
@@ -91,51 +91,12 @@ public interface ComparatorBuilder {
   }
 
   /**
-   * Creates and adds a value comparator for the given field name or path to this builder.
-   *
-   * @param field the field name or path (can be {@code null})
-   * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case-insensitive order, {@code false} for a
-   *     case-sensitive order
-   * @param nullIsFirst specifies the order of {@code null} values
-   * @return the comparator builder
-   */
-  default ComparatorBuilder add(
-      String field,
-      boolean asc,
-      boolean ignoreCase,
-      boolean nullIsFirst) {
-    return add(field, asc, ignoreCase, nullIsFirst, null);
-  }
-
-  /**
-   * Creates and adds a value comparator for the given field name or path to this builder. A custom
-   * value extractor can be specified.
-   *
-   * @param field the field name or path (can be {@code null})
-   * @param asc {@code true} for an ascending order, {@code false} for a descending order
-   * @param ignoreCase {@code true} for a case insensitive order,  {@code false} for a case
-   *     sensitive order
-   * @param nullIsFirst specifies the order of {@code null} values
-   * @param valueExtractor the value extractor (can be {@code null})
-   * @return the comparator builder
-   */
-  default ComparatorBuilder add(
-      String field,
-      boolean asc,
-      boolean ignoreCase,
-      boolean nullIsFirst,
-      ValueExtractor valueExtractor) {
-    return add(new ValueComparator(field, asc, ignoreCase, nullIsFirst, valueExtractor));
-  }
-
-  /**
    * Creates and adds a value comparator for the given field ordering description.
    *
    * @param field the field ordering description (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(SortOrder field) {
+  default ComparatorBuilder add(SortOrderItem field) {
     return add(field, null);
   }
 
@@ -147,15 +108,8 @@ public interface ComparatorBuilder {
    * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
-  default ComparatorBuilder add(SortOrder field, ValueExtractor valueExtractor) {
-    return Optional.ofNullable(field)
-        .map(sortOrder -> add(
-            sortOrder.getField(),
-            sortOrder.isAsc(),
-            sortOrder.isIgnoreCase(),
-            sortOrder.isNullIsFirst(),
-            valueExtractor))
-        .orElse(this);
+  default ComparatorBuilder add(SortOrderItem field, ValueExtractor valueExtractor) {
+    return add(new ValueComparator(field, valueExtractor));
   }
 
   /**
@@ -165,7 +119,7 @@ public interface ComparatorBuilder {
    *     added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(Collection<? extends SortOrder> sortOrders) {
+  default ComparatorBuilder addAll(Collection<? extends SortOrderItem> sortOrders) {
     return addAll(sortOrders, (ValueExtractor) null);
   }
 
@@ -179,7 +133,7 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends SortOrder> sortOrders,
+      Collection<? extends SortOrderItem> sortOrders,
       ValueExtractor valueExtractor) {
     Optional.ofNullable(sortOrders)
         .ifPresent(orders -> orders.stream()
@@ -197,8 +151,8 @@ public interface ComparatorBuilder {
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      Collection<? extends SortOrder> sortOrders,
-      Function<SortOrder, Comparator<?>> comparatorFunction) {
+      Collection<? extends SortOrderItem> sortOrders,
+      Function<SortOrderItem, Comparator<?>> comparatorFunction) {
 
     Optional.ofNullable(sortOrders)
         .ifPresent(orders -> orders.stream()
@@ -210,45 +164,43 @@ public interface ComparatorBuilder {
   /**
    * Creates and adds value comparators for the given field ordering descriptions.
    *
-   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will
-   *     be added)
+   * @param sortOrder the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
    * @return the comparator builder
    */
-  default ComparatorBuilder addAll(SortOrders sortOrders) {
-    return Optional.ofNullable(sortOrders)
-        .map(orders -> addAll(orders.getSortOrders()))
-        .orElse(this);
+  default ComparatorBuilder addAll(SortOrder sortOrder) {
+    return addAll(sortOrder, (ValueExtractor) null);
   }
 
   /**
    * Creates and adds value comparators for the given field ordering descriptions. A custom value
    * extractor can be specified.
    *
-   * @param sortOrders the ordering descriptions (can be {@code null} - no comparator will
-   *     be added)
+   * @param sortOrder the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
    * @param valueExtractor the value extractor (can be {@code null})
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      SortOrders sortOrders,
+      SortOrder sortOrder,
       ValueExtractor valueExtractor) {
-    return Optional.ofNullable(sortOrders)
-        .map(orders -> addAll(orders.getSortOrders(), valueExtractor))
+    return Optional.ofNullable(sortOrder)
+        .map(orders -> addAll(orders.getItems(), valueExtractor))
         .orElse(this);
   }
 
   /**
    * Add all comparator builder.
    *
-   * @param sortOrders the sort orders
+   * @param sortOrder the sort orders
    * @param comparatorFunction the comparator function
    * @return the comparator builder
    */
   default ComparatorBuilder addAll(
-      SortOrders sortOrders,
-      Function<SortOrder, Comparator<?>> comparatorFunction) {
-    return Optional.ofNullable(sortOrders)
-        .map(orders -> addAll(orders.getSortOrders(), comparatorFunction))
+      SortOrder sortOrder,
+      Function<SortOrderItem, Comparator<?>> comparatorFunction) {
+    return Optional.ofNullable(sortOrder)
+        .map(orders -> addAll(orders.getItems(), comparatorFunction))
         .orElse(this);
   }
 

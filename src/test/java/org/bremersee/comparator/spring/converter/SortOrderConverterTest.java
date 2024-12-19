@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2019-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,21 @@
 package org.bremersee.comparator.spring.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 import java.util.List;
-import org.assertj.core.api.SoftAssertions;
-import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.bremersee.comparator.model.SortOrder;
-import org.bremersee.comparator.model.SortOrdersTextProperties;
+import org.bremersee.comparator.model.SortOrderItem;
+import org.bremersee.comparator.model.SortOrderItem.CaseHandling;
+import org.bremersee.comparator.model.SortOrderItem.Direction;
+import org.bremersee.comparator.model.SortOrderItem.NullHandling;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The sort order converter test.
  *
  * @author Christian Bremer
  */
-@ExtendWith(SoftAssertionsExtension.class)
 class SortOrderConverterTest {
 
   /**
@@ -40,52 +40,23 @@ class SortOrderConverterTest {
   @Test
   void convert() {
     SortOrderConverter converter = new SortOrderConverter();
-    SortOrder actual = converter.convert("field0,desc,false,true");
-    SortOrder expected = new SortOrder("field0", false, false, true);
+
+    SortOrder actual = converter.convert(
+        "field0,asc,sensitive,nulls-first"
+            + ";field1,desc,insensitive,nulls-last"
+            + ";field2,desc,insensitive,native");
+
+    SortOrderItem sortOrderItem0 = new SortOrderItem(
+        "field0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);
+    SortOrderItem sortOrderItem1 = new SortOrderItem(
+        "field1", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NULLS_LAST);
+    SortOrderItem sortOrderItem2 = new SortOrderItem(
+        "field2", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NATIVE);
+    List<SortOrderItem> expected = List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2);
 
     assertThat(actual)
-        .isEqualTo(expected);
-  }
-
-  /**
-   * Convert with properties.
-   *
-   * @param softly the soft assertions
-   */
-  @Test
-  void convertWithProperties(SoftAssertions softly) {
-    SortOrderConverter converter = new SortOrderConverter(
-        SortOrdersTextProperties.builder()
-            .sortOrderArgsSeparator("::")
-            .caseSensitiveValues(List.of("cs"))
-            .caseInsensitiveValues(List.of("cis"))
-            .nullIsFirstValue("nif")
-            .nullIsLastValue("nil")
-            .build());
-
-    SortOrder actual = converter.convert("::asc::cis::nif");
-    SortOrder expected = new SortOrder(null, true, true, true);
-    softly.assertThat(actual).isEqualTo(expected);
-
-    actual = converter.convert("field1");
-    expected = new SortOrder("field1", true, true, false);
-    softly.assertThat(actual).isEqualTo(expected);
-
-    actual = converter.convert("field2::desc");
-    expected = new SortOrder("field2", false, true, false);
-    softly.assertThat(actual).isEqualTo(expected);
-
-    actual = converter.convert("field3::desc::cs");
-    expected = new SortOrder("field3", false, false, false);
-    softly.assertThat(actual).isEqualTo(expected);
-
-    actual = converter.convert("field4::desc::cs::nif");
-    expected = new SortOrder("field4", false, false, true);
-    softly.assertThat(actual).isEqualTo(expected);
-
-    actual = converter.convert("::desc");
-    expected = new SortOrder(null, false, true, false);
-    softly.assertThat(actual).isEqualTo(expected);
+        .extracting(SortOrder::getItems, list(SortOrderItem.class))
+        .containsExactlyElementsOf(expected);
   }
 
 }

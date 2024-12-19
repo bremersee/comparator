@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.EqualsAndHashCode;
@@ -56,6 +57,11 @@ public class SortOrder {
    * The constant SEPARATOR.
    */
   public static final String SEPARATOR = ";";
+
+  /**
+   * The constant SEPARATOR_ENCODED.
+   */
+  protected static final String SEPARATOR_ENCODED = Pattern.quote("%3B");
 
   @Schema(description = "The sort order items.")
   @XmlElementRef
@@ -161,6 +167,7 @@ public class SortOrder {
    */
   public static SortOrder fromSortOrderText(String source) {
     return Optional.ofNullable(source)
+        .map(text -> text.replaceAll(SEPARATOR_ENCODED, SEPARATOR))
         .map(text -> {
           List<SortOrderItem> sortOrderItems = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(text, SEPARATOR);

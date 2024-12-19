@@ -88,6 +88,8 @@ class SortOrderTest {
     assertThat(readFields)
         .as("Write and read xml of %s", sortOrder)
         .isEqualTo(sortOrder);
+
+    System.out.println(SortOrder.SEPARATOR_ENCODED);
   }
 
   /**
@@ -202,6 +204,12 @@ class SortOrderTest {
         "i2", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NATIVE);
     SortOrder sortOrder = new SortOrder(List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2));
     List<SortOrderItem> expected = sortOrder.getItems();
+    softly.assertThat(actual)
+        .extracting(SortOrder::getItems, list(SortOrderItem.class))
+        .containsExactlyElementsOf(expected);
+
+    actual = SortOrder.fromSortOrderText(
+        "i0,asc,sensitive,nulls-first%3Bi1,desc,insensitive,nulls-last%3Bi2,desc");
     softly.assertThat(actual)
         .extracting(SortOrder::getItems, list(SortOrderItem.class))
         .containsExactlyElementsOf(expected);

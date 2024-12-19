@@ -33,6 +33,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -103,6 +104,11 @@ public class SortOrderItem {
    * The constant SEPARATOR.
    */
   public static final String SEPARATOR = ",";
+
+  /**
+   * The constant SEPARATOR_ENCODED.
+   */
+  protected static final String SEPARATOR_ENCODED = Pattern.quote("%2C");
 
   /**
    * The constant DEFAULT_DIRECTION.
@@ -282,6 +288,7 @@ public class SortOrderItem {
    */
   public static SortOrderItem fromSortOrderText(String source) {
     return Optional.ofNullable(source)
+        .map(text -> text.replaceAll(SEPARATOR_ENCODED, SEPARATOR))
         .map(text -> {
           String separator = SEPARATOR;
           String field;

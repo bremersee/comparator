@@ -108,7 +108,7 @@ public class SortOrderItem {
   /**
    * The constant SEPARATOR_ENCODED.
    */
-  protected static final String SEPARATOR_ENCODED = Pattern.quote("%2C");
+  protected static final String ALTERNATIVE_SEPARATOR = ":";
 
   /**
    * The constant DEFAULT_DIRECTION.
@@ -288,7 +288,7 @@ public class SortOrderItem {
    */
   public static SortOrderItem fromSortOrderText(String source) {
     return Optional.ofNullable(source)
-        .map(text -> text.replaceAll(SEPARATOR_ENCODED, SEPARATOR))
+        .map(text -> text.replaceAll(Pattern.quote(ALTERNATIVE_SEPARATOR), SEPARATOR))
         .map(text -> {
           String separator = SEPARATOR;
           String field;

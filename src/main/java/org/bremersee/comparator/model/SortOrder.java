@@ -61,7 +61,7 @@ public class SortOrder {
   /**
    * The constant SEPARATOR_ENCODED.
    */
-  protected static final String SEPARATOR_ENCODED = Pattern.quote("%3B");
+  protected static final String ALTERNATIVE_SEPARATOR = "|";
 
   @Schema(description = "The sort order items.")
   @XmlElementRef
@@ -167,7 +167,7 @@ public class SortOrder {
    */
   public static SortOrder fromSortOrderText(String source) {
     return Optional.ofNullable(source)
-        .map(text -> text.replaceAll(SEPARATOR_ENCODED, SEPARATOR))
+        .map(text -> text.replaceAll(Pattern.quote(ALTERNATIVE_SEPARATOR), SEPARATOR))
         .map(text -> {
           List<SortOrderItem> sortOrderItems = new ArrayList<>();
           StringTokenizer tokenizer = new StringTokenizer(text, SEPARATOR);

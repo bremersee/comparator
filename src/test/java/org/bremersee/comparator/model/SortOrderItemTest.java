@@ -242,7 +242,7 @@ class SortOrderItemTest {
     softly.assertThat(actual.getNullHandling().isNullFirst())
         .isTrue();
 
-    actual = SortOrderItem.fromSortOrderText("i0%2Casc%2Cinsensitive%2Cnative");
+    actual = SortOrderItem.fromSortOrderText("i0:asc:insensitive:native");
     expected = SortOrderItem.by("i0")
         .with(Direction.ASC)
         .with(CaseHandling.INSENSITIVE)

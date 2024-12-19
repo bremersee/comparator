@@ -59,7 +59,7 @@ public class SortOrder {
   public static final String SEPARATOR = ";";
 
   /**
-   * The constant SEPARATOR_ENCODED.
+   * The constant ALTERNATIVE_SEPARATOR.
    */
   protected static final String ALTERNATIVE_SEPARATOR = "|";
 

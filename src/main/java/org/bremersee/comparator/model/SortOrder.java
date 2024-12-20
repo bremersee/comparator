@@ -16,6 +16,8 @@
 
 package org.bremersee.comparator.model;
 
+import static java.util.Objects.isNull;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -198,7 +200,37 @@ public class SortOrder {
    * @return the combined sort order
    */
   public static SortOrder by(Collection<? extends SortOrder> sortOrders) {
-    List<SortOrderItem> items = Stream.ofNullable(sortOrders)
+    return by(sortOrders, new SortOrder());
+  }
+
+  /**
+   * Combines the given sort orders. If they are empty, the default sort order will be used.
+   *
+   * @param sortOrders the sort orders
+   * @param defaultSortOrder the default sort order
+   * @return the combined sort order
+   */
+  public static SortOrder by(
+      Collection<? extends SortOrder> sortOrders,
+      String defaultSortOrder) {
+    return by(sortOrders, SortOrder.fromSortOrderText(defaultSortOrder));
+  }
+
+  /**
+   * Combines the given sort orders. If they are empty, the default sort order will be used.
+   *
+   * @param sortOrders the sort orders
+   * @param defaultSortOrder the default sort order
+   * @return the combined sort order
+   */
+  public static SortOrder by(
+      Collection<? extends SortOrder> sortOrders,
+      SortOrder defaultSortOrder) {
+
+    if (isNull(sortOrders) || sortOrders.isEmpty()) {
+      return Objects.requireNonNullElseGet(defaultSortOrder, SortOrder::new);
+    }
+    List<SortOrderItem> items = Stream.of(sortOrders)
         .flatMap(Collection::stream)
         .filter(Objects::nonNull)
         .map(SortOrder::getItems)

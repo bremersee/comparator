@@ -263,4 +263,42 @@ class SortOrderTest {
         .containsExactlyElementsOf(expected);
   }
 
+  /**
+   * By sort orders with default.
+   */
+  @Test
+  void bySortOrdersWithDefault() {
+    SortOrderItem sortOrderItem0 = new SortOrderItem(
+        "i0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);
+    SortOrderItem sortOrderItem1 = new SortOrderItem(
+        "i1", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NULLS_LAST);
+    SortOrderItem sortOrderItem2 = new SortOrderItem(
+        "i2", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NATIVE);
+    SortOrder actual = SortOrder.by(List.of(),
+        new SortOrder(List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2)));
+    List<SortOrderItem> expected = List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2);
+    assertThat(actual)
+        .extracting(SortOrder::getItems, list(SortOrderItem.class))
+        .containsExactlyElementsOf(expected);
+  }
+
+  /**
+   * By sort orders with default as text.
+   */
+  @Test
+  void bySortOrdersWithDefaultAsText() {
+    SortOrderItem sortOrderItem0 = new SortOrderItem(
+        "i0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);
+    SortOrderItem sortOrderItem1 = new SortOrderItem(
+        "i1", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NULLS_LAST);
+    SortOrderItem sortOrderItem2 = new SortOrderItem(
+        "i2", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NATIVE);
+    SortOrder actual = SortOrder.by(null,
+        "i0,asc,sensitive,nulls-first;i1,desc,insensitive,nulls-last;i2,desc,insensitive,native");
+    List<SortOrderItem> expected = List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2);
+    assertThat(actual)
+        .extracting(SortOrder::getItems, list(SortOrderItem.class))
+        .containsExactlyElementsOf(expected);
+  }
+
 }

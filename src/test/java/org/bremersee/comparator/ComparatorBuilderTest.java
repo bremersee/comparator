@@ -134,6 +134,22 @@ class ComparatorBuilderTest {
     softly.assertThat(result)
         .as("Compare with given value extractor %s with %s using %s", two, one, sortOrder)
         .isGreaterThan(0);
+
+    result = ComparatorBuilder.newInstance()
+        .addAll(sortOrder.getSortOrderText())
+        .build()
+        .compare(one, two);
+    softly.assertThat(result)
+        .as("Compare %s with %s using %s", one, two, sortOrder)
+        .isLessThan(0);
+
+    result = ComparatorBuilder.newInstance()
+        .addAll(sortOrder.getSortOrderText(), new DefaultValueExtractor())
+        .build()
+        .compare(two, one);
+    softly.assertThat(result)
+        .as("Compare with given value extractor %s with %s using %s", two, one, sortOrder)
+        .isGreaterThan(0);
   }
 
   /**
@@ -230,6 +246,18 @@ class ComparatorBuilderTest {
     Collections.shuffle(list);
     list.sort(ComparatorBuilder.newInstance()
         .addAll(new SortOrder(sortOrderItems), sortOrder -> {
+          if ("not_exists".equals(sortOrder.getField())) {
+            return new ComplexObjectExtensionComparator();
+          }
+          return new ValueComparator(sortOrder);
+        })
+        .build());
+    softly.assertThat(list)
+        .containsExactly(c, a, b);
+
+    Collections.shuffle(list);
+    list.sort(ComparatorBuilder.newInstance()
+        .addAll(new SortOrder(sortOrderItems).getSortOrderText(), sortOrder -> {
           if ("not_exists".equals(sortOrder.getField())) {
             return new ComplexObjectExtensionComparator();
           }

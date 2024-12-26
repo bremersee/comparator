@@ -132,12 +132,12 @@ public class SortOrder {
    *
    * <p>The syntax of the ordering description is
    * <pre>
-   * fieldNameOrPath0,direction,case-handling,null-handling;fieldNameOrPath1,direction,case-handling,null-handling
+   * fieldNameOrPath0;direction;case-handling;null-handling,fieldNameOrPath1;direction;case-handling;null-handling
    * </pre>
    *
    * <p>For example
    * <pre>
-   * created,desc;person.lastName,asc;person.firstName,asc
+   * created;desc,person.lastName;asc,person.firstName;asc
    * </pre>
    *
    * @return the sort order text
@@ -145,9 +145,32 @@ public class SortOrder {
   @JsonIgnore
   @XmlTransient
   public String getSortOrderText() {
+    return getSortOrderText(SortOrderTextSeparators.defaults());
+  }
+
+  /**
+   * Creates the sort order text of this ordering descriptions.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath0;direction;case-handling;null-handling,fieldNameOrPath1;direction;case-handling;null-handling
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * created;desc,person.lastName;asc,person.firstName;asc
+   * </pre>
+   *
+   * @param separators the separators
+   * @return the sort order text
+   */
+  public String getSortOrderText(SortOrderTextSeparators separators) {
+    String separator = Optional.ofNullable(separators)
+        .orElseGet(SortOrderTextSeparators::defaults)
+        .getChainSeparator();
     return items.stream()
-        .map(SortOrderItem::getSortOrderText)
-        .collect(Collectors.joining(SEPARATOR));
+        .map(item -> item.getSortOrderText(separators))
+        .collect(Collectors.joining(separator));
   }
 
   @Override
@@ -162,12 +185,27 @@ public class SortOrder {
    * @return the sort order
    */
   public static SortOrder fromSortOrderText(String source) {
+    return fromSortOrderText(source, SortOrderTextSeparators.defaults());
+  }
+
+  /**
+   * From sort order text.
+   *
+   * @param source the sort order text
+   * @param separators the separators
+   * @return the sort order
+   */
+  public static SortOrder fromSortOrderText(String source, SortOrderTextSeparators separators) {
+    String separator = Optional.ofNullable(separators)
+        .orElseGet(SortOrderTextSeparators::defaults)
+        .getChainSeparator();
     return Optional.ofNullable(source)
         .map(text -> {
           List<SortOrderItem> sortOrderItems = new ArrayList<>();
-          StringTokenizer tokenizer = new StringTokenizer(text, SEPARATOR);
+          StringTokenizer tokenizer = new StringTokenizer(text, separator);
           while (tokenizer.hasMoreTokens()) {
-            sortOrderItems.add(SortOrderItem.fromSortOrderText(tokenizer.nextToken()));
+            sortOrderItems.add(SortOrderItem
+                .fromSortOrderText(tokenizer.nextToken(), separators));
           }
           return new SortOrder(sortOrderItems);
         })

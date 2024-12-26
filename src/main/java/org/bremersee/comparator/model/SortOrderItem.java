@@ -225,12 +225,12 @@ public class SortOrderItem {
    *
    * <p>The syntax of the ordering description is
    * <pre>
-   * fieldNameOrPath,direction,caseHandling,nullHandling
+   * fieldNameOrPath;direction;caseHandling;nullHandling
    * </pre>
    *
    * <p>For example
    * <pre>
-   * person.lastName,asc,sensitive,nulls-first
+   * person.lastName;asc;sensitive;nulls-first
    * </pre>
    *
    * @return the sort order text
@@ -238,6 +238,29 @@ public class SortOrderItem {
   @JsonIgnore
   @XmlTransient
   public String getSortOrderText() {
+    return getSortOrderText(SortOrderTextSeparators.defaults());
+  }
+
+  /**
+   * Creates the sort order text of this ordering description.
+   *
+   * <p>The syntax of the ordering description is
+   * <pre>
+   * fieldNameOrPath;direction;caseHandling;nullHandling
+   * </pre>
+   *
+   * <p>For example
+   * <pre>
+   * person.lastName;asc;sensitive;nulls-first
+   * </pre>
+   *
+   * @param separators the separators
+   * @return the sort order text
+   */
+  public String getSortOrderText(SortOrderTextSeparators separators) {
+    String separator = Optional.ofNullable(separators)
+        .orElseGet(SortOrderTextSeparators::defaults)
+        .getArgumentSeparator();
     StringBuilder sb = new StringBuilder();
     if (nonNull(getField())) {
       sb.append(getField());
@@ -247,13 +270,13 @@ public class SortOrderItem {
         && isNullHandlingDefault;
     boolean isDirectionDefault = getDirection() == DEFAULT_DIRECTION && isCaseHandlingDefault;
     if (!isDirectionDefault) {
-      sb.append(SEPARATOR).append(getDirection().toString());
+      sb.append(separator).append(getDirection().toString());
     }
     if (!isCaseHandlingDefault) {
-      sb.append(SEPARATOR).append(getCaseHandling().toString());
+      sb.append(separator).append(getCaseHandling().toString());
     }
     if (!isNullHandlingDefault) {
-      sb.append(SEPARATOR).append(getNullHandling().toString());
+      sb.append(separator).append(getNullHandling().toString());
     }
     return sb.toString();
   }
@@ -281,9 +304,22 @@ public class SortOrderItem {
    * @return the sort order
    */
   public static SortOrderItem fromSortOrderText(String source) {
+    return fromSortOrderText(source, SortOrderTextSeparators.defaults());
+  }
+
+  /**
+   * From sort order text.
+   *
+   * @param source the sort order text
+   * @param separators the separators
+   * @return the sort order
+   */
+  public static SortOrderItem fromSortOrderText(String source, SortOrderTextSeparators separators) {
     return Optional.ofNullable(source)
         .map(text -> {
-          String separator = SEPARATOR;
+          String separator = Optional.ofNullable(separators)
+              .orElseGet(SortOrderTextSeparators::defaults)
+              .getArgumentSeparator();
           String field;
           Direction direction = DEFAULT_DIRECTION;
           CaseHandling caseHandling = DEFAULT_CASE_HANDLING;

@@ -16,7 +16,9 @@
 
 package org.bremersee.comparator.spring.converter;
 
+import java.util.Optional;
 import org.bremersee.comparator.model.SortOrder;
+import org.bremersee.comparator.model.SortOrderTextSeparators;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 
@@ -27,8 +29,27 @@ import org.springframework.lang.NonNull;
  */
 public class SortOrderConverter implements Converter<String, SortOrder> {
 
+  private final SortOrderTextSeparators separators;
+
+  /**
+   * Instantiates a new sort order converter.
+   */
+  public SortOrderConverter() {
+    this(SortOrderTextSeparators.defaults());
+  }
+
+  /**
+   * Instantiates a new sort order converter.
+   *
+   * @param separators the separators
+   */
+  public SortOrderConverter(SortOrderTextSeparators separators) {
+    this.separators = Optional.ofNullable(separators)
+        .orElseGet(SortOrderTextSeparators::defaults);
+  }
+
   @Override
   public SortOrder convert(@NonNull String source) {
-    return SortOrder.fromSortOrderText(source);
+    return SortOrder.fromSortOrderText(source, separators);
   }
 }

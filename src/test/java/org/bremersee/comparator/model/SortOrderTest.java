@@ -174,7 +174,7 @@ class SortOrderTest {
     String actual = sortOrder0.getSortOrderText();
     softly.assertThat(actual)
         .as("Create sort orders text of %s", sortOrder0)
-        .isEqualTo("i0,asc,sensitive,nulls-first;i1,desc,insensitive,nulls-last;i2,desc");
+        .isEqualTo("i0;asc;sensitive;nulls-first,i1;desc;insensitive;nulls-last,i2;desc");
     softly.assertThat(sortOrder0.toString())
         .as("toString is equal to sort orders text")
         .isEqualTo(actual);
@@ -193,7 +193,7 @@ class SortOrderTest {
         .isEmpty();
 
     actual = SortOrder.fromSortOrderText(
-        "i0,asc,sensitive,nulls-first;i1,desc,insensitive,nulls-last;i2,desc");
+        "i0;asc;sensitive;nulls-first,i1;desc;insensitive;nulls-last,i2;desc");
     SortOrderItem sortOrderItem0 = new SortOrderItem(
         "i0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);
     SortOrderItem sortOrderItem1 = new SortOrderItem(
@@ -207,7 +207,7 @@ class SortOrderTest {
         .containsExactlyElementsOf(expected);
 
     actual = SortOrder.fromSortOrderText(
-        "i0,asc,sensitive,nulls-first|i1,desc,insensitive,nulls-last|i2,desc");
+        "i0;asc;sensitive;nulls-first,i1;desc;insensitive;nulls-last,i2;desc");
     softly.assertThat(actual)
         .extracting(SortOrder::getItems, list(SortOrderItem.class))
         .containsExactlyElementsOf(expected);
@@ -294,7 +294,7 @@ class SortOrderTest {
     SortOrderItem sortOrderItem2 = new SortOrderItem(
         "i2", Direction.DESC, CaseHandling.INSENSITIVE, NullHandling.NATIVE);
     SortOrder actual = SortOrder.by(null,
-        "i0,asc,sensitive,nulls-first;i1,desc,insensitive,nulls-last;i2,desc,insensitive,native");
+        "i0;asc;sensitive;nulls-first,i1;desc;insensitive;nulls-last,i2;desc;insensitive;native");
     List<SortOrderItem> expected = List.of(sortOrderItem0, sortOrderItem1, sortOrderItem2);
     assertThat(actual)
         .extracting(SortOrder::getItems, list(SortOrderItem.class))

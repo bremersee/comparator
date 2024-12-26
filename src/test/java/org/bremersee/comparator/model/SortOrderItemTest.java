@@ -141,7 +141,7 @@ class SortOrderItemTest {
         .with(Direction.DESC);
     softly.assertThat(sortOrderItem0.getSortOrderText())
         .as("Create sort order text of %s", sortOrderItem0)
-        .isEqualTo(",desc");
+        .isEqualTo(";desc");
     softly.assertThat(sortOrderItem0.getField())
         .isNull();
 
@@ -153,14 +153,14 @@ class SortOrderItemTest {
     sortOrderItem0 = sortOrderItem0.with(Direction.DESC);
     softly.assertThat(sortOrderItem0.getSortOrderText())
         .as("Create sort order text of %s", sortOrderItem0)
-        .isEqualTo("i0,desc");
+        .isEqualTo("i0;desc");
 
     sortOrderItem0 = sortOrderItem0
         .with(Direction.ASC)
         .with(CaseHandling.SENSITIVE);
     softly.assertThat(sortOrderItem0.getSortOrderText())
         .as("Create sort order text of %s", sortOrderItem0)
-        .isEqualTo("i0,asc,sensitive");
+        .isEqualTo("i0;asc;sensitive");
 
     sortOrderItem0 = sortOrderItem0
         .with(Direction.ASC)
@@ -168,7 +168,7 @@ class SortOrderItemTest {
         .with(NullHandling.NULLS_LAST);
     softly.assertThat(sortOrderItem0.getSortOrderText())
         .as("Create sort order text of %s", sortOrderItem0)
-        .isEqualTo("i0,asc,insensitive,nulls-last");
+        .isEqualTo("i0;asc;insensitive;nulls-last");
 
     sortOrderItem0 = sortOrderItem0
         .with(Direction.ASC)
@@ -176,7 +176,7 @@ class SortOrderItemTest {
         .with(NullHandling.NULLS_FIRST);
     softly.assertThat(sortOrderItem0.getSortOrderText())
         .as("Create sort order text of %s", sortOrderItem0)
-        .isEqualTo("i0,asc,insensitive,nulls-first");
+        .isEqualTo("i0;asc;insensitive;nulls-first");
 
     softly.assertThat(sortOrderItem0.toString())
         .as("toString is equal to sort order text")
@@ -190,7 +190,7 @@ class SortOrderItemTest {
    */
   @Test
   void testFromSortOrderText(SoftAssertions softly) {
-    SortOrderItem actual = SortOrderItem.fromSortOrderText(",desc");
+    SortOrderItem actual = SortOrderItem.fromSortOrderText(";desc");
     SortOrderItem expected = SortOrderItem.by(null)
         .with(Direction.DESC);
     softly.assertThat(actual)
@@ -205,13 +205,13 @@ class SortOrderItemTest {
     softly.assertThat(actual.getDirection().isAscending())
         .isTrue();
 
-    actual = SortOrderItem.fromSortOrderText("i0,desc");
+    actual = SortOrderItem.fromSortOrderText("i0;desc");
     expected = SortOrderItem.by("i0")
         .with(Direction.DESC);
     softly.assertThat(actual)
         .isEqualTo(expected);
 
-    actual = SortOrderItem.fromSortOrderText("i0,asc,sensitive");
+    actual = SortOrderItem.fromSortOrderText("i0;asc;sensitive");
     expected = SortOrderItem.by("i0")
         .with(Direction.ASC)
         .with(CaseHandling.SENSITIVE);
@@ -220,7 +220,7 @@ class SortOrderItemTest {
     softly.assertThat(actual.getCaseHandling().isSensitive())
         .isTrue();
 
-    actual = SortOrderItem.fromSortOrderText("i0,asc,insensitive,nulls-last");
+    actual = SortOrderItem.fromSortOrderText("i0;asc;insensitive;nulls-last");
     expected = SortOrderItem.by("i0")
         .with(Direction.ASC)
         .with(CaseHandling.INSENSITIVE)
@@ -232,7 +232,7 @@ class SortOrderItemTest {
     softly.assertThat(actual.getNullHandling().isNullLast())
         .isTrue();
 
-    actual = SortOrderItem.fromSortOrderText("i0,asc,insensitive,nulls-first");
+    actual = SortOrderItem.fromSortOrderText("i0;asc;insensitive;nulls-first");
     expected = SortOrderItem.by("i0")
         .with(Direction.ASC)
         .with(CaseHandling.INSENSITIVE)
@@ -242,7 +242,7 @@ class SortOrderItemTest {
     softly.assertThat(actual.getNullHandling().isNullFirst())
         .isTrue();
 
-    actual = SortOrderItem.fromSortOrderText("i0:asc:insensitive:native");
+    actual = SortOrderItem.fromSortOrderText("i0;asc;insensitive;native");
     expected = SortOrderItem.by("i0")
         .with(Direction.ASC)
         .with(CaseHandling.INSENSITIVE)

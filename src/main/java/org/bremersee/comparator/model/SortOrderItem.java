@@ -33,7 +33,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -57,15 +56,15 @@ import lombok.Getter;
  *  ---------------------------------------------------------------------------------------------
  * </pre>
  *
- * <p>These values have a 'sort oder text' representation. The values are concatenated with comma
- * (,):
+ * <p>These values have a 'sort oder text' representation. The values are concatenated with
+ * semicolon (;):
  * <pre>
- * fieldNameOrPath,direction,caseHandling,nullHandling
+ * fieldNameOrPath;direction;caseHandling;nullHandling
  * </pre>
  *
  * <p>For example:
  * <pre>
- * properties.customSettings.priority,asc,insensitive,nulls-first
+ * properties.customSettings.priority;asc;insensitive;nulls-first
  * </pre>
  *
  * <p>Defaults can be omitted. This is the same:
@@ -73,9 +72,9 @@ import lombok.Getter;
  * properties.customSettings.priority
  * </pre>
  *
- * <p>The building of a chain is done by concatenate the fields with a semicolon (;):
+ * <p>The building of a chain is done by concatenate the fields with a comma (,):
  * <pre>
- * field0,desc;field1,desc
+ * field0;desc,field1;desc
  * </pre>
  *
  * @author Christian Bremer
@@ -103,12 +102,7 @@ public class SortOrderItem {
   /**
    * The constant SEPARATOR.
    */
-  public static final String SEPARATOR = ",";
-
-  /**
-   * The constant ALTERNATIVE_SEPARATOR.
-   */
-  protected static final String ALTERNATIVE_SEPARATOR = ":";
+  public static final String SEPARATOR = ";";
 
   /**
    * The constant DEFAULT_DIRECTION.
@@ -288,7 +282,6 @@ public class SortOrderItem {
    */
   public static SortOrderItem fromSortOrderText(String source) {
     return Optional.ofNullable(source)
-        .map(text -> text.replaceAll(Pattern.quote(ALTERNATIVE_SEPARATOR), SEPARATOR))
         .map(text -> {
           String separator = SEPARATOR;
           String field;

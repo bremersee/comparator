@@ -67,8 +67,8 @@ class Example {
     List<Node> list = new ArrayList<>();
     // add nodes
     list.sort(ComparatorBuilder.newInstance()
-        .add("name", true, true, false)        // fieldName, asc, ignoreCase, nullIsFirst
-        .add("createdAt", false, true, false)  // fieldName, asc, ignoreCase, nullIsFirst
+        .add("name")
+        .add("createdAt")
         .build());
   }
 }
@@ -92,8 +92,8 @@ class Example {
         .add((o1, o2) ->
             (o1 instanceof Branch && o2 instanceof Branch)
                 || (o1 instanceof Leaf && o2 instanceof Leaf) ? 0 : o1 instanceof Branch ? -1 : 1)
-        .add("name", true, true, false)        // fieldName, asc, ignoreCase, nullIsFirst
-        .add("createdAt", false, true, false)  // fieldName, asc, ignoreCase, nullIsFirst
+        .add("name")        // fieldName, asc, ignoreCase, nullIsFirst
+        .add("createdAt")  // fieldName, asc, ignoreCase, nullIsFirst
         .build());
   }
 }

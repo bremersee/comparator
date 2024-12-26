@@ -42,9 +42,9 @@ class SortOrderConverterTest {
     SortOrderConverter converter = new SortOrderConverter();
 
     SortOrder actual = converter.convert(
-        "field0,asc,sensitive,nulls-first"
-            + ";field1,desc,insensitive,nulls-last"
-            + ";field2,desc,insensitive,native");
+        "field0;asc;sensitive;nulls-first"
+            + ",field1;desc;insensitive;nulls-last"
+            + ",field2;desc;insensitive;native");
 
     SortOrderItem sortOrderItem0 = new SortOrderItem(
         "field0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);

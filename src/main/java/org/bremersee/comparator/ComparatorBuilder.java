@@ -205,6 +205,45 @@ public interface ComparatorBuilder {
   }
 
   /**
+   * Creates and adds value comparators for the given field ordering descriptions.
+   *
+   * @param sortOrderText the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
+   * @return the comparator builder
+   */
+  default ComparatorBuilder addAll(String sortOrderText) {
+    return addAll(SortOrder.fromSortOrderText(sortOrderText));
+  }
+
+  /**
+   * Creates and adds value comparators for the given field ordering descriptions. A custom value
+   * extractor can be specified.
+   *
+   * @param sortOrderText the ordering descriptions (can be {@code null} - no comparator will be
+   *     added)
+   * @param valueExtractor the value extractor (can be {@code null})
+   * @return the comparator builder
+   */
+  default ComparatorBuilder addAll(
+      String sortOrderText,
+      ValueExtractor valueExtractor) {
+    return addAll(SortOrder.fromSortOrderText(sortOrderText), valueExtractor);
+  }
+
+  /**
+   * Add all comparator builder.
+   *
+   * @param sortOrderText the sort orders
+   * @param comparatorFunction the comparator function
+   * @return the comparator builder
+   */
+  default ComparatorBuilder addAll(
+      String sortOrderText,
+      Function<SortOrderItem, Comparator<?>> comparatorFunction) {
+    return addAll(SortOrder.fromSortOrderText(sortOrderText), comparatorFunction);
+  }
+
+  /**
    * Build comparator.
    *
    * @param <T> the type parameter

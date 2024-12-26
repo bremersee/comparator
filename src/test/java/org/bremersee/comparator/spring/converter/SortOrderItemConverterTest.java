@@ -41,7 +41,7 @@ class SortOrderItemConverterTest {
   @Test
   void convert(SoftAssertions softly) {
     SortOrderItemConverter converter = new SortOrderItemConverter();
-    SortOrderItem actual = converter.convert("field0,asc,sensitive,nulls-first");
+    SortOrderItem actual = converter.convert("field0;asc;sensitive;nulls-first");
     SortOrderItem expected = new SortOrderItem(
         "field0", Direction.ASC, CaseHandling.SENSITIVE, NullHandling.NULLS_FIRST);
     softly

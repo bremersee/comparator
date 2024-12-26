@@ -23,7 +23,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 
 /**
- * The sort order converter.
+ * The sort order item converter.
  *
  * @author Christian Bremer
  */
